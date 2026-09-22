@@ -133,11 +133,18 @@ export function applyContent(data: PortfolioData) {
       experienceList.innerHTML = '';
       activeExperience.forEach((exp) => {
         const li = document.createElement('li');
-        li.className = 'timeline-item';
+        // A career break is a timeline marker, not a job: styled quieter than a real role.
+        const isBreak = exp.kind === 'break';
+        li.className = isBreak ? 'timeline-item timeline-item-break' : 'timeline-item';
         const meta = document.createElement('div');
         meta.className = 'timeline-meta';
 
-        if (exp.logo) {
+        if (isBreak) {
+          const marker = document.createElement('div');
+          marker.className = 'company-logo company-logo-break';
+          marker.setAttribute('aria-hidden', 'true');
+          meta.appendChild(marker);
+        } else if (exp.logo) {
           const img = document.createElement('img');
           img.className = 'company-logo';
           img.src = exp.logo;

@@ -2,6 +2,8 @@ export interface Experience {
   role: string;
   company: string;
   period: string;
+  /** 'break' marks a career break: a timeline marker, not a job. Defaults to 'role'. */
+  kind?: 'role' | 'break';
   logo?: string;
   highlights?: string[];
   disabled?: boolean;

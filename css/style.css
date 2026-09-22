@@ -2098,6 +2098,56 @@ html[data-theme='dark'] .skeleton-card {
   font-size: 13px;
 }
 
+/* Career break: a labelled gap in the timeline, not a job. Kept quieter than a
+   real role so it reads as context and never competes with actual positions. */
+.timeline-item-break {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px dashed var(--border-light);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] .timeline-item-break {
+  background: transparent;
+  border: 1px dashed var(--border-light);
+}
+
+.timeline-item-break:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.company-logo-break {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--border-light);
+  background: transparent;
+  mix-blend-mode: normal;
+}
+
+.company-logo-break::after {
+  content: '';
+  width: 24px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--text-tertiary);
+}
+
+.timeline-item-break .role {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.timeline-item-break .company {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
 .highlights {
   gap: 10px;
   margin-top: 16px;
