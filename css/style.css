@@ -2049,6 +2049,11 @@ html[data-theme='dark'] .skeleton-card {
   line-height: 1.55;
 }
 
+/* About renders one <p> per blank-line-separated paragraph (src/render.ts). */
+#about-body p + p {
+  margin-top: 1em;
+}
+
 .timeline,
 .projects-grid,
 .skills-container {

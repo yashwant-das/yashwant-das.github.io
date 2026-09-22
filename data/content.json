@@ -14,7 +14,7 @@
   "subtitle": "Lead QA Engineer & Test Automation Architect • AI-Assisted Quality Engineering",
   "avatar": "assets/avatars/avatar.webp",
   "resume": "",
-  "heroSummary": "Lead QA Engineer and Test Automation Architect with 12+ years building test automation frameworks and test strategy for Fortune 500 and consumer-scale platforms across OTT streaming, e-commerce, fintech and telecom. I design and own automation across web, mobile, API and connected TV, wired into CI/CD, and have led QE teams of 4–10 engineers working with stakeholders across the US, Latin America, Europe, Australia and Singapore. Currently building open-source AI-assisted Playwright tooling: LLM-driven test generation, AST-based self-healing and benchmark-driven evaluation.",
+  "heroSummary": "I build the systems that decide whether software ships. For twelve years that has meant streaming platforms watched by millions, checkout flows moving real money, and Android handsets shipping to three continents. Now it also means teaching language models to write and repair tests — while deterministic checks, not the model, still decide what passes.",
   "heroStats": [
     {
       "value": "12+",
@@ -22,22 +22,17 @@
       "disabled": false
     },
     {
-      "value": "Fortune 500",
-      "label": "enterprise clients",
-      "disabled": false
-    },
-    {
       "value": "35M+",
-      "label": "consumer platform scale",
+      "label": "users on platforms I tested",
       "disabled": false
     },
     {
-      "value": "AI + OTT + Fintech",
-      "label": "specialized domains",
+      "value": "8",
+      "label": "countries coordinated",
       "disabled": false
     }
   ],
-  "about": "I architect test automation and quality strategy, hands-on. Over 12+ years I have built frameworks from scratch for Fortune 500 and consumer-scale platforms — cloud media QC automation for Paramount, checkout and payment flows for Falabella, OTT streaming for Optus Sport, ALTBalaji, FOX and Mediacorp, and web plus API automation for Pilot Flying J — along with automation work across insurance and financial services. My depth is in Playwright, Appium and Selenium, OTT DRM validation (Widevine, FairPlay), media QC pipelines and CI/CD quality gates. Today my work sits where deterministic engineering meets AI: LLM-assisted test generation, explainable self-healing, and agentic workflows that stay reviewable.",
+  "about": "Most of my career has gone into one question — what does \"working\" actually mean here? — and then building the machinery to answer it before a customer does.\n\nThat machinery looks different everywhere. At an OTT vendor it meant proving video played correctly on a Smart TV in Singapore, an Xbox in Australia and a phone in India, with DRM intact on every one. At a retail platform serving 35M+ customers it meant checkout and payments, in Spanish, across four Latin American markets. At an enterprise consultancy it meant cloud media QC for Paramount, and frameworks that ten engineers could work in without standing on each other.\n\nLately the interesting problem is AI. I'm skeptical of QA systems that treat model output as ground truth, so the tools I build keep the two apart: a model can generate a test, read a failure and propose a repair — but an AST-level patch, a re-run and a deterministic assertion decide whether it was right. Every call is traced. Every claim is benchmarked.",
   "experience": [
     {
       "role": "Upskilling & Independent Projects",
@@ -48,7 +43,7 @@
         "Published six open-source projects: AI-assisted Playwright tooling (structured test generation, AST-based self-healing, benchmark-driven evaluation), LLM output evaluation with Promptfoo, and reference frameworks for Selenium 4 on Java 21 and distributed load testing with Locust, Prometheus and Grafana.",
         "Pursuing a Bachelor of Computer Applications at Manipal University Jaipur (expected 2029)."
       ],
-      "disabled": false
+      "disabled": true
     },
     {
       "role": "QA Manager (Contract)",
@@ -56,11 +51,9 @@
       "period": "03/2025 — 06/2025 · Bengaluru, India",
       "logo": "assets/logos/publicis-sapient.webp",
       "highlights": [
-        "Client: Pilot Flying J · Operated in a dual capacity as a hands-on Quality Engineering contributor and QA Manager across web, mobile, and API platforms, with direct contribution to Playwright-based automation and release validation.",
-        "Drove shift-left testing practices by introducing early-phase test design, automation adoption, and quality validation during development and sprint planning stages.",
-        "Owned test strategy, QA governance, and delivery oversight, ensuring alignment with business requirements, engineering workflows, and release timelines.",
-        "Collaborated with engineering and DevOps teams to embed automated quality checks into CI/CD pipelines, improving release confidence and deployment stability.",
-        "Mentored QA engineers, supported hiring and onboarding, and contributed to capability development and standardization of Quality Engineering practices."
+        "Client: Pilot Flying J. Arrived at programme start with no automation in place and left with a Playwright framework the web and mobile streams both ran on, plus an API suite shared with the team in Romania.",
+        "Grew and trained a ten-person QE team across three workstreams — most of them new to the framework, all of them shipping in it within weeks.",
+        "Moved test design into sprint planning rather than after it, so quality work stopped arriving late by default."
       ],
       "disabled": false
     },
@@ -72,7 +65,7 @@
       "highlights": [
         "Upskilled in Playwright (Java) and Python test automation (pytest, Selenium); the resulting frameworks were published on GitHub in April–May 2025."
       ],
-      "disabled": false
+      "disabled": true
     },
     {
       "role": "Senior Specialist Quality Engineering",
@@ -80,11 +73,10 @@
       "period": "04/2021 — 06/2024 · Bengaluru, India",
       "logo": "assets/logos/ltimindtree.webp",
       "highlights": [
-        "Clients: Paramount Pictures, The Travelers Companies, Equifax · Led Quality Engineering and test automation initiatives for Fortune 500 clients, improving test reliability, execution efficiency, and release confidence across API, web, and cloud platforms.",
-        "Owned automation strategy and framework architecture across web, mobile, API, and OTT workflows, supporting scalable and maintainable test systems.",
-        "Led Media QC and performance testing initiatives for OTT platforms, optimizing API responsiveness, validating playback quality, and ensuring system scalability.",
-        "Designed and implemented visual and functional automation tooling to improve UI validation, diagnosability, and long-term test maintainability.",
-        "Served as a Transition Champion, leading project transitions, knowledge transfer initiatives, and recruitment efforts to build and scale high-performing Quality Engineering teams."
+        "Owned automation architecture across three enterprise programmes at once — media, insurance and financial services — five to ten engineers each, one set of shared conventions between them.",
+        "For Paramount, built cloud media QC automation checking audio, video quality and encoding integrity across streaming and post-production, plus performance testing of playback at scale.",
+        "Built internal tooling for test creation, data validation and visual checks, and spent real time killing flaky tests — the quiet work that decides whether anyone trusts the suite.",
+        "Led transitions and knowledge transfer as Transition Champion, which mostly meant making myself unnecessary on the way out."
       ],
       "disabled": false
     },
@@ -94,10 +86,9 @@
       "period": "07/2019 — 04/2021 · Bengaluru, India",
       "logo": "assets/logos/future-focus.webp",
       "highlights": [
-        "Client: Falabella (35M+ customers across Latin America) · Led Quality Engineering for high-traffic mobile, API, and backend platforms across Android and iOS, ensuring stability, performance, and release confidence at scale.",
-        "Designed and implemented cross-platform test automation frameworks using Cucumber and Appium, significantly improving test coverage and reducing regression cycles.",
-        "Integrated automated testing into CI/CD pipelines, streamlining release workflows and improving delivery efficiency.",
-        "Managed distributed QA teams across Chile, Peru, Colombia, and Argentina, addressing localization challenges through Spanish-language testing and structured cross-team collaboration."
+        "Led a team of five on Falabella's e-commerce platform — web and native apps, with checkout and payments as the part that could not be wrong.",
+        "Built cross-platform BDD automation in Cucumber and Appium, then wired it into the release pipeline so regression stopped being a manual event.",
+        "Ran QA across Chile, Peru, Colombia and Argentina, Spanish-language localisation included. Four markets, one suite."
       ],
       "disabled": false
     },
@@ -107,11 +98,10 @@
       "period": "07/2017 — 07/2019 · Trivandrum, India",
       "logo": "assets/logos/diagnal.webp",
       "highlights": [
-        "Clients: Optus Sport, ALTBalaji, Mediacorp, FOX · Led Quality Engineering for OTT and VOD platforms across Smart TVs, Xbox, Fire TV, and mobile devices, ensuring high-quality playback, DRM compliance, and seamless user experience.",
-        "Designed and implemented automation frameworks using Appium and Selenium, integrating CI/CD-driven regression workflows to reduce test cycles and improve execution efficiency.",
-        "Integrated real-time analytics and monitoring using Conviva and log analysis tools to assess streaming performance and improve issue detection and diagnostics.",
-        "Led app store certification testing for Microsoft Xbox and Amazon Fire TV, ensuring compliance with platform-specific technical and content requirements.",
-        "Validated regional content availability, geo-restrictions, and multiple streaming protocols (MPEG-DASH, HLS, Smooth Streaming) across global OTT deployments."
+        "Four streaming clients — Optus Sport, ALTBalaji, Mediacorp and FOX — across web, mobile, Smart TVs, Apple TV, Xbox and Fire TV. Same content, very different players, all expected to just work.",
+        "Took apps through Microsoft Xbox and Amazon Fire TV store certification, where the bar is someone else's checklist and there is no arguing with it.",
+        "Used Conviva telemetry and log analysis to turn \"the video looks bad\" into something specific enough to fix.",
+        "Validated geo-restrictions, regional catalogues and streaming protocols for launches in Australia, India, Singapore and the US."
       ],
       "disabled": false
     },
@@ -120,16 +110,15 @@
       "company": "Career Break",
       "period": "09/2016 — 06/2017 · Kerala, India",
       "kind": "break",
-      "disabled": false
+      "disabled": true
     },
     {
       "role": "Senior Test Engineer",
       "company": "Gionee, Syntech Technology",
       "period": "03/2015 — 08/2016 · Delhi, India",
       "highlights": [
-        "Led the development and maintenance of Android instrumented automation for mobile applications, with a strong focus on media and image quality validation.",
-        "Conducted mobile performance testing, leveraging automation to efficiently identify, analyze, and resolve stability and performance issues.",
-        "Established and managed a digital image and audio quality test lab in India, standardizing validation for camera, display, and audio subsystems."
+        "Trained at Gionee's Shenzhen headquarters, then built and ran the digital image and audio quality lab in India — where camera, display and audio claims either held up or didn't.",
+        "Wrote Android instrumented automation for media and image quality, alongside performance and stability runs."
       ],
       "disabled": false
     },
@@ -138,8 +127,8 @@
       "company": "Lava International Ltd",
       "period": "01/2013 — 08/2014 · Noida, India",
       "highlights": [
-        "Developed and implemented test automation frameworks using Appium, Android UI Automator, and instrumentation tests to support comprehensive Android application testing across smartphones and tablets.",
-        "Defined and executed automated testing strategies for new device launches, covering Android smartphones, tablets, feature phones, and third-party applications to ensure OS compatibility and integration."
+        "Automated Android testing across phones, tablets and feature phones with Appium and UI Automator.",
+        "Defined the test approach for new device launches — OS compatibility and third-party app integration, on hardware that changed every few months."
       ],
       "disabled": false
     },
@@ -147,10 +136,7 @@
       "role": "Test Engineer",
       "company": "Marquistech",
       "period": "07/2012 — 12/2012 · Gurgaon, India",
-      "highlights": [
-        "Client: Nokia Corporation · Implemented automated testing for post-launch evaluation of Nokia Lumia series, ensuring device stability, software reliability, and user satisfaction.",
-        "Collaborated with cross-functional teams to integrate automated testing solutions, driving continuous quality improvement in product development."
-      ],
+      "highlights": ["Automated post-launch testing for the Nokia Lumia series."],
       "disabled": false
     },
     {
@@ -159,9 +145,8 @@
       "period": "10/2010 — 07/2012 · Noida, India",
       "logo": "assets/logos/samsung.webp",
       "highlights": [
-        "Automated Android platform testing using the Compatibility Test Suite (CTS) to ensure OS compliance, security standards, and device stability.",
-        "Developed automated testing frameworks for Samsung mobile devices and applications, improving test coverage and defect detection.",
-        "Led DRM compliance and application functionality validation for Samsung Media Service and Media Hub (AT&T), optimizing content protection and media playback performance."
+        "Android platform testing with the Compatibility Test Suite, and automation for Samsung devices and apps.",
+        "Validated DRM compliance for Samsung Media Service and Media Hub (AT&T) — the first time streaming rights were my problem, and not the last."
       ],
       "disabled": false
     },
@@ -170,8 +155,7 @@
       "company": "Bhilwara Infotechnology",
       "period": "04/2010 — 07/2010 · Bengaluru, India",
       "highlights": [
-        "Client: Electronic Data Systems · Performed functional, compliance, and stability testing of video games across Xbox 360, PlayStation 3, and PSP platforms.",
-        "Contributed to testing high-profile titles including Demon's Souls, Toy Story, Enslaved: Odyssey to the West, and Solatorobo: Red the Hunter."
+        "Where it started: Xbox, PlayStation 3 and PSP titles — Demon's Souls, Toy Story, Enslaved: Odyssey to the West — playing the same level until it broke."
       ],
       "disabled": false
     }

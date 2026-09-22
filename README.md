@@ -37,8 +37,8 @@ npm ci
 # Start TypeScript watcher in one terminal
 npm run watch
 
-# Start a local development server in another terminal
-python3 -m http.server 8000
+# Start the local static server in another terminal
+npm run serve
 
 # Open http://localhost:8000
 ```

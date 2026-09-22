@@ -10,6 +10,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "watch": "tsc -w",
+    "serve": "node scripts/serve.mjs",
     "check": "tsc --noEmit",
     "test": "playwright test",
     "lint": "eslint .",

@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import fs from 'fs';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';

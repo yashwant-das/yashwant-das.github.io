@@ -121,7 +121,22 @@ export function applyContent(data: PortfolioData) {
 
   const aboutBody = document.getElementById('about-body');
   if (aboutBody && 'about' in data) {
-    aboutBody.textContent = data.about || '';
+    // Blank lines in the source become real paragraphs. Built as text nodes
+    // rather than innerHTML so content stays data, never markup.
+    const paragraphs = (data.about || '')
+      .split(/\n\s*\n/)
+      .map((para) => para.trim())
+      .filter(Boolean);
+    aboutBody.textContent = '';
+    if (paragraphs.length > 1) {
+      paragraphs.forEach((para) => {
+        const p = document.createElement('p');
+        p.textContent = para;
+        aboutBody.appendChild(p);
+      });
+    } else {
+      aboutBody.textContent = paragraphs[0] ?? '';
+    }
   }
 
   const experienceList = document.getElementById('experience-list');

@@ -10,6 +10,17 @@ export default tseslint.config(
     ignores: ['dist/', 'node_modules/', 'playwright-report/', 'test-results/', '.agents/'],
   },
   {
+    // Files under scripts/ run in Node, not the browser.
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        process: 'readonly',
+        console: 'readonly',
+        URL: 'readonly',
+      },
+    },
+  },
+  {
     files: ['**/*.ts'],
     languageOptions: {
       parserOptions: {
