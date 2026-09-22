@@ -8,7 +8,6 @@ const NAV_CONFIG = {
   THRESHOLD_MAX: 1.0,
 };
 
-const root = document.documentElement;
 const navToggle = document.getElementById('nav-toggle');
 const siteNav = document.getElementById('site-nav');
 const yearEl = document.getElementById('year');
@@ -69,7 +68,6 @@ function init() {
   initObservers();
   initScrollToTop();
   initSectionAnimations();
-  initCursorHighlight();
 }
 
 async function fetchContent() {
@@ -172,24 +170,6 @@ function initObservers() {
   );
 
   sections.forEach((sec) => io.observe(sec));
-}
-
-function initCursorHighlight() {
-  let rafId: number | null = null;
-  window.addEventListener(
-    'pointermove',
-    (e) => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        const x = (e.clientX / window.innerWidth) * 100;
-        const y = (e.clientY / window.innerHeight) * 100;
-        root.style.setProperty('--cursor-x', x + '%');
-        root.style.setProperty('--cursor-y', y + '%');
-        rafId = null;
-      });
-    },
-    { passive: true }
-  );
 }
 
 function initScrollToTop() {

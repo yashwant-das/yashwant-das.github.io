@@ -88,3 +88,6 @@ ENV/
 _deploy/
 
 .cursor/worktrees.json
+
+# Claude Code local preview config
+.claude/

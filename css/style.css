@@ -9,7 +9,7 @@
   --text-secondary: #6e6e73;
   --text-tertiary: #737373;
   --accent-blue: #0071e3;
-  --accent-blue-hover: #0077ed;
+  --accent-blue-hover: #006edb;
   --border-light: #d2d2d7;
   --border-medium: #e5e5e7;
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
@@ -30,9 +30,6 @@
   --header-height: 72px;
   --transition-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --transition-base: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  /* Cursor position variables */
-  --cursor-x: 50%;
-  --cursor-y: 50%;
 }
 
 html[data-theme='light'] {
@@ -45,9 +42,9 @@ html[data-theme='dark'] {
   --bg-tertiary: #2c2c2e;
   --text-primary: #f5f5f7;
   --text-secondary: #a1a1a6;
-  --text-tertiary: #737373;
-  --accent-blue: #0a84ff;
-  --accent-blue-hover: #409cff;
+  --text-tertiary: #86868b;
+  --accent-blue: #0071e3;
+  --accent-blue-hover: #006edb;
   --border-light: #424245;
   --border-medium: #2c2c2e;
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -66,9 +63,9 @@ html[data-theme='dark'] {
     --bg-tertiary: #2c2c2e;
     --text-primary: #f5f5f7;
     --text-secondary: #a1a1a6;
-    --text-tertiary: #737373;
-    --accent-blue: #0a84ff;
-    --accent-blue-hover: #409cff;
+    --text-tertiary: #86868b;
+    --accent-blue: #0071e3;
+    --accent-blue-hover: #006edb;
     --border-light: #424245;
     --border-medium: #2c2c2e;
     --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -107,42 +104,6 @@ body {
     background-color var(--transition-base),
     color var(--transition-base);
   position: relative;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(
-    circle 400px at var(--cursor-x, 50%) var(--cursor-y, 50%),
-    rgba(0, 113, 227, 0.3) 0%,
-    rgba(0, 113, 227, 0.2) 20%,
-    rgba(0, 113, 227, 0.12) 40%,
-    rgba(0, 113, 227, 0.06) 60%,
-    rgba(0, 113, 227, 0.02) 80%,
-    transparent 100%
-  );
-  pointer-events: none;
-  z-index: 0;
-  will-change: background;
-  opacity: 1;
-}
-
-html[data-theme='dark'] body::before {
-  background: radial-gradient(
-    circle 400px at var(--cursor-x, 50%) var(--cursor-y, 50%),
-    rgba(10, 132, 255, 0.35) 0%,
-    rgba(10, 132, 255, 0.25) 20%,
-    rgba(10, 132, 255, 0.15) 40%,
-    rgba(10, 132, 255, 0.1) 60%,
-    rgba(10, 132, 255, 0.05) 80%,
-    transparent 100%
-  );
 }
 
 main {
@@ -775,6 +736,27 @@ html[data-theme='dark'] .company-logo {
   opacity: 0.9;
 }
 
+.company-logo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  mix-blend-mode: normal;
+  user-select: none;
+}
+
+html[data-theme='dark'] .company-logo-placeholder {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+
 .timeline-meta-content {
   flex: 1;
   min-width: 200px;
@@ -1240,6 +1222,55 @@ html[data-theme='dark'] .contact-card:hover {
 
 .social-label {
   line-height: 1;
+}
+
+.contact-actions {
+  margin-top: var(--spacing-md);
+  display: flex;
+  align-items: center;
+}
+
+.btn-copy-email {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 0.5px solid var(--border-light);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-copy-email:hover,
+.btn-copy-email:focus-visible {
+  background: var(--bg-primary);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-copy-email:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.btn-copy-email.copied {
+  background: #34c759;
+  border-color: #34c759;
+  color: #ffffff;
+}
+
+html[data-theme='dark'] .btn-copy-email.copied {
+  background: #30d158;
+  border-color: #30d158;
+  color: #000000;
 }
 
 /* Footer */
@@ -2018,6 +2049,11 @@ html[data-theme='dark'] .skeleton-card {
   line-height: 1.55;
 }
 
+/* About renders one <p> per blank-line-separated paragraph (src/render.ts). */
+#about-body p + p {
+  margin-top: 1em;
+}
+
 .timeline,
 .projects-grid,
 .skills-container {
@@ -2065,6 +2101,56 @@ html[data-theme='dark'] .skeleton-card {
 .edu .period {
   color: var(--text-tertiary);
   font-size: 13px;
+}
+
+/* Career break: a labelled gap in the timeline, not a job. Kept quieter than a
+   real role so it reads as context and never competes with actual positions. */
+.timeline-item-break {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px dashed var(--border-light);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] .timeline-item-break {
+  background: transparent;
+  border: 1px dashed var(--border-light);
+}
+
+.timeline-item-break:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.company-logo-break {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--border-light);
+  background: transparent;
+  mix-blend-mode: normal;
+}
+
+.company-logo-break::after {
+  content: '';
+  width: 24px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--text-tertiary);
+}
+
+.timeline-item-break .role {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.timeline-item-break .company {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
 }
 
 .highlights {

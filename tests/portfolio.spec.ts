@@ -1,5 +1,28 @@
+import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+
+// Assert against the content source, not copies of it: this test is about
+// whether the hero renders from data, so editing content.json must not break it.
+interface ExperienceEntry {
+  role: string;
+  company: string;
+  kind?: 'role' | 'break';
+  disabled?: boolean;
+}
+
+// Path is relative to the repo root, which is Playwright's cwd. Avoid
+// import.meta.url here: it flips this file to ESM and breaks the axe import.
+const content = JSON.parse(readFileSync('data/content.json', 'utf8')) as {
+  name: string;
+  subtitle: string;
+  heroSummary: string;
+  avatar: string;
+  experience: ExperienceEntry[];
+};
+
+const activeExperience = content.experience.filter((e) => !e.disabled);
+const expectedBreaks = activeExperience.filter((e) => e.kind === 'break');
 
 const EXPECTED_SECTIONS = [
   'about',
@@ -51,12 +74,12 @@ test.describe('Portfolio E2E Tests', () => {
 
   test('should render the hero from portfolio data', async ({ page }) => {
     await expect(page.locator('.hero-eyebrow')).toContainText('Portfolio');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Yashwant Das');
-    await expect(page.locator('#hero-subtitle')).toHaveText(
-      'QA Architect • AI-Assisted Test Systems'
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(content.name);
+    await expect(page.locator('#hero-subtitle')).toHaveText(content.subtitle);
+    await expect(page.locator('.hero-summary')).toContainText(
+      content.heroSummary.slice(0, 60).trim()
     );
-    await expect(page.locator('.hero-summary')).toContainText('QA Manager and Test Architect');
-    await expect(page.locator('.avatar img')).toHaveAttribute('src', 'assets/avatars/avatar.webp');
+    await expect(page.locator('.avatar img')).toHaveAttribute('src', content.avatar);
     await expect(page.locator('.hero-meta')).toBeVisible();
     // Resume link is hidden when resume field is empty
     await expect(page.locator('#resume-link')).toBeHidden();
@@ -75,6 +98,21 @@ test.describe('Portfolio E2E Tests', () => {
     await themeToggle.click();
     const finalTheme = await html.getAttribute('data-theme');
     expect(finalTheme).toBe(initialTheme);
+  });
+
+  test('should render every experience entry, marking career breaks', async ({ page }) => {
+    const entries = page.locator('#experience-list .timeline-item');
+    await expect(entries).toHaveCount(activeExperience.length);
+
+    const breaks = page.locator('#experience-list .timeline-item-break');
+    await expect(breaks).toHaveCount(expectedBreaks.length);
+
+    // A break is a timeline marker, not a job: it must not render a company logo.
+    for (const [i, entry] of expectedBreaks.entries()) {
+      const card = breaks.nth(i);
+      await expect(card).toContainText(entry.role);
+      await expect(card.locator('img.company-logo')).toHaveCount(0);
+    }
   });
 
   test('should render certifications from JSON', async ({ page }) => {
@@ -131,6 +169,10 @@ test.describe('Portfolio E2E Tests', () => {
     await expect(page.locator('#social-list a[href*="github.com"]')).toBeVisible();
     // Medium link
     await expect(page.locator('#social-list a[href*="medium.com"]')).toBeVisible();
+
+    // Copy email button
+    await expect(page.locator('#copy-email-btn')).toBeVisible();
+    await expect(page.locator('#copy-email-btn')).toContainText('Copy yashworks@gmail.com');
   });
 
   for (const viewport of RESPONSIVE_VIEWPORTS) {

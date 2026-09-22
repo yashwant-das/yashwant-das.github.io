@@ -1,7 +1,7 @@
 # Personal Portfolio - Yashwant Das
 
-[![Deployment](https://github.com/yashwant-das/portfolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/yashwant-das/portfolio/actions/workflows/deploy.yml)
-[![Pages](https://img.shields.io/github/deployments/yashwant-das/portfolio/github-pages?label=GitHub%20Pages&logo=github)](https://yashwant-das.github.io)
+[![Deployment](https://github.com/yashwant-das/yashwant-das.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/yashwant-das/yashwant-das.github.io/actions/workflows/deploy.yml)
+[![Pages](https://img.shields.io/github/deployments/yashwant-das/yashwant-das.github.io/github-pages?label=GitHub%20Pages&logo=github)](https://yashwant-das.github.io)
 
 A modern, minimal portfolio website built with TypeScript and vanilla CSS, following Apple-inspired design principles.
 
@@ -37,8 +37,8 @@ npm ci
 # Start TypeScript watcher in one terminal
 npm run watch
 
-# Start a local development server in another terminal
-python3 -m http.server 8000
+# Start the local static server in another terminal
+npm run serve
 
 # Open http://localhost:8000
 ```

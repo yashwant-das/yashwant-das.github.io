@@ -81,6 +81,11 @@
           "period": {
             "type": "string"
           },
+          "kind": {
+            "type": "string",
+            "enum": ["role", "break"],
+            "description": "\"break\" marks a career break: a timeline marker, not a job. Defaults to \"role\"."
+          },
           "logo": {
             "type": "string"
           },

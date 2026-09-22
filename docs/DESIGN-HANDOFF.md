@@ -74,6 +74,12 @@ The active implementation defines tokens in `css/style.css`, starting near the `
 
 - About: single text card.
 - Experience: timeline cards, three columns on wide desktop, one column on mobile.
+- Career break: an experience entry with `"kind": "break"`. It is a labelled gap in
+  the timeline, not a job, so it is deliberately quieter than a real role —
+  transparent card with a dashed border, no hover lift, a dashed marker in place of a
+  company logo, smaller role text, and the company line set as an uppercase label.
+  Breaks keep the timeline continuous so no gap reads as unexplained; they must never
+  compete visually with actual positions.
 - Projects: three columns desktop, two columns tablet, one column mobile.
 - Skills: category cards, three columns desktop, two columns tablet, one column mobile.
 - Education and certifications: compact credential cards.

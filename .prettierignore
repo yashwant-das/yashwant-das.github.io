@@ -5,3 +5,5 @@ playwright-report/
 blob-report/
 coverage/
 _deploy/
+.agents/
+.impeccable/

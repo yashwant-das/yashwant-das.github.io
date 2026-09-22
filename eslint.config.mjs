@@ -7,7 +7,18 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   prettier,
   {
-    ignores: ['dist/', 'node_modules/', 'playwright-report/', 'test-results/'],
+    ignores: ['dist/', 'node_modules/', 'playwright-report/', 'test-results/', '.agents/'],
+  },
+  {
+    // Files under scripts/ run in Node, not the browser.
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        process: 'readonly',
+        console: 'readonly',
+        URL: 'readonly',
+      },
+    },
   },
   {
     files: ['**/*.ts'],

@@ -39,7 +39,7 @@ For local preview:
 
 ```bash
 npm run build
-python3 -m http.server 8000
+npm run serve
 ```
 
 Open `http://localhost:8000`.
