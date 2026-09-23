@@ -62,7 +62,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build TypeScript
+      - name: Build site
         run: npm run build
 
       - name: Setup Pages
@@ -70,26 +70,10 @@ jobs:
         with:
           enablement: true
 
-      - name: Prepare deployment directory
-        run: |
-          mkdir -p _deploy
-
-          # Copy core files
-          cp index.html _deploy/
-
-          # Copy directories if they exist
-          [ -d css ] && cp -r css _deploy/
-          [ -d dist ] && cp -r dist _deploy/
-          [ -d data ] && cp -r data _deploy/
-          [ -d assets ] && cp -r assets _deploy/
-
-          # Ensure .nojekyll exists
-          touch _deploy/.nojekyll
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '_deploy'
+          path: 'dist'
 
       - name: Deploy to GitHub Pages
         id: deployment

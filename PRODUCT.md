@@ -14,7 +14,7 @@ Secondary: Collaborators, engineers, and open-source contributors exploring prac
 
 ## Product Purpose
 
-A high-performance, distraction-free personal portfolio and engineering showcase. It exists to provide evaluators with immediate, verifiable proof of technical depth, enterprise architecture leadership, and cutting-edge test innovation, driving contact through email, LinkedIn, or GitHub.
+A calm personal site, deliberately not a resume. In under a minute it shows who Yashwant is, who he has worked with (a logo wall), what he works with (a periodic table of tools), and what he builds (open-source work), and it leads to contact by email, LinkedIn or GitHub. The resume holds the career history.
 
 ## Positioning
 
@@ -26,35 +26,35 @@ Evaluated primarily by busy decision-makers on desktop and mobile screens, frequ
 
 ## Capabilities and Constraints
 
-- **Stack & Architecture:** Static HTML5 entry shell, vanilla CSS design tokens, and TypeScript compiling to vanilla ES modules in `dist/`. No heavy framework runtime.
+- **Stack & Architecture:** Vite and TypeScript. `data/content.json` is rendered to static HTML at build time, and a ~1 kB script adds the theme toggle, copy email and active nav. No framework runtime.
 - **Data Decoupling:** All personal content, roles, metrics, and project metadata live in `data/content.json` governed by `data/schema.json`. Shell code (`index.html`) remains strictly generic.
-- **Dynamic Grace:** Sections hide cleanly when data is absent or toggled off via `src/render.ts`.
+- **Dynamic Grace:** Sections hide cleanly when data is absent or turned off with `visibility`.
 - **Quality Gates:** Must pass automated verification suites (`npm run build`, `npm run check`, `npm run lint`, and Playwright test runner).
 
 ## Brand Commitments
 
 - **Tone of Voice:** Authoritative, engineering-focused, pragmatic, and measured. Avoid superficial AI hype in favor of architecture, protocols, and concrete mechanics.
-- **Visual Language:** Apple-inspired restraint as specified in `docs/DESIGN-HANDOFF.md` — crisp typography, monochromatic canvases (pure white/black), subtle surface tiers, single-level cards, and zero decorative background noise or gradient blobs.
-- **Assets:** Preserves verified professional assets including avatar (`assets/avatars/avatar.webp`) and enterprise logos (`assets/logos/`).
+- **Visual Language:** Quiet and typographic, as specified in `docs/DESIGN-HANDOFF.md`: neutral greys, a serif display face, hairline grids, monochrome logos, and one accent reserved for focus. Dark by default, with light designed to the same standard.
+- **Assets:** Avatar at `public/assets/avatars/avatar.webp`. Monochrome logos in `src/icons/` and from Simple Icons.
 
 ## Evidence on Hand
 
-- **Career Milestones:** 12+ years across Publicis Sapient (Pilot Flying J), LTIMindtree (Paramount, Travelers, Equifax), Future Focus Infotech (Falabella), Diagnal Technologies (Optus Sport, FOX), and Samsung India.
+- **Worked with:** Paramount, FOX, Optus Sport, Falabella, Pilot Flying J, Equifax, Travelers, Mediacorp, ALTBalaji and Nokia as clients; Samsung, LTIMindtree, Publicis Sapient and Diagnal as employers.
 - **Featured Repositories:**
   - _Smart Playwright Protocol (SPP)_: `https://github.com/yashwant-das/test-playwright-protocol`
   - _Testing LLM Automation Engine_: `https://github.com/yashwant-das/testing-llm-automation-engine`
-- **Credentials:** BCA (Manipal University Jaipur), Diploma in Electronics & Embedded Systems (NTTF), IBM Generative AI certifications, Cisco Python, Atlassian Jira.
 - **Contact:** `mailto:yashworks@gmail.com`, LinkedIn, GitHub, Medium.
 
 ## Product Principles
 
 1. **Evidence Over Assertion:** Back every technical claim with specific frameworks, protocols, career context, or inspectable code.
-2. **Quiet Utility Over Ornament:** Present information with maximum scanability and hierarchy; the engineering work leads while the interface recedes.
-3. **Data-Driven Single Source of Truth:** Never hard-code personal claims or achievements in markup; maintain fidelity with `data/content.json`.
-4. **Architectural Control in AI:** Frame AI testing around auditable decisions, explicit task lifecycles, and human verification rather than opaque generation.
+2. **Quiet Utility Over Ornament:** Typography and whitespace carry the page; the interface recedes.
+3. **A Person, Not a Resume:** Show identity, range and current work; leave dates and job history to the resume.
+4. **Data-Driven Single Source of Truth:** Never hard-code personal claims or achievements in markup; maintain fidelity with `data/content.json`.
+5. **Architectural Control in AI:** Frame AI testing around auditable decisions, explicit task lifecycles, and human verification rather than opaque generation.
 
 ## Accessibility & Inclusion
 
 - Adherence to WCAG 2.1 AA standards.
-- Strict semantic heading hierarchy (`h1` through `h3`), skip-to-content mechanism, keyboard navigation with high-contrast visible focus rings in both light and dark themes.
+- Strict semantic heading hierarchy (`h1` through `h3`), a skip-to-content link, keyboard navigation, and visible focus rings in both themes. Axe runs in both themes.
 - Complete support for `prefers-reduced-motion` and automated auditing via Playwright with `@axe-core/playwright`.

@@ -1,607 +1,183 @@
 {
   "$schema": "./schema.json",
   "visibility": {
-    "home": true,
-    "about": true,
-    "experience": true,
-    "projects": true,
-    "skills": true,
-    "education": true,
-    "certifications": true,
+    "brands": true,
+    "toolbox": true,
+    "surfaces": true,
+    "work": true,
     "contact": true
   },
   "name": "Yashwant Das",
-  "subtitle": "Lead QA Engineer & Test Automation Architect • AI-Assisted Quality Engineering",
+  "role": "Test automation architect",
+  "location": "Bengaluru, India",
   "avatar": "assets/avatars/avatar.webp",
-  "resume": "",
-  "heroSummary": "I build the systems that decide whether software ships. For twelve years that has meant streaming platforms watched by millions, checkout flows moving real money, and Android handsets shipping to three continents. Now it also means teaching language models to write and repair tests — while deterministic checks, not the model, still decide what passes.",
-  "heroStats": [
-    {
-      "value": "12+",
-      "label": "years in quality engineering",
-      "disabled": false
-    },
-    {
-      "value": "35M+",
-      "label": "users on platforms I tested",
-      "disabled": false
-    },
-    {
-      "value": "8",
-      "label": "countries coordinated",
-      "disabled": false
-    }
-  ],
-  "about": "Most of my career has gone into one question — what does \"working\" actually mean here? — and then building the machinery to answer it before a customer does.\n\nThat machinery looks different everywhere. At an OTT vendor it meant proving video played correctly on a Smart TV in Singapore, an Xbox in Australia and a phone in India, with DRM intact on every one. At a retail platform serving 35M+ customers it meant checkout and payments, in Spanish, across four Latin American markets. At an enterprise consultancy it meant cloud media QC for Paramount, and frameworks that ten engineers could work in without standing on each other.\n\nLately the interesting problem is AI. I'm skeptical of QA systems that treat model output as ground truth, so the tools I build keep the two apart: a model can generate a test, read a failure and propose a repair — but an AST-level patch, a re-run and a deterministic assertion decide whether it was right. Every call is traced. Every claim is benchmarked.",
-  "experience": [
-    {
-      "role": "Upskilling & Independent Projects",
-      "company": "Career Break",
-      "period": "07/2025 — Present · Bengaluru, India",
-      "kind": "break",
-      "highlights": [
-        "Published six open-source projects: AI-assisted Playwright tooling (structured test generation, AST-based self-healing, benchmark-driven evaluation), LLM output evaluation with Promptfoo, and reference frameworks for Selenium 4 on Java 21 and distributed load testing with Locust, Prometheus and Grafana.",
-        "Pursuing a Bachelor of Computer Applications at Manipal University Jaipur (expected 2029)."
-      ],
-      "disabled": true
-    },
-    {
-      "role": "QA Manager (Contract)",
-      "company": "Publicis Sapient (via Pacific Consulting)",
-      "period": "03/2025 — 06/2025 · Bengaluru, India",
-      "logo": "assets/logos/publicis-sapient.webp",
-      "highlights": [
-        "Client: Pilot Flying J. Arrived at programme start with no automation in place and left with a Playwright framework the web and mobile streams both ran on, plus an API suite shared with the team in Romania.",
-        "Grew and trained a ten-person QE team across three workstreams — most of them new to the framework, all of them shipping in it within weeks.",
-        "Moved test design into sprint planning rather than after it, so quality work stopped arriving late by default."
-      ],
-      "disabled": false
-    },
-    {
-      "role": "Upskilling",
-      "company": "Career Break",
-      "period": "07/2024 — 02/2025 · Bengaluru, India",
-      "kind": "break",
-      "highlights": [
-        "Upskilled in Playwright (Java) and Python test automation (pytest, Selenium); the resulting frameworks were published on GitHub in April–May 2025."
-      ],
-      "disabled": true
-    },
-    {
-      "role": "Senior Specialist Quality Engineering",
-      "company": "LTIMindtree",
-      "period": "04/2021 — 06/2024 · Bengaluru, India",
-      "logo": "assets/logos/ltimindtree.webp",
-      "highlights": [
-        "Owned automation architecture across three enterprise programmes at once — media, insurance and financial services — five to ten engineers each, one set of shared conventions between them.",
-        "For Paramount, built cloud media QC automation checking audio, video quality and encoding integrity across streaming and post-production, plus performance testing of playback at scale.",
-        "Built internal tooling for test creation, data validation and visual checks, and spent real time killing flaky tests — the quiet work that decides whether anyone trusts the suite.",
-        "Led transitions and knowledge transfer as Transition Champion, which mostly meant making myself unnecessary on the way out."
-      ],
-      "disabled": false
-    },
-    {
-      "role": "QA Lead",
-      "company": "Future Focus Infotech",
-      "period": "07/2019 — 04/2021 · Bengaluru, India",
-      "logo": "assets/logos/future-focus.webp",
-      "highlights": [
-        "Led a team of five on Falabella's e-commerce platform — web and native apps, with checkout and payments as the part that could not be wrong.",
-        "Built cross-platform BDD automation in Cucumber and Appium, then wired it into the release pipeline so regression stopped being a manual event.",
-        "Ran QA across Chile, Peru, Colombia and Argentina, Spanish-language localisation included. Four markets, one suite."
-      ],
-      "disabled": false
-    },
-    {
-      "role": "Senior QA Engineer",
-      "company": "Diagnal Technologies",
-      "period": "07/2017 — 07/2019 · Trivandrum, India",
-      "logo": "assets/logos/diagnal.webp",
-      "highlights": [
-        "Four streaming clients — Optus Sport, ALTBalaji, Mediacorp and FOX — across web, mobile, Smart TVs, Apple TV, Xbox and Fire TV. Same content, very different players, all expected to just work.",
-        "Took apps through Microsoft Xbox and Amazon Fire TV store certification, where the bar is someone else's checklist and there is no arguing with it.",
-        "Used Conviva telemetry and log analysis to turn \"the video looks bad\" into something specific enough to fix.",
-        "Validated geo-restrictions, regional catalogues and streaming protocols for launches in Australia, India, Singapore and the US."
-      ],
-      "disabled": false
-    },
-    {
-      "role": "Relocation",
-      "company": "Career Break",
-      "period": "09/2016 — 06/2017 · Kerala, India",
-      "kind": "break",
-      "disabled": true
-    },
-    {
-      "role": "Senior Test Engineer",
-      "company": "Gionee, Syntech Technology",
-      "period": "03/2015 — 08/2016 · Delhi, India",
-      "highlights": [
-        "Trained at Gionee's Shenzhen headquarters, then built and ran the digital image and audio quality lab in India — where camera, display and audio claims either held up or didn't.",
-        "Wrote Android instrumented automation for media and image quality, alongside performance and stability runs."
-      ],
-      "disabled": false
-    },
-    {
-      "role": "Test Engineer",
-      "company": "Lava International Ltd",
-      "period": "01/2013 — 08/2014 · Noida, India",
-      "highlights": [
-        "Automated Android testing across phones, tablets and feature phones with Appium and UI Automator.",
-        "Defined the test approach for new device launches — OS compatibility and third-party app integration, on hardware that changed every few months."
-      ],
-      "disabled": false
-    },
-    {
-      "role": "Test Engineer",
-      "company": "Marquistech",
-      "period": "07/2012 — 12/2012 · Gurgaon, India",
-      "highlights": ["Automated post-launch testing for the Nokia Lumia series."],
-      "disabled": false
-    },
-    {
-      "role": "Associate Engineer",
-      "company": "Samsung India Electronics",
-      "period": "10/2010 — 07/2012 · Noida, India",
-      "logo": "assets/logos/samsung.webp",
-      "highlights": [
-        "Android platform testing with the Compatibility Test Suite, and automation for Samsung devices and apps.",
-        "Validated DRM compliance for Samsung Media Service and Media Hub (AT&T) — the first time streaming rights were my problem, and not the last."
-      ],
-      "disabled": false
-    },
-    {
-      "role": "Game Tester",
-      "company": "Bhilwara Infotechnology",
-      "period": "04/2010 — 07/2010 · Bengaluru, India",
-      "highlights": [
-        "Where it started: Xbox, PlayStation 3 and PSP titles — Demon's Souls, Toy Story, Enslaved: Odyssey to the West — playing the same level until it broke."
-      ],
-      "disabled": false
-    }
+  "statement": "I make sure software works on every screen it ships to. Lately, I teach language models to help.",
+  "status": "Building with local LLMs",
+  "description": "Yashwant Das is a test automation architect in Bengaluru, working across web, mobile, streaming and TV, and building AI-assisted Playwright tooling with local LLMs.",
+  "brands": {
+    "note": "Client work was delivered through the employers listed.",
+    "items": [
+      { "name": "Paramount", "kind": "client", "logo": "paramount", "scale": 1.2 },
+      { "name": "FOX", "kind": "client", "logo": "fox", "scale": 0.85 },
+      { "name": "Optus Sport", "kind": "client", "logo": "optus" },
+      { "name": "Falabella", "kind": "client", "logo": "falabella", "scale": 1.1 },
+      { "name": "Pilot Flying J", "kind": "client", "logo": "pilot" },
+      { "name": "Equifax", "kind": "client", "logo": "equifax" },
+      { "name": "Travelers", "kind": "client", "logo": "travelers", "scale": 1.05 },
+      { "name": "Mediacorp", "kind": "client", "logo": "mediacorp" },
+      { "name": "ALTBalaji", "kind": "client" },
+      { "name": "Nokia", "kind": "client", "logo": "nokia" },
+      { "name": "Samsung", "kind": "employer", "logo": "samsung" },
+      { "name": "LTIMindtree", "kind": "employer", "logo": "ltimindtree", "scale": 1.1 },
+      { "name": "Publicis Sapient", "kind": "employer", "logo": "publicis-sapient" },
+      { "name": "Diagnal", "kind": "employer", "logo": "diagnal" }
+    ]
+  },
+  "toolbox": {
+    "groups": [
+      { "id": "lang", "label": "Languages" },
+      { "id": "auto", "label": "Automation" },
+      { "id": "frame", "label": "Frameworks" },
+      { "id": "ai", "label": "AI testing" },
+      { "id": "agents", "label": "AI coding" },
+      { "id": "ci", "label": "CI and cloud" },
+      { "id": "perf", "label": "Performance" },
+      { "id": "media", "label": "Streaming" }
+    ],
+    "items": [
+      {
+        "symbol": "Ts",
+        "name": "TypeScript",
+        "group": "lang",
+        "icon": "typescript",
+        "focus": true
+      },
+      { "symbol": "Py", "name": "Python", "group": "lang", "icon": "python", "focus": true },
+      { "symbol": "Jv", "name": "Java", "group": "lang", "icon": "openjdk" },
+      { "symbol": "Js", "name": "JavaScript", "group": "lang", "icon": "javascript" },
+      { "symbol": "Pg", "name": "PostgreSQL", "group": "lang", "icon": "postgresql" },
+      { "symbol": "My", "name": "MySQL", "group": "lang" },
+      { "symbol": "Mg", "name": "MongoDB", "group": "lang", "icon": "mongodb" },
+
+      {
+        "symbol": "Pw",
+        "name": "Playwright",
+        "group": "auto",
+        "icon": "playwright",
+        "focus": true
+      },
+      { "symbol": "Se", "name": "Selenium", "group": "auto", "icon": "selenium" },
+      { "symbol": "Ap", "name": "Appium", "group": "auto", "icon": "appium" },
+      { "symbol": "Wd", "name": "WebdriverIO", "group": "auto", "icon": "webdriverio" },
+      { "symbol": "Cy", "name": "Cypress", "group": "auto", "icon": "cypress" },
+      { "symbol": "Ra", "name": "REST Assured", "group": "auto" },
+      { "symbol": "Pm", "name": "Postman", "group": "auto", "icon": "postman" },
+      { "symbol": "Gq", "name": "GraphQL", "group": "auto", "icon": "graphql" },
+
+      { "symbol": "Pt", "name": "pytest", "group": "frame", "icon": "pytest" },
+      { "symbol": "Tn", "name": "TestNG", "group": "frame" },
+      { "symbol": "Ju", "name": "JUnit", "group": "frame", "icon": "junit5" },
+      { "symbol": "Je", "name": "Jest", "group": "frame", "icon": "jest" },
+      { "symbol": "Cu", "name": "Cucumber", "group": "frame", "icon": "cucumber" },
+      { "symbol": "Al", "name": "Allure", "group": "frame", "icon": "allure" },
+
+      { "symbol": "Ol", "name": "Ollama", "group": "ai", "icon": "ollama", "focus": true },
+      { "symbol": "Ls", "name": "LM Studio", "group": "ai", "icon": "lmstudio", "focus": true },
+      { "symbol": "Mx", "name": "MLX", "group": "ai" },
+      {
+        "symbol": "Mc",
+        "name": "MCP",
+        "group": "ai",
+        "icon": "modelcontextprotocol",
+        "focus": true
+      },
+      { "symbol": "Pf", "name": "Promptfoo", "group": "ai", "icon": "promptfoo" },
+      { "symbol": "Pd", "name": "Pydantic", "group": "ai", "icon": "pydantic" },
+      { "symbol": "Gr", "name": "Gradio", "group": "ai", "icon": "gradio" },
+
+      { "symbol": "Cl", "name": "Claude Code", "group": "agents", "icon": "claude", "focus": true },
+      { "symbol": "Co", "name": "Copilot CLI", "group": "agents", "icon": "githubcopilot" },
+      { "symbol": "Cx", "name": "Codex CLI", "group": "agents" },
+      { "symbol": "Gm", "name": "Gemini CLI", "group": "agents", "icon": "googlegemini" },
+
+      { "symbol": "Gt", "name": "Git", "group": "ci", "icon": "git" },
+      { "symbol": "Gh", "name": "GitHub Actions", "group": "ci", "icon": "githubactions" },
+      { "symbol": "Jk", "name": "Jenkins", "group": "ci", "icon": "jenkins" },
+      { "symbol": "Ci", "name": "CircleCI", "group": "ci", "icon": "circleci" },
+      { "symbol": "Az", "name": "Azure DevOps", "group": "ci", "icon": "azuredevops" },
+      { "symbol": "Dk", "name": "Docker", "group": "ci", "icon": "docker" },
+      { "symbol": "Bs", "name": "BrowserStack", "group": "ci" },
+      { "symbol": "Ji", "name": "Jira", "group": "ci", "icon": "jira" },
+
+      { "symbol": "Jm", "name": "JMeter", "group": "perf" },
+      { "symbol": "Ga", "name": "Gatling", "group": "perf", "icon": "gatling" },
+      { "symbol": "Ar", "name": "Artillery", "group": "perf" },
+      { "symbol": "Lo", "name": "Locust", "group": "perf", "icon": "locust" },
+      { "symbol": "Pr", "name": "Prometheus", "group": "perf", "icon": "prometheus" },
+      { "symbol": "Gf", "name": "Grafana", "group": "perf", "icon": "grafana" },
+
+      { "symbol": "Ff", "name": "FFmpeg", "group": "media", "icon": "ffmpeg" },
+      { "symbol": "Hl", "name": "HLS", "group": "media" },
+      { "symbol": "Da", "name": "MPEG-DASH", "group": "media" },
+      { "symbol": "Wv", "name": "Widevine", "group": "media" },
+      { "symbol": "Fp", "name": "FairPlay", "group": "media" },
+      { "symbol": "Ae", "name": "AWS Elemental", "group": "media" },
+      { "symbol": "Cv", "name": "Conviva", "group": "media" }
+    ]
+  },
+  "surfaces": [
+    { "name": "Web", "icon": "ui:globe" },
+    { "name": "iOS", "icon": "ui:phone" },
+    { "name": "Android", "icon": "ui:phone" },
+    { "name": "Smart TV", "icon": "ui:tv" },
+    { "name": "Apple TV", "icon": "ui:tv" },
+    { "name": "Fire TV", "icon": "ui:tv" },
+    { "name": "Xbox", "icon": "ui:gamepad" },
+    { "name": "PlayStation", "icon": "ui:gamepad" },
+    { "name": "Roku", "icon": "ui:tv" },
+    { "name": "webOS", "icon": "ui:tv" }
   ],
   "projects": [
     {
       "title": "Testing LLM Automation Engine",
-      "description": "An LLM + vision AI automation framework for Playwright that addresses three core challenges: generating TypeScript tests from DOM context, generating tests from screenshots using multimodal vision models, and automatically healing broken specs. The self-healer runs an auditable Monitor → Investigate → Reason → Act → Report pipeline, combining deterministic heuristics for fast error classification with LLM reasoning. Every repair emits a structured HealingDecision artifact with confidence scoring, diagnostic evidence, code patches, and verification results.",
-      "tags": [
-        "Playwright",
-        "Python",
-        "Computer Vision",
-        "LLM Reasoning",
-        "Self-Healing Tests",
-        "Multimodal QA"
-      ],
-      "live": "",
-      "code": "https://github.com/yashwant-das/testing-llm-automation-engine",
-      "featured": true,
-      "disabled": false
+      "description": "Generates, heals and benchmarks Playwright specs with local LLMs.",
+      "language": "Python",
+      "code": "https://github.com/yashwant-das/testing-llm-automation-engine"
     },
     {
       "title": "Smart Playwright Protocol",
-      "description": "SPP is a protocol-driven workflow for AI-assisted Playwright automation — defining an auditable contract for how AI agents and engineers collaborate on test tasks. It enforces a strict 6-phase engineering lifecycle (Select → Understand → Explore → Plan → Implement → Verify) using Markdown task contracts, deterministic verification gates, and Page Object best practices. Features a dedicated CLI and Model Context Protocol (MCP) server integration to manage task state and coordinate autonomous agents under explicit engineering control.",
-      "tags": [
-        "Playwright",
-        "TypeScript",
-        "MCP Server",
-        "Agentic Workflows",
-        "AI-Assisted Testing",
-        "QA Architecture"
-      ],
-      "live": "",
-      "code": "https://github.com/yashwant-das/test-playwright-protocol",
-      "featured": true,
-      "disabled": false
+      "description": "A six-phase contract that keeps AI coding agents reviewable.",
+      "language": "TypeScript",
+      "code": "https://github.com/yashwant-das/test-playwright-protocol"
     },
     {
-      "title": "Offline AI Toolkit for Apple Silicon",
-      "description": "Offline-first local AI toolkit built on MLX. Audio transcription with MLX Whisper, meeting summaries through Ollama, and vision analysis with Moondream and LLaMA 3.2 — no API keys, nothing leaves the machine.",
-      "tags": ["Python", "MLX", "Ollama", "Vision LLMs", "Local Inference"],
-      "live": "",
-      "code": "https://github.com/yashwant-das/genai-mlx-playground",
-      "featured": false,
-      "disabled": false
+      "title": "Offline AI toolkit for Apple Silicon",
+      "description": "Transcription, summaries and vision on-device with MLX and Ollama.",
+      "language": "Python",
+      "code": "https://github.com/yashwant-das/genai-mlx-playground"
     },
     {
-      "title": "Distributed Load Testing Stack",
-      "description": "Locust master/worker cluster with Prometheus metrics, Grafana dashboards and custom alerting, orchestrated with Docker Compose. Multi-scenario load profiles and real observability rather than a single summary number.",
-      "tags": ["Locust", "Prometheus", "Grafana", "Docker", "Performance"],
-      "live": "",
-      "code": "https://github.com/yashwant-das/performance-locust-framework",
-      "featured": false,
-      "disabled": false
+      "title": "Distributed load testing",
+      "description": "A Locust cluster with Prometheus metrics and Grafana dashboards.",
+      "language": "Python",
+      "code": "https://github.com/yashwant-das/performance-locust-framework"
     },
     {
-      "title": "LLM Evaluation with Promptfoo",
-      "description": "Translation-quality evaluation for local models, run entirely offline through Ollama and LM Studio. Treats model output as something to be measured against assertions, not trusted.",
-      "tags": ["Promptfoo", "Ollama", "LM Studio", "LLM Evaluation"],
-      "live": "",
-      "code": "https://github.com/yashwant-das/llm-promptfoo-tests",
-      "featured": false,
-      "disabled": false
+      "title": "LLM evaluation with Promptfoo",
+      "description": "Offline translation-quality checks for local models.",
+      "language": "YAML",
+      "code": "https://github.com/yashwant-das/llm-promptfoo-tests"
     },
     {
-      "title": "Selenium 4 Reference Framework (Java 21)",
-      "description": "Reference-grade Selenium 4 and TestNG framework on Java 21: Page Object Model, parallel execution, Allure reporting, REST Assured for API coverage, and Checkstyle quality gates.",
-      "tags": ["Java 21", "Selenium 4", "TestNG", "Allure", "REST Assured"],
-      "live": "",
-      "code": "https://github.com/yashwant-das/web-selenium-java-framework",
-      "featured": false,
-      "disabled": false
-    },
-    {
-      "title": "Python Selenium Framework",
-      "description": "pytest and Selenium WebDriver framework with Page Object Model, parallel execution, Allure reports and multi-environment configuration.",
-      "tags": ["Python", "pytest", "Selenium", "Allure", "POM"],
-      "live": "",
-      "code": "https://github.com/yashwant-das/web-selenium-framework",
-      "featured": false,
-      "disabled": false
-    }
-  ],
-  "skills": {
-    "AI & LLM Engineering for QA": [
-      {
-        "name": "LLM-Assisted Test Generation",
-        "disabled": false
-      },
-      {
-        "name": "Self-Healing Test Automation",
-        "disabled": false
-      },
-      {
-        "name": "Deterministic Heuristics + LLM",
-        "disabled": false
-      },
-      {
-        "name": "Confidence Scoring & Diagnostics",
-        "disabled": false
-      },
-      {
-        "name": "Explainability & Audit Artifacts",
-        "disabled": false
-      },
-      {
-        "name": "Reasoning Pipelines",
-        "disabled": false
-      },
-      {
-        "name": "Prompt Engineering",
-        "disabled": false
-      },
-      {
-        "name": "Local LLMs (Ollama, LM Studio, MLX)",
-        "disabled": false
-      },
-      {
-        "name": "LLM Evaluation (Promptfoo)",
-        "disabled": false
-      },
-      {
-        "name": "Structured Outputs (Pydantic)",
-        "disabled": false
-      }
-    ],
-    "Vision & Multimodal Automation": [
-      {
-        "name": "Multimodal Test Exploration",
-        "disabled": false
-      },
-      {
-        "name": "UI Understanding from Screenshots",
-        "disabled": false
-      },
-      {
-        "name": "Visual Fallback & Regression Strategies",
-        "disabled": false
-      }
-    ],
-    "Agentic Coding CLI Tools": [
-      {
-        "name": "GitHub Copilot CLI",
-        "disabled": false
-      },
-      {
-        "name": "Claude Code",
-        "disabled": false
-      },
-      {
-        "name": "Codex CLI",
-        "disabled": false
-      },
-      {
-        "name": "Gemini CLI",
-        "disabled": false
-      },
-      {
-        "name": "Model Context Protocol (MCP)",
-        "disabled": false
-      }
-    ],
-    "Test Automation (UI & API)": [
-      {
-        "name": "Playwright",
-        "disabled": false
-      },
-      {
-        "name": "Selenium",
-        "disabled": false
-      },
-      {
-        "name": "Appium",
-        "disabled": false
-      },
-      {
-        "name": "Cypress",
-        "disabled": false
-      },
-      {
-        "name": "REST Assured",
-        "disabled": false
-      },
-      {
-        "name": "Postman",
-        "disabled": false
-      },
-      {
-        "name": "GraphQL Testing",
-        "disabled": false
-      },
-      {
-        "name": "WireMock",
-        "disabled": false
-      },
-      {
-        "name": "WebdriverIO",
-        "disabled": false
-      },
-      {
-        "name": "Requests",
-        "disabled": false
-      }
-    ],
-    "Test Frameworks & BDD": [
-      {
-        "name": "Cucumber (BDD)",
-        "disabled": false
-      },
-      {
-        "name": "TestNG",
-        "disabled": false
-      },
-      {
-        "name": "JUnit",
-        "disabled": false
-      },
-      {
-        "name": "PyTest",
-        "disabled": false
-      },
-      {
-        "name": "Jest",
-        "disabled": false
-      },
-      {
-        "name": "Page Object Model",
-        "disabled": false
-      },
-      {
-        "name": "Allure",
-        "disabled": false
-      }
-    ],
-    "Media & Streaming QE": [
-      {
-        "name": "OTT / VOD Playback Quality",
-        "disabled": false
-      },
-      {
-        "name": "DRM Validation (Widevine, FairPlay)",
-        "disabled": false
-      },
-      {
-        "name": "HLS / MPEG-DASH Streaming",
-        "disabled": false
-      },
-      {
-        "name": "Media QC Automation (FFmpeg)",
-        "disabled": false
-      },
-      {
-        "name": "AWS Elemental",
-        "disabled": false
-      },
-      {
-        "name": "Conviva QoS Analytics",
-        "disabled": false
-      }
-    ],
-    "Performance & Non-Functional Testing": [
-      {
-        "name": "JMeter",
-        "disabled": false
-      },
-      {
-        "name": "Locust",
-        "disabled": false
-      },
-      {
-        "name": "Artillery",
-        "disabled": false
-      },
-      {
-        "name": "Load & Stress Testing",
-        "disabled": false
-      },
-      {
-        "name": "OWASP Security Practices",
-        "disabled": false
-      },
-      {
-        "name": "Prometheus & Grafana",
-        "disabled": false
-      }
-    ],
-    "CI/CD, Cloud & DevOps": [
-      {
-        "name": "Jenkins",
-        "disabled": false
-      },
-      {
-        "name": "GitHub Actions",
-        "disabled": false
-      },
-      {
-        "name": "Docker",
-        "disabled": false
-      },
-      {
-        "name": "BrowserStack",
-        "disabled": false
-      },
-      {
-        "name": "AWS Device Farm",
-        "disabled": false
-      },
-      {
-        "name": "Azure DevOps",
-        "disabled": false
-      },
-      {
-        "name": "Git",
-        "disabled": false
-      },
-      {
-        "name": "CircleCI",
-        "disabled": false
-      }
-    ],
-    "Platforms & Devices": [
-      {
-        "name": "Android & iOS",
-        "disabled": false
-      },
-      {
-        "name": "Smart TVs & Fire TV",
-        "disabled": false
-      },
-      {
-        "name": "Apple TV & Roku",
-        "disabled": false
-      },
-      {
-        "name": "Xbox & PlayStation",
-        "disabled": false
-      },
-      {
-        "name": "macOS & Linux",
-        "disabled": false
-      },
-      {
-        "name": "Android TV & webOS",
-        "disabled": false
-      }
-    ],
-    "Programming & Data": [
-      {
-        "name": "TypeScript",
-        "disabled": false
-      },
-      {
-        "name": "JavaScript",
-        "disabled": false
-      },
-      {
-        "name": "Python",
-        "disabled": false
-      },
-      {
-        "name": "Java",
-        "disabled": false
-      },
-      {
-        "name": "SQL (PostgreSQL, MySQL)",
-        "disabled": false
-      },
-      {
-        "name": "NoSQL (MongoDB)",
-        "disabled": false
-      }
-    ],
-    "Quality Engineering Leadership": [
-      {
-        "name": "Test Strategy & Planning",
-        "disabled": false
-      },
-      {
-        "name": "Automation Architecture",
-        "disabled": false
-      },
-      {
-        "name": "Shift-Left QA Practices",
-        "disabled": false
-      },
-      {
-        "name": "Jira Workflow Automation",
-        "disabled": false
-      },
-      {
-        "name": "Agile, Scrum & Kanban",
-        "disabled": false
-      },
-      {
-        "name": "Cross-Team Quality Governance",
-        "disabled": false
-      },
-      {
-        "name": "Zephyr & TestRail",
-        "disabled": false
-      }
-    ]
-  },
-  "education": [
-    {
-      "degree": "Bachelor of Computer Applications",
-      "school": "Manipal University Jaipur",
-      "period": "2026 — 2029 · Online (Currently Pursuing)",
-      "disabled": false
-    },
-    {
-      "degree": "Diploma in Electronics",
-      "school": "Nettur Technical Training Foundation (NTTF)",
-      "period": "2006 — 2009 · Bengaluru, India",
-      "disabled": false
-    }
-  ],
-  "certifications": [
-    {
-      "name": "Generative AI: Prompt Engineering",
-      "organization": "IBM",
-      "logo": "assets/logos/ibm.svg",
-      "disabled": false
-    },
-    {
-      "name": "Introduction to Artificial Intelligence (AI)",
-      "organization": "IBM",
-      "logo": "assets/logos/ibm.svg",
-      "disabled": false
-    },
-    {
-      "name": "Python Essentials 1",
-      "organization": "Cisco Networking Academy",
-      "logo": "assets/logos/cisco.webp",
-      "disabled": false
-    },
-    {
-      "name": "Agile with Atlassian Jira",
-      "organization": "Atlassian",
-      "logo": "assets/logos/atlassian.webp",
-      "disabled": false
+      "title": "Selenium 4 reference framework",
+      "description": "Java 21, TestNG, Allure and REST Assured, with quality gates.",
+      "language": "Java",
+      "code": "https://github.com/yashwant-das/web-selenium-java-framework"
     }
   ],
   "contact": {
+    "email": "yashworks@gmail.com",
     "socials": {
-      "Email": "mailto:yashworks@gmail.com",
       "LinkedIn": "https://linkedin.com/in/yashwant-das",
       "GitHub": "https://github.com/yashwant-das",
       "Medium": "https://medium.com/@yashwant-das"

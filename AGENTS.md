@@ -7,14 +7,16 @@ Guidance for AI coding agents working in this repository.
 This is a static personal portfolio website built with:
 
 - HTML entry shell: [`index.html`](index.html)
+- Build and prerender: [`vite.config.ts`](vite.config.ts)
 - Styling: [`css/style.css`](css/style.css)
 - TypeScript source: [`src/`](src/)
-- Compiled browser JS: [`dist/`](dist/)
+- Logos: [`src/icons/`](src/icons/) (single-colour SVGs) plus Simple Icons slugs
+- Build output: `dist/` (generated, not committed)
 - Content: [`data/content.json`](data/content.json)
 - Content schema: [`data/schema.json`](data/schema.json)
 - Tests: Playwright in `tests/`
 
-The site is intentionally lightweight and data-driven. Most personal content should be configured in JSON and rendered by TypeScript, not hard-coded into the HTML shell.
+The site is intentionally lightweight and data-driven. Personal content lives in JSON and is rendered to static HTML at build time by `src/render.ts`, never hard-coded into the HTML shell.
 
 ## Source Of Truth
 
@@ -38,41 +40,40 @@ npm run format
 For local preview:
 
 ```bash
-npm run build
-npm run serve
+npm run dev
 ```
 
-Open `http://localhost:8000`.
+Open `http://localhost:5173`. `npm run build && npm run preview` serves the production build at `http://localhost:8000`.
 
 ## Architecture Notes
 
-- [`index.html`](index.html) owns semantic structure, stable element IDs, skeleton placeholders, and controls.
-- [`src/render.ts`](src/render.ts) owns data rendering from [`data/content.json`](data/content.json), dynamic sections, social links, project cards, resume visibility, contact behavior, and empty-section hiding.
-- [`src/main.ts`](src/main.ts) owns navigation behavior, smooth scrolling, section observers, mobile nav, scroll-to-top, and page-level effects.
-- [`src/theme.ts`](src/theme.ts) owns light/dark theme initialization, persistence, system preference handling, and `theme-color`.
-- [`css/style.css`](css/style.css) owns tokens, layout, responsive behavior, component styling, loading states, and reduced-motion behavior.
-- [`data/schema.json`](data/schema.json) must be updated when new content fields are introduced.
-- [`src/types.ts`](src/types.ts) must be kept aligned with [`data/schema.json`](data/schema.json).
+- [`index.html`](index.html) is a generic shell: head basics, the pre-paint theme script, the skip link, and the `<!--app-head-->` / `<!--app-body-->` slots.
+- [`vite.config.ts`](vite.config.ts) fills those slots at build time and on each dev request.
+- [`src/render.ts`](src/render.ts) turns content into HTML: header, hero, brand wall, periodic table, surfaces, work, contact, footer and JSON-LD. It also hides sections that are empty or turned off in `visibility`. Escape every data value with `escapeHtml`.
+- [`src/icons.ts`](src/icons.ts) resolves icon names to inline SVG. It runs at build time only; never import it, or `simple-icons`, from browser code.
+- [`src/main.ts`](src/main.ts) handles copy email and the active nav link. [`src/theme.ts`](src/theme.ts) handles the theme toggle and persistence (dark default; only a light choice is stored).
+- [`css/style.css`](css/style.css) owns tokens, the hairline grid technique, layout, responsive behaviour and reduced motion.
+- [`data/schema.json`](data/schema.json) must be updated when content fields change, and [`src/types.ts`](src/types.ts) kept aligned with it. [`scripts/validate-schema.mjs`](scripts/validate-schema.mjs) also enforces unique toolbox symbols and valid groups.
 
 ## Design Rules
 
-- Preserve the Apple-inspired visual language documented in [`docs/DESIGN-HANDOFF.md`](docs/DESIGN-HANDOFF.md).
-- Use the existing CSS tokens before adding new colors, spacing values, radii, or shadows.
-- Keep sections full-width with constrained inner content; avoid floating page-level cards.
-- Do not add nested cards.
-- Avoid decorative background glows, gradient blobs, and nonfunctional visual noise.
-- Keep hero, nav, cards, buttons, tags, contact, and footer responsive across the viewport matrix in the design handoff.
-- Maintain both light and dark theme quality.
-- For meaningful visual changes, check for horizontal overflow at the documented viewport widths.
+- Preserve the quiet, typographic system in [`docs/DESIGN-HANDOFF.md`](docs/DESIGN-HANDOFF.md): neutral greys, one serif display face, hairline grids.
+- The accent colour is for focus rings and the "current focus" marker only.
+- No cards, shadows, gradients, glows or decorative motion.
+- Use the existing tokens before adding colours, spacing or radii.
+- Hairline grids use the box-shadow technique and whole-pixel cells; keep both when changing a grid.
+- Logos must be single-colour `currentColor` SVGs. Don't add raster or multi-colour logos.
+- Maintain both themes to the same standard, and check horizontal overflow at the documented widths.
 
 ## Content Rules
 
 - Prefer [`data/content.json`](data/content.json) for profile-specific content.
-- Do not hard-code personal achievements, metrics, company names, or project facts in [`index.html`](index.html); use [`data/content.json`](data/content.json) fields such as `heroStats`.
+- Do not hard-code personal facts, company names, or project details in [`index.html`](index.html) or [`src/render.ts`](src/render.ts); use [`data/content.json`](data/content.json).
+- This is a personal site, not a resume: don't reintroduce experience timelines, dates, education or certification lists.
 - If adding a new data field:
   1. Update [`data/schema.json`](data/schema.json).
   2. Update [`src/types.ts`](src/types.ts).
-  3. Render it from [`src/render.ts`](src/render.ts).
+  3. Render it from [`src/render.ts`](src/render.ts), escaping values.
   4. Hide or degrade gracefully when absent.
 - Keep [`data/content.json`](data/content.json) valid against the schema.
 
@@ -108,15 +109,13 @@ Run `npm test` when changes affect:
 For design changes, also verify:
 
 - No horizontal overflow at 360, 390, 430, 600, 820, 1024, 1366, 1440, and 1920 widths.
-- Mobile nav opens and closes.
-- Theme toggle works.
-- Resume link visibility still follows content data.
-- Contact email and social links render correctly.
+- Theme toggle works, and both themes pass axe.
+- Periodic table cells stay square, whole-pixel and uniform.
+- Contact email, copy button and social links work.
 
 ## Generated Files
 
-- Edit TypeScript in [`src/`](src/), then run `npm run build` to update [`dist/`](dist/).
-- Do not manually edit [`dist/`](dist/) unless the task explicitly requires it and TypeScript source is not involved.
+- `dist/` is Vite's build output and is not committed. Edit the sources instead.
 - Avoid committing transient Playwright reports or screenshots unless the user explicitly asks for artifacts.
 
 ## Git Hygiene

@@ -1,108 +1,47 @@
-import { debugLog, handleError } from './utils.js';
+import { handleError } from './utils.ts';
 
-const THEME_CONFIG = {
-  VALID_THEMES: ['light', 'dark'],
-  STORAGE_KEY: 'theme',
-  DEFAULT_THEME: 'light',
-};
+// Dark is the default. A choice made with the toggle is remembered; the inline
+// script in index.html applies it before first paint.
+type Theme = 'light' | 'dark';
+
+const STORAGE_KEY = 'yd-theme';
+const THEME_COLOR: Record<Theme, string> = { dark: '#0b0b0b', light: '#fbfbfa' };
 
 const root = document.documentElement;
 
-const themeStorage = (() => {
-  if (typeof window === 'undefined' || typeof localStorage === 'undefined') return null;
+function currentTheme(): Theme {
+  return root.dataset.theme === 'light' ? 'light' : 'dark';
+}
+
+function applyTheme(theme: Theme) {
+  root.dataset.theme = theme;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLOR[theme]);
+
+  const toggle = document.getElementById('theme-toggle');
+  toggle?.setAttribute(
+    'aria-label',
+    theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
+  );
+}
+
+function saveTheme(theme: Theme) {
   try {
-    const probe = '__theme-probe__';
-    localStorage.setItem(probe, probe);
-    localStorage.removeItem(probe);
-    return localStorage;
-  } catch {
-    return null;
-  }
-})();
-
-function getSystemPreference(): string {
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    return 'dark';
-  }
-  return THEME_CONFIG.DEFAULT_THEME;
-}
-
-function hasManualPreference(): boolean {
-  if (!themeStorage) return false;
-  return themeStorage.getItem(THEME_CONFIG.STORAGE_KEY + '_manual') === 'true';
-}
-
-function setTheme(mode: string, isManual = false) {
-  if (!THEME_CONFIG.VALID_THEMES.includes(mode)) {
-    debugLog(`Invalid theme: ${mode}. Defaulting to '${THEME_CONFIG.DEFAULT_THEME}'`);
-    mode = THEME_CONFIG.DEFAULT_THEME;
-  }
-
-  root.setAttribute('data-theme', mode);
-
-  const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-  if (themeColorMeta) {
-    themeColorMeta.setAttribute('content', mode === 'dark' ? '#000000' : '#ffffff');
-  }
-
-  if (themeStorage) {
-    try {
-      themeStorage.setItem(THEME_CONFIG.STORAGE_KEY, mode);
-      if (isManual) {
-        const systemPref = getSystemPreference();
-        if (mode === systemPref) {
-          themeStorage.removeItem(THEME_CONFIG.STORAGE_KEY + '_manual');
-          debugLog('Manual selection matches system preference, clearing manual flag');
-        } else {
-          themeStorage.setItem(THEME_CONFIG.STORAGE_KEY + '_manual', 'true');
-        }
-      } else {
-        themeStorage.removeItem(THEME_CONFIG.STORAGE_KEY + '_manual');
-      }
-    } catch (err) {
-      handleError(err, 'Failed to save theme preference');
+    if (theme === 'dark') {
+      localStorage.removeItem(STORAGE_KEY);
+    } else {
+      localStorage.setItem(STORAGE_KEY, theme);
     }
-  }
-
-  const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
-    const isDark = mode === 'dark';
-    themeToggle.setAttribute('aria-pressed', String(isDark));
+  } catch (err) {
+    handleError(err, 'Failed to save theme preference');
   }
 }
 
 export function initTheme() {
-  const storedTheme = themeStorage ? themeStorage.getItem(THEME_CONFIG.STORAGE_KEY) : null;
-  const hasManual = hasManualPreference();
-  const systemPreference = getSystemPreference();
+  applyTheme(currentTheme());
 
-  const initThemeValue = hasManual && storedTheme ? storedTheme : systemPreference;
-  setTheme(initThemeValue, hasManual);
-
-  if (window.matchMedia) {
-    const colorSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const onChange = (e: MediaQueryListEvent | MediaQueryList) => {
-      if (!hasManualPreference()) {
-        const newPreference = e.matches ? 'dark' : THEME_CONFIG.DEFAULT_THEME;
-        setTheme(newPreference, false);
-        debugLog('System preference changed to:', newPreference);
-      }
-    };
-
-    if (colorSchemeQuery.addEventListener) {
-      colorSchemeQuery.addEventListener('change', onChange);
-    } else if ('addListener' in colorSchemeQuery) {
-      (colorSchemeQuery as MediaQueryList).addListener(onChange);
-    }
-  }
-
-  const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = root.getAttribute('data-theme');
-      const next = currentTheme === 'dark' ? 'light' : 'dark';
-      setTheme(next, true);
-    });
-  }
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const next: Theme = currentTheme() === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    saveTheme(next);
+  });
 }

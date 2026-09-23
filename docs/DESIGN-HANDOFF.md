@@ -1,180 +1,115 @@
-# Portfolio Design Handoff
+# Design Handoff
 
-This document is the source of truth for the current portfolio visual system and implementation contract.
+Source of truth for the site's visual system and implementation contract.
 
-## Product Context
+## Intent
 
-- Product: personal portfolio website
-- Audience: recruiters, hiring managers, collaborators, and engineers reviewing work
-- Primary task: quickly understand identity, experience, projects, skills, credentials, and contact path
-- Stack: static HTML, vanilla CSS, TypeScript DOM rendering, JSON content
-- Entry point: `index.html`
-- Stylesheet: `css/style.css`
-- Content source: `data/content.json`
-- Content schema: `data/schema.json`
+A personal site, not a resume. It says who Yashwant is in one sentence, shows who he has worked with, and presents his toolbox as a periodic table. There is no employment timeline, education or certification list; the resume covers those.
 
-## Design Principles
+The look is quiet and typographic: neutral greys, one serif display face, hairline grids, no cards, no gradients, and almost no motion.
 
-1. Keep the first viewport direct and portfolio-first: identity, role, summary, calls to action, and avatar.
-2. Preserve Apple-inspired restraint: white or black canvas, light gray surfaces, blue accent, strong typography, and measured motion.
-3. Prefer quiet utility over decoration. Do not add ornamental gradients, animated background glows, or nested cards.
-4. Keep content data-driven. User-specific claims should come from `data/content.json` or be derived from it.
-5. Maintain accessible controls and visible focus states for navigation, theme, copy, and link actions.
+## Stack
 
-## Design Tokens
+- `index.html` is a generic shell with two slots: `<!--app-head-->` and `<!--app-body-->`.
+- `vite.config.ts` renders `data/content.json` into those slots at build time and on each dev-server request, using `src/render.ts`. The shipped page is static HTML; nothing renders on the client.
+- `src/icons.ts` (build time only) resolves each `icon` / `logo` name to inline SVG, in this order:
+  1. a built-in stroke icon (`ui:globe`, `ui:phone`, `ui:tv`, `ui:gamepad`)
+  2. a file in `src/icons/<name>.svg`
+  3. a Simple Icons slug
+- `src/main.ts` adds the theme toggle, the copy-email button and the active nav link. It's about 1 kB gzipped.
 
-The active implementation defines tokens in `css/style.css`, starting near the `Design Tokens` comment.
+## Tokens
 
-| Token              | Light     | Dark      | Usage                                     |
-| ------------------ | --------- | --------- | ----------------------------------------- |
-| `--bg-primary`     | `#ffffff` | `#000000` | Page canvas, footer, primary surfaces     |
-| `--bg-secondary`   | `#f5f5f7` | `#1d1d1f` | Cards, pills, nav hover, muted panels     |
-| `--bg-tertiary`    | `#fafafa` | `#2c2c2e` | Secondary controls and skeletons          |
-| `--text-primary`   | `#1d1d1f` | `#f5f5f7` | Headings, primary copy, labels            |
-| `--text-secondary` | `#6e6e73` | `#a1a1a6` | Body copy, descriptions, inactive nav     |
-| `--text-tertiary`  | `#86868b` | `#86868b` | Periods, metadata, footer copy            |
-| `--accent-blue`    | `#0071e3` | `#0a84ff` | Primary buttons, focus, links, indicators |
-| `--border-light`   | `#d2d2d7` | `#424245` | Dividers, cards, controls                 |
+Defined at the top of `css/style.css`. Dark is the default theme; light uses the same token names under `:root[data-theme='light']`.
+
+| Token           | Dark      | Light     | Use                                       |
+| --------------- | --------- | --------- | ----------------------------------------- |
+| `--bg`          | `#0b0b0b` | `#fbfbfa` | Page canvas                               |
+| `--bg-hover`    | `#141414` | `#f1f1ef` | Hover fill on tiles and cells             |
+| `--text`        | `#ededed` | `#111111` | Headings, symbols, primary text           |
+| `--text-2`      | `#a3a3a3` | `#555555` | Body copy, nav, names                     |
+| `--text-3`      | `#8a8a8a` | `#6e6e6e` | Metadata, numbers, footnotes (AA on --bg) |
+| `--line`        | `#232323` | `#e3e3e0` | Hairlines                                 |
+| `--line-strong` | `#3a3a3a` | `#c9c9c5` | Button outline, link underline            |
+| `--logo`        | `#8f8f8f` | `#6a6a6a` | Resting logo colour                       |
+| `--accent`      | `#8aa4ff` | `#2448d8` | Focus ring and "current focus" rule only  |
+| `--status`      | `#4cc38a` | `#1a8a5a` | Status dot in the hero                    |
+
+The accent is the only colour on the page. Don't use it for decoration.
 
 ## Typography
 
-- Font stack: `system-ui`, `-apple-system`, `BlinkMacSystemFont`, `SF Pro Display`, `SF Pro Text`, `Segoe UI`, `Roboto`, sans-serif.
-- Body copy: 16px baseline, `line-height: 1.6`, no global negative letter spacing.
-- Hero title: `clamp(44px, 6.6vw, 84px)`, `line-height: 1.02`, tight letter spacing.
-- Section titles: `clamp(32px, 4.2vw, 48px)`, left aligned, with small monospace eyebrow via `::before`.
-- Card titles: 18px, semibold, compact line height.
-- Metadata and pills: 12px to 13px, subdued color.
+- Display: Instrument Serif 400, self-hosted through `@fontsource`, with a size-adjusted Georgia fallback so the swap doesn't shift layout. Used only for the hero statement and the contact line.
+- UI: the system sans stack at 15px/1.6.
+- Labels: the system mono stack at 12px. Section titles, meta, group heads, atomic numbers, footnotes and the legend all use it.
+- Two weights only: 400 and 500.
 
-## Layout Contract
+## Layout
 
-### Header
+- The content column is 1040px max, with a gutter of `clamp(16px, 4vw, 40px)`.
+- Section spacing is `clamp(72px, 10vw, 128px)`.
+- Each section header is a mono title on the left and mono meta on the right. The brand wall and toolbox headers sit inside `.grid-frame`, which shrinks to the grid's width, so both align exactly with the grid edges.
 
-- Sticky 64px header.
-- Translucent white or black background with saturation blur.
-- Left: logo mark and name.
-- Center/right: section navigation on desktop.
-- Mobile: hamburger button plus theme toggle; menu opens below the header.
+## Hairline grids
+
+The brand wall and the periodic table share one technique:
+
+- Each cell draws its right and bottom edges outside itself with `box-shadow`, and its left and top edges inside. Neighbouring edges land on the same pixel, so every line is exactly 1px, never doubled, and ragged last rows still close.
+- Column widths use `round(down, …, 1px)` against the container (`cqi`), so cells are whole pixels and lines never fall on half pixels. Tests assert this.
+
+## Components
 
 ### Hero
 
-- Open, unframed layout.
-- Left column: eyebrow, name, subtitle, summary, CTA row, data-driven profile metrics.
-- Right column: avatar image on desktop; stacks below copy on mobile.
-- CTA buttons should remain stable in size and wrap cleanly.
-- Profile metrics must be accurate and come from `heroStats` in `data/content.json`.
+- The avatar (56px, greyscale, hairline ring) sits beside the name, which is the page's only `h1`, and the role and location.
+- The statement is set in the serif at `clamp(36px, 6vw, 68px)` with `text-wrap: balance`.
+- Below it: the optional status dot and the GitHub and LinkedIn links.
 
-### Sections
+### Worked with
 
-- Sections use full-width page rhythm, not floating page-level cards.
-- Major content modules use simple single-level cards with 14px radius, light border, and `--bg-secondary`.
-- Section spacing: 96px desktop, 72px mobile.
-- Section titles are left aligned, with semantic headings preserved.
+- Monochrome logos in `currentColor`: `--logo` at rest, `--text` on hover. There are 7 columns from a 700px container width, 4 from 480px, and 2 below that.
+- Logos are sized by equal area, not equal height (`logoSize()` in `src/render.ts`). A brand's optional `scale` corrects optically on top of that.
+- A brand without a logo shows its name as a wordmark. That fallback is a designed state.
+- The footnote states that client work was delivered through employers.
 
-### Modules
+### Toolbox (periodic table)
 
-- About: single text card.
-- Experience: timeline cards, three columns on wide desktop, one column on mobile.
-- Career break: an experience entry with `"kind": "break"`. It is a labelled gap in
-  the timeline, not a job, so it is deliberately quieter than a real role —
-  transparent card with a dashed border, no hover lift, a dashed marker in place of a
-  company logo, smaller role text, and the company line set as an uppercase label.
-  Breaks keep the timeline continuous so no gap reads as unexplained; they must never
-  compete visually with actual positions.
-- Projects: three columns desktop, two columns tablet, one column mobile.
-- Skills: category cards, three columns desktop, two columns tablet, one column mobile.
-- Education and certifications: compact credential cards.
-- Contact: left-aligned card with social links (Email, LinkedIn, GitHub, Medium). Email is the first social entry using a `mailto:` href.
+- **Layout:**
+  - From 700px container width, each group is a column with a fixed-height head (group number and label), and columns have different heights.
+  - Below 700px, each group becomes a labelled block: 4 columns from 480px, 3 below that.
+- **Cell:** square. Atomic number at top left (mono, tabular), logo at top right (14px), two-letter symbol in the middle, name at the bottom (one line, ellipsis as a last resort).
+- **Current focus:** a 2px accent rule on the cell's bottom edge, with sr-only text "(current focus)". It's explained in the legend.
+- **Numbering:** atomic numbers are derived from data order and never hand-maintained. `validate-schema` enforces unique symbols and valid groups.
+- **Adding a tool:** add an item to `toolbox.items` with an `icon`. If a logo is only a wordmark and unreadable at 14px, leave `icon` out; a cell without a logo is valid.
 
-## Responsive Contract
+### Tested on
 
-Validate these viewports before shipping meaningful layout changes:
+A single wrapping row of stroke icons and labels, with a hairline above.
 
-| Viewport                | Size        |
-| ----------------------- | ----------- |
-| Mobile compact          | 360 x 800   |
-| Mobile standard         | 390 x 844   |
-| Mobile large            | 430 x 932   |
-| Foldable / small tablet | 600 x 960   |
-| Tablet portrait         | 820 x 1180  |
-| Tablet landscape        | 1024 x 768  |
-| Laptop                  | 1366 x 768  |
-| Desktop                 | 1440 x 900  |
-| Wide desktop            | 1920 x 1080 |
+### Selected work
 
-Acceptance criteria:
+Hairline index rows, each a single link: title, a one-line description, then the language and ↗. From 720px the columns are `20rem / 1fr / 7rem`, so every row lines up.
 
-- No horizontal overflow.
-- Header controls remain reachable.
-- Hero text and buttons do not overlap the avatar.
-- Cards do not nest inside other cards.
-- Long project tags wrap without resizing the card grid unexpectedly.
-- Contact links open in a new tab (external URLs) or compose an email (`mailto:` links) with `noopener noreferrer`.
+### Contact
 
-## Interaction Contract
+A large serif line with a `mailto:` link, a pill button that copies the email, and text links to each social profile.
 
-- Navigation links scroll to sections and update active state.
-- Mobile nav opens and closes through `#nav-toggle`; selecting a link closes it.
-- Theme toggle updates `html[data-theme]`, persists manual preferences, and updates `theme-color`.
-- Resume link is hidden unless `data.content.json` provides a value.
-- Social and project links open in a new tab with `noopener noreferrer`.
-- Section entrance animation respects `prefers-reduced-motion`.
+## Interaction
 
-## Content Contract
+- The theme defaults to dark. Only a light choice is stored (`localStorage['yd-theme']`); an inline script in `<head>` applies it before first paint. `theme-color` follows the theme.
+- The nav shows Toolbox, Work and Contact. It hides below 520px, where the page is a short scroll with no menu.
+- External links open in a new tab with `noopener noreferrer`.
+- Motion is limited to 150ms colour transitions and smooth anchor scrolling, both disabled under `prefers-reduced-motion`.
 
-All profile content should come from `data/content.json` unless it is structural UI copy.
+## Viewports
 
-Data-driven fields:
+Check these for horizontal overflow; the Playwright suite does it automatically:
 
-- Identity: `name`, `subtitle`, `heroSummary`, `heroStats`, `avatar`
-- Contact: `resume`, `socials` (including an optional `Email` mailto entry)
-- Body sections: `about`, `experience`, `projects`, `skills`, `education`, `certifications`
+360, 390, 430, 600, 820, 1024, 1366, 1440 and 1920 px wide.
 
-Implementation notes:
+## Logos
 
-- Empty sections are hidden by `src/render.ts`.
-- New content fields should be added to `data/schema.json` and `src/types.ts`.
-- Avoid hard-coded personal achievements in `index.html`; configure them in `heroStats` or derive them from other data.
-
-## Accessibility Contract
-
-- Keep `Skip to content` available.
-- Preserve one `h1` in the hero and ordered heading hierarchy for sections.
-- Controls must have accessible names: theme toggle, nav toggle, social links.
-- Focus states must remain visible against light and dark themes.
-- Icon-only controls require labels or titles.
-- Do not rely on color alone for state when adding new interactive controls.
-
-## Quality Gates
-
-Run these before merging design changes:
-
-```bash
-npm run build
-npm run check
-npm run lint
-npm test
-```
-
-For responsive verification, run a Playwright or browser pass over the viewport matrix above and confirm `document.documentElement.scrollWidth === document.documentElement.clientWidth`.
-
-## File Ownership
-
-- `index.html`: semantic shell, stable IDs, structural controls, skeleton placeholders.
-- `css/style.css`: design tokens, layout, responsive behavior, component styling.
-- `src/render.ts`: JSON-driven DOM population and content visibility.
-- `src/theme.ts`: light/dark theme behavior.
-- `src/main.ts`: navigation, scrolling, section observers, and page-level interactions.
-- `data/content.json`: public portfolio data.
-- `data/schema.json`: content validation contract.
-
-## Change Checklist
-
-Before accepting future visual changes:
-
-1. Confirm the change supports the portfolio user journey.
-2. Update tokens instead of scattering one-off colors or spacing.
-3. Keep static shell copy generic unless it is backed by content data.
-4. Verify light and dark themes.
-5. Verify desktop, tablet, and mobile layouts.
-6. Run the quality gates.
-7. Update this handoff and `DESIGN-MANIFEST.json` when design contracts change.
+- Anything in `src/icons/` is single-colour and uses `currentColor`.
+- Colour sources were converted with a luminance mask: white became a knockout and every other colour became solid, so knockouts work however the source file is layered.
+- Wordmarks from Simple Icons (FOX, Nokia, Samsung) were tight-cropped from their square 24×24 box.
+- Logos are trademarks of their owners and appear only to identify companies and tools that Yashwant has worked with or uses.
