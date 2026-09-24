@@ -72,14 +72,14 @@
   --fast: 150ms;
 
   /* Dark (default) */
-  --bg: #0b0b0b;
-  --bg-hover: #141414;
-  --text: #ededed;
-  --text-2: #a3a3a3;
-  --text-3: #8a8a8a;
-  --line: #232323;
-  --line-strong: #3a3a3a;
-  --logo: #8f8f8f;
+  --bg: #1a1a1a;
+  --bg-hover: #232323;
+  --text: #ececec;
+  --text-2: #a6a6a6;
+  --text-3: #8c8c8c;
+  --line: #2e2e2e;
+  --line-strong: #474747;
+  --logo: #939393;
   --accent: #8aa4ff;
   --status: #4cc38a;
   --selection: rgba(138, 164, 255, 0.28);
