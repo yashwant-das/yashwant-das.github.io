@@ -7,7 +7,7 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   prettier,
   {
-    ignores: ['dist/', 'node_modules/', 'playwright-report/', 'test-results/', '.agents/'],
+    ignores: ['dist/', 'node_modules/', 'playwright-report/', 'test-results/'],
   },
   {
     // Files under scripts/ run in Node, not the browser.
