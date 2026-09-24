@@ -56,7 +56,7 @@
       { "symbol": "Jv", "name": "Java", "group": "lang", "icon": "openjdk" },
       { "symbol": "Js", "name": "JavaScript", "group": "lang", "icon": "javascript" },
       { "symbol": "Pg", "name": "PostgreSQL", "group": "lang", "icon": "postgresql" },
-      { "symbol": "My", "name": "MySQL", "group": "lang" },
+      { "symbol": "My", "name": "MySQL", "group": "lang", "icon": "mysql" },
       { "symbol": "Mg", "name": "MongoDB", "group": "lang", "icon": "mongodb" },
 
       {
@@ -109,7 +109,7 @@
       { "symbol": "Bs", "name": "BrowserStack", "group": "ci" },
       { "symbol": "Ji", "name": "Jira", "group": "ci", "icon": "jira" },
 
-      { "symbol": "Jm", "name": "JMeter", "group": "perf" },
+      { "symbol": "Jm", "name": "JMeter", "group": "perf", "icon": "apachejmeter" },
       { "symbol": "Ga", "name": "Gatling", "group": "perf", "icon": "gatling" },
       { "symbol": "Ar", "name": "Artillery", "group": "perf" },
       { "symbol": "Lo", "name": "Locust", "group": "perf", "icon": "locust" },
@@ -142,36 +142,42 @@
       "title": "Testing LLM Automation Engine",
       "description": "Generates, heals and benchmarks Playwright specs with local LLMs.",
       "language": "Python",
+      "icon": "python",
       "code": "https://github.com/yashwant-das/ai-py-playwright-workbench"
     },
     {
       "title": "Smart Playwright Protocol",
       "description": "A six-phase contract that keeps AI coding agents reviewable.",
       "language": "TypeScript",
+      "icon": "typescript",
       "code": "https://github.com/yashwant-das/ai-ts-playwright-protocol"
     },
     {
       "title": "Offline AI toolkit for Apple Silicon",
       "description": "Transcription, summaries and vision on-device with MLX and Ollama.",
       "language": "Python",
+      "icon": "python",
       "code": "https://github.com/yashwant-das/ai-py-mlx-playground"
     },
     {
       "title": "Distributed load testing",
       "description": "A Locust cluster with Prometheus metrics and Grafana dashboards.",
       "language": "Python",
+      "icon": "python",
       "code": "https://github.com/yashwant-das/qa-py-locust-grafana"
     },
     {
       "title": "LLM evaluation with Promptfoo",
       "description": "Offline translation-quality checks for local models.",
       "language": "YAML",
+      "icon": "yaml",
       "code": "https://github.com/yashwant-das/ai-js-promptfoo-eval"
     },
     {
       "title": "Selenium 4 reference framework",
       "description": "Java 21, TestNG, Allure and REST Assured, with quality gates.",
       "language": "Java",
+      "icon": "openjdk",
       "code": "https://github.com/yashwant-das/qa-java-selenium"
     }
   ],

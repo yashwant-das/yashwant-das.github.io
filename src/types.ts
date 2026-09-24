@@ -36,6 +36,7 @@ export interface Project {
   title: string;
   description: string;
   language?: string;
+  icon?: string;
   code: string;
   disabled?: boolean;
 }

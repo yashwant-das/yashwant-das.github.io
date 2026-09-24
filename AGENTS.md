@@ -24,11 +24,12 @@ npm run format     # Prettier
 
 - This is a personal site, not a resume. Don't add job timelines, dates, education or certifications.
 - **Quiet and typographic:**
-  - Neutral greys, one serif for display text only, hairline grids.
+  - Neutral greys, hairline grids.
+  - One typeface (Inter). Set every `font-size` from the type-scale tokens in `css/style.css`; don't add one-off sizes or a second font.
   - No cards, shadows, gradients or decorative motion.
 - **Accent colour:** used only for focus rings and the "current focus" marker in the toolbox.
 - **Themes:** dark is the default; light must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
-- **Logos:** single-colour `currentColor` SVGs only.
+- **Logos:** single-colour `currentColor` SVGs only. Social links pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
 - **Grids:** the brand wall and the periodic table keep whole-pixel cells and exactly-1px hairlines, drawn with `box-shadow` edges.
 - **Accessibility:**
   - Keep the skip link, one `h1`, visible focus rings in both themes, and support for `prefers-reduced-motion`.

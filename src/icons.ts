@@ -27,6 +27,7 @@ const UI_ICONS: Record<string, string> = {
   phone:
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6.25" y="2.75" width="11.5" height="18.5" rx="2.25"/><path d="M11 18h2"/></svg>',
   tv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="4.75" width="18.5" height="12.5" rx="1.5"/><path d="M8 20.25h8"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="4.75" width="18.5" height="14.5" rx="2"/><path d="m3.5 6 8.5 6.75L20.5 6"/></svg>',
   gamepad:
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 7.25h9a4.75 4.75 0 0 1 4.6 5.9l-.9 3.6a2.2 2.2 0 0 1-3.8.9L14.9 16H9.1l-1.5 1.65a2.2 2.2 0 0 1-3.8-.9l-.9-3.6a4.75 4.75 0 0 1 4.6-5.9Z"/><path d="M8 10.25v3M6.5 11.75h3M15.5 11h.01M17 12.5h.01"/></svg>',
 };
