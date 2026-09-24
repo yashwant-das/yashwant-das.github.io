@@ -5,7 +5,7 @@ import { handleError } from './utils.ts';
 type Theme = 'light' | 'dark';
 
 const STORAGE_KEY = 'yd-theme';
-const THEME_COLOR: Record<Theme, string> = { dark: '#0b0b0b', light: '#fbfbfa' };
+const THEME_COLOR: Record<Theme, string> = { dark: '#1a1a1a', light: '#fbfbfa' };
 
 const root = document.documentElement;
 

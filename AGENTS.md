@@ -31,7 +31,7 @@ npm run format     # Prettier
   - No cards, shadows, gradients or decorative motion.
 - **Accent colour:** used only for focus rings and the cell markers (employers in "Worked with", current focus in the toolbox). Markers stop short of the cell edges so neighbours stay separate, and every marker has a legend.
 - **Themes:** dark is the default; light must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
-- **Logos:** single-colour `currentColor` SVGs only. Every toolbox item shows a logo; when a tool has none, use the closest matching icon (see `src/icons/`). Social links pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
+- **Logos:** single-colour `currentColor` SVGs only. Every toolbox item shows a logo; when a tool has none, use the closest matching icon (see `src/icons/`). `lava`, `gionee`, `altbalaji`, `ffi` and `marquistech` in `src/icons/` are stand-in wordmarks set from Inter's outlines; swap in the official marks when available. Social links pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
 - **Grids:** the brand wall and the periodic table keep whole-pixel cells and exactly-1px hairlines, drawn with `box-shadow` edges. `.container` snaps its width so both grids fill it exactly and share one right edge with every other section.
 - **Accessibility:**
   - Keep the skip link, one `h1`, visible focus rings in both themes, and support for `prefers-reduced-motion`.
