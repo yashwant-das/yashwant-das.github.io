@@ -27,10 +27,11 @@ const UI_ICONS: Record<string, string> = {
   phone:
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6.25" y="2.75" width="11.5" height="18.5" rx="2.25"/><path d="M11 18h2"/></svg>',
   tv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="4.75" width="18.5" height="12.5" rx="1.5"/><path d="M8 20.25h8"/></svg>',
-  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="4.75" width="18.5" height="14.5" rx="2"/><path d="m3.5 6 8.5 6.75L20.5 6"/></svg>',
-  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="8.75" y="8.75" width="12.5" height="12.5" rx="2"/><path d="M15.25 8.75v-3a2 2 0 0 0-2-2h-7.5a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h3"/></svg>',
+  // Solid, like the brand logos it sits beside in Contact.
+  mail: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 4-8 5-8-5V6l8 5 8-5z"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12z"/></svg>',
   check:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4.75 12.75 4.5 4.5 10-10.5"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4.75 12.75 4.5 4.5 10-10.5" stroke-width="2.25"/></svg>',
   gamepad:
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 7.25h9a4.75 4.75 0 0 1 4.6 5.9l-.9 3.6a2.2 2.2 0 0 1-3.8.9L14.9 16H9.1l-1.5 1.65a2.2 2.2 0 0 1-3.8-.9l-.9-3.6a4.75 4.75 0 0 1 4.6-5.9Z"/><path d="M8 10.25v3M6.5 11.75h3M15.5 11h.01M17 12.5h.01"/></svg>',
 };

@@ -938,9 +938,10 @@ button {
 
 .copy-glyph svg {
   display: inline;
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.125em;
+  /* Matched to the ↗ the other links carry. */
+  width: 0.8em;
+  height: 0.8em;
+  vertical-align: -0.02em;
 }
 
 .copy-email:hover .copy-glyph {
