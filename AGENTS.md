@@ -18,7 +18,7 @@ npm run validate   # run before finishing: build + lint + tests
 npm run format     # Prettier
 ```
 
-`npm run build` type-checks, validates the content (schema, unique symbols, valid groups), then builds.
+`npm run build` type-checks, validates the content (schema, unique toolbox names, valid groups), then builds.
 
 ## Design rules
 
@@ -26,11 +26,12 @@ npm run format     # Prettier
 - **Quiet and typographic:**
   - Neutral greys, hairline grids.
   - One typeface (Inter). Set every `font-size` from the type-scale tokens in `css/style.css`; don't add one-off sizes or a second font.
+  - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid).
   - No cards, shadows, gradients or decorative motion.
-- **Accent colour:** used only for focus rings and the "current focus" marker in the toolbox.
+- **Marker colours:** the accent is used only for focus rings and the "current focus" marker in the toolbox; `--employer` only for the employer marker in "Worked with". Every marker has a legend.
 - **Themes:** dark is the default; light must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
-- **Logos:** single-colour `currentColor` SVGs only. Social links pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
-- **Grids:** the brand wall and the periodic table keep whole-pixel cells and exactly-1px hairlines, drawn with `box-shadow` edges.
+- **Logos:** single-colour `currentColor` SVGs only. Every toolbox item shows a logo; when a tool has none, use the closest matching icon (see `src/icons/`). Social links pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
+- **Grids:** the brand wall and the periodic table keep whole-pixel cells and exactly-1px hairlines, drawn with `box-shadow` edges. `.container` snaps its width so both grids fill it exactly and share one right edge with every other section.
 - **Accessibility:**
   - Keep the skip link, one `h1`, visible focus rings in both themes, and support for `prefers-reduced-motion`.
   - Don't rely on colour alone to convey meaning.

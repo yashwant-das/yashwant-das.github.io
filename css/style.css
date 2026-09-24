@@ -2,8 +2,9 @@
 
 /* ==========================================================================
    Tokens
-   Neutral greys only; one accent, used for focus rings and the "current
-   focus" marker. Dark is the default theme; light is designed to the same bar.
+   Neutral greys, plus two markers: the accent (focus rings and "current
+   focus" in the toolbox) and the employer marker in "Worked with". Dark is the
+   default theme; light is designed to the same bar.
    ========================================================================== */
 
 /* Metric-matched fallback so the Inter swap doesn't shift the layout. */
@@ -23,16 +24,14 @@
   /*
    * Type scale. Every font-size on the page is one of these steps.
    *   display  hero statement
-   *   2xl      contact line
-   *   xl       page title (name), element symbols
+   *   xl       page title (name), contact line
    *   lg       section titles
    *   base     body text, item titles
    *   sm       subtitles, secondary text, nav, buttons
    *   xs       captions, labels, footer
    *   2xs      periodic table cell labels only
    */
-  --text-display: clamp(36px, 6vw, 56px);
-  --text-2xl: clamp(24px, 3.6vw, 32px);
+  --text-display: 28px;
   --text-xl: 24px;
   --text-lg: 20px;
   --text-base: 16px;
@@ -44,17 +43,33 @@
   --weight-medium: 500;
   --weight-semibold: 600;
 
-  --leading-tight: 1.1;
+  --leading-tight: 1.2;
   --leading-snug: 1.35;
-  --leading-normal: 1.6;
+  --leading-normal: 1.55;
 
-  /* Larger text is tracked tighter. */
-  --tracking-display: -0.03em;
-  --tracking-title: -0.02em;
+  --tracking-display: -0.025em;
+  --tracking-title: -0.015em;
 
-  --page-width: 1040px;
-  --gutter: clamp(16px, 4vw, 40px);
-  --section-space: clamp(72px, 10vw, 128px);
+  /*
+   * Spacing scale, on a 4px grid. Every margin, padding and gap uses a step.
+   */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* 19 x 56 + 1: both grids divide it exactly (see .container). */
+  --page-width: 1065px;
+  --gutter: var(--space-4);
+  --section-space: var(--space-8);
+  --header-height: 56px;
+  --icon-size: 16px;
+
   --hairline: 1px;
   --radius: 8px;
   --ease: cubic-bezier(0.2, 0, 0, 1);
@@ -70,10 +85,19 @@
   --line-strong: #3a3a3a;
   --logo: #8f8f8f;
   --accent: #8aa4ff;
+  --employer: #e2a64b;
   --status: #4cc38a;
   --selection: rgba(138, 164, 255, 0.28);
 
   color-scheme: dark;
+}
+
+@media (min-width: 720px) {
+  :root {
+    --text-display: 36px;
+    --gutter: var(--space-6);
+    --section-space: var(--space-9);
+  }
 }
 
 :root[data-theme='light'] {
@@ -86,6 +110,7 @@
   --line-strong: #c9c9c5;
   --logo: #6a6a6a;
   --accent: #2448d8;
+  --employer: #b26b00;
   --status: #1a8a5a;
   --selection: rgba(36, 72, 216, 0.16);
 
@@ -106,10 +131,11 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: 72px;
+  scroll-padding-top: calc(var(--header-height) + var(--space-4));
 }
 
 body {
+  container-type: inline-size;
   margin: 0;
   background: var(--bg);
   color: var(--text);
@@ -176,10 +202,10 @@ button {
 
 .skip-link {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: var(--space-3);
+  left: var(--space-3);
   z-index: 100;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius);
   background: var(--text);
   color: var(--bg);
@@ -192,45 +218,66 @@ button {
 }
 
 .container {
+  --step: 12px;
   width: 100%;
   max-width: calc(var(--page-width) + var(--gutter) * 2);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
+/*
+ * One right edge for every section. The brand wall and the periodic table use
+ * whole-pixel cells, so each is a multiple of its column count (plus a 1px
+ * hairline) wide. Snapping the content width to a multiple every column count
+ * divides makes both grids fill it exactly: 2, 3 and 4 columns divide 12; 4, 7
+ * and 8 divide 56.
+ */
+@supports (width: round(down, 100px, 1px)) {
+  .container {
+    --avail: calc(min(100cqi, var(--page-width) + var(--gutter) * 2) - var(--gutter) * 2);
+    --width: calc(
+      round(down, var(--avail) - var(--hairline) + 0.01px, var(--step)) + var(--hairline) +
+        var(--gutter) * 2
+    );
+    max-width: var(--width);
+    /* Centre on a whole pixel, so hairlines never straddle two. */
+    margin-left: max(0px, round(down, calc((100cqi - var(--width)) / 2), 1px));
+  }
+}
+
+/* The grids switch to 7 and 8 columns at a 700px content width. */
+@media (min-width: 764px) {
+  .container {
+    --step: 56px;
+  }
+}
+
 .arrow {
   display: inline-block;
-  margin-left: 3px;
+  margin-left: var(--space-1);
   color: var(--text-3);
   transition: color var(--fast) var(--ease);
 }
 
-/* Links in running text get a hairline underline that darkens on hover. */
-.hero-links a,
-.contact-actions a,
-.contact-line a {
+/* Links with a logo: icon, label, arrow. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   color: var(--text-2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
   transition: color var(--fast) var(--ease);
 }
 
-.hero-links a:hover,
-.contact-actions a:hover,
-.hero-links a:hover .arrow,
-.contact-actions a:hover .arrow {
+.link:hover,
+.link:hover .arrow {
   color: var(--text);
 }
 
-/* Social and email links lead with their logo. */
-.hero-links a,
-.contact-actions a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .link-icon svg {
-  width: 16px;
-  height: 16px;
+  width: var(--icon-size);
+  height: var(--icon-size);
 }
 
 /* ==========================================================================
@@ -248,8 +295,8 @@ button {
 .header-inner {
   display: flex;
   align-items: center;
-  gap: 28px;
-  height: 56px;
+  gap: var(--space-6);
+  height: var(--header-height);
 }
 
 .wordmark {
@@ -259,7 +306,7 @@ button {
 
 .site-nav {
   display: flex;
-  gap: 24px;
+  gap: var(--space-5);
   margin-left: auto;
   font-size: var(--text-sm);
 }
@@ -277,9 +324,9 @@ button {
 .theme-toggle {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
-  margin-right: -6px;
+  width: var(--space-6);
+  height: var(--space-6);
+  margin-right: calc(var(--space-2) * -1);
   padding: 0;
   border: 0;
   border-radius: var(--radius);
@@ -311,7 +358,7 @@ button {
   display: block;
 }
 
-@media (max-width: 519px) {
+@media (max-width: 599px) {
   .site-nav {
     display: none;
   }
@@ -326,20 +373,19 @@ button {
    ========================================================================== */
 
 .hero {
-  padding-block: clamp(64px, 11vw, 144px) clamp(72px, 10vw, 120px);
+  padding-top: var(--section-space);
 }
 
 .hero-id {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: clamp(28px, 4vw, 40px);
+  gap: var(--space-4);
 }
 
 .hero-avatar {
   flex: none;
-  width: 64px;
-  height: 64px;
+  width: var(--space-8);
+  height: var(--space-8);
   border-radius: 50%;
   object-fit: cover;
   background: var(--bg-hover);
@@ -355,17 +401,29 @@ button {
 
 .hero-role {
   color: var(--text-2);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   line-height: var(--leading-snug);
 }
 
 .sep {
-  margin-inline: 6px;
+  margin-inline: var(--space-2);
   color: var(--text-3);
 }
 
+/* Phone: role and location on their own lines instead of a ragged wrap. */
+@media (max-width: 599px) {
+  .hero-role span {
+    display: block;
+  }
+
+  .hero-role .sep {
+    display: none;
+  }
+}
+
 .hero-statement {
-  max-width: 17em;
+  max-width: 24em;
+  margin-top: var(--space-6);
   font-size: var(--text-display);
   font-weight: var(--weight-semibold);
   line-height: var(--leading-tight);
@@ -377,28 +435,30 @@ button {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 28px;
-  margin-top: clamp(28px, 4vw, 40px);
-  font-size: var(--text-sm);
+  gap: var(--space-3) var(--space-5);
+  margin-top: var(--space-6);
 }
 
 .status {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   color: var(--text-2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
 }
 
 .status-dot {
-  width: 7px;
-  height: 7px;
+  width: var(--space-2);
+  height: var(--space-2);
   border-radius: 50%;
   background: var(--status);
 }
 
 .hero-links {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
 }
 
 /* ==========================================================================
@@ -406,7 +466,7 @@ button {
    ========================================================================== */
 
 .section {
-  padding-block: var(--section-space) 0;
+  padding-top: var(--section-space);
 }
 
 .section-head {
@@ -414,8 +474,8 @@ button {
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 4px 16px;
-  margin-bottom: 20px;
+  gap: var(--space-1) var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
 .section-title {
@@ -432,17 +492,32 @@ button {
   font-variant-numeric: tabular-nums;
 }
 
-/* Captions and labels. */
-.pgroup-head,
-.footnote,
+/* Legend under a grid: marker keys on the left, a note on the right. */
 .legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-5);
+  margin-top: var(--space-4);
+  color: var(--text-3);
   font-size: var(--text-xs);
   line-height: var(--leading-snug);
 }
 
-.footnote {
-  margin-top: 14px;
-  color: var(--text-3);
+.legend-key {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.legend-swatch {
+  width: var(--space-4);
+  height: 2px;
+  background: var(--accent);
+}
+
+.legend-swatch[data-kind='employer'] {
+  background: var(--employer);
 }
 
 /*
@@ -454,6 +529,7 @@ button {
  */
 .brand,
 .el {
+  position: relative;
   box-shadow:
     var(--hairline) 0 0 0 var(--line),
     0 var(--hairline) 0 0 var(--line),
@@ -462,10 +538,30 @@ button {
     0 var(--hairline) 0 0 var(--line) inset;
 }
 
+/* A two-pixel rule on a cell's bottom edge marks it (focus, employer). */
+.el.is-focus::after,
+.brand[data-kind='employer']::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: var(--accent);
+}
+
+.brand[data-kind='employer']::after {
+  background: var(--employer);
+}
+
 /* Sizes to the grid inside it, so headings and notes align to its edges. */
 .grid-frame {
   width: fit-content;
   max-width: 100%;
+}
+
+/* The container query needs a sized parent, so the grid queries its wrapper. */
+#brands .container,
+#toolbox .container {
+  container-type: inline-size;
 }
 
 /* ==========================================================================
@@ -474,7 +570,8 @@ button {
 
 .brand-grid {
   --cols: 2;
-  --cell: round(down, calc((100cqi - var(--hairline)) / var(--cols)), 1px);
+  /* The 0.01px absorbs float error, so an exact fit never rounds a pixel short. */
+  --cell: round(down, calc((100cqi - var(--hairline)) / var(--cols) + 0.01px), 1px);
   display: grid;
   grid-template-columns: repeat(var(--cols), var(--cell));
   padding-bottom: var(--hairline);
@@ -484,12 +581,6 @@ button {
   .brand-grid {
     grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
   }
-}
-
-/* The container query needs a sized parent, so the grid queries its wrapper. */
-#brands .container,
-#toolbox .container {
-  container-type: inline-size;
 }
 
 @container (min-width: 480px) {
@@ -508,8 +599,8 @@ button {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
-  height: clamp(76px, 9vw, 96px);
-  padding: 12px;
+  height: var(--space-9);
+  padding: var(--space-3);
   color: var(--logo);
   transition:
     color var(--fast) var(--ease),
@@ -544,26 +635,29 @@ button {
 
 .ptable {
   --cols: 3;
-  --cell: round(down, calc((100cqi - var(--hairline)) / var(--cols)), 1px);
+  --cell: round(down, calc((100cqi - var(--hairline)) / var(--cols) + 0.01px), 1px);
   padding-bottom: var(--hairline);
 }
 
 .pgroup + .pgroup {
-  margin-top: 28px;
+  margin-top: var(--space-6);
 }
 
 .pgroup-head {
   display: flex;
-  gap: 10px;
+  gap: var(--space-2);
   align-items: baseline;
-  padding-bottom: 10px;
+  padding-bottom: var(--space-3);
   color: var(--text-2);
+  font-size: var(--text-xs);
   font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
   white-space: nowrap;
 }
 
 .pgroup-num {
   color: var(--text-3);
+  font-weight: var(--weight-regular);
   font-variant-numeric: tabular-nums;
 }
 
@@ -593,25 +687,14 @@ button {
   .pgroup-head {
     flex-direction: column;
     justify-content: flex-end;
-    gap: 2px;
-    height: 48px;
-    padding: 0 0 12px 10px;
+    gap: 0;
+    height: var(--space-7);
+    padding: 0 var(--space-2) var(--space-3);
     overflow: hidden;
   }
 
   .pgroup-cells {
     grid-template-columns: var(--cell);
-  }
-}
-
-/* Between the column layout and full width, tighten the cell interior. */
-@container (min-width: 700px) and (max-width: 919px) {
-  .ptable .el {
-    padding: 8px;
-  }
-
-  .ptable .pgroup-head {
-    padding-left: 8px;
   }
 }
 
@@ -622,13 +705,11 @@ button {
 }
 
 .el {
-  position: relative;
   display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   aspect-ratio: 1;
   min-width: 0;
-  padding: 10px;
+  padding: var(--space-2);
   transition: background-color var(--fast) var(--ease);
 }
 
@@ -637,15 +718,15 @@ button {
 }
 
 .el-num {
-  grid-area: 1 / 1;
   color: var(--text-3);
   font-size: var(--text-2xs);
-  line-height: 14px;
+  line-height: var(--space-4);
   font-variant-numeric: tabular-nums;
 }
 
 .el-logo {
-  grid-area: 1 / 2;
+  display: grid;
+  place-items: center;
   color: var(--logo);
   transition: color var(--fast) var(--ease);
 }
@@ -655,57 +736,39 @@ button {
 }
 
 .el-logo svg {
-  width: calc(14px * var(--scale, 1));
-  height: calc(14px * var(--scale, 1));
-}
-
-.el-sym {
-  grid-area: 2 / 1 / 3 / 3;
-  align-self: center;
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-  line-height: 1;
-  letter-spacing: var(--tracking-title);
+  width: calc(var(--space-6) * var(--scale, 1));
+  height: calc(var(--space-6) * var(--scale, 1));
 }
 
 .el-name {
-  grid-area: 3 / 1 / 4 / 3;
   overflow: hidden;
   color: var(--text-2);
   font-size: var(--text-2xs);
-  line-height: 14px;
+  line-height: var(--space-4);
+  text-align: center;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-/* Current focus: a two-pixel accent rule sitting on the cell's bottom edge. */
-.el.is-focus::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 2px;
-  background: var(--accent);
-}
+/*
+ * Column layout at mid widths: the cells are small, so the logo shrinks and
+ * long names wrap. The name row is always two lines tall, so logos in a row
+ * stay level whether their names wrap or not.
+ */
+@container (min-width: 700px) and (max-width: 919px) {
+  .el {
+    grid-template-rows: auto minmax(0, 1fr) var(--space-6);
+  }
 
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 24px;
-  margin-top: 16px;
-  color: var(--text-3);
-}
+  .el-logo svg {
+    width: calc(var(--space-5) * var(--scale, 1));
+    height: calc(var(--space-5) * var(--scale, 1));
+  }
 
-.legend p {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.legend-focus {
-  width: 16px;
-  height: 2px;
-  background: var(--accent);
+  .el-name {
+    align-self: end;
+    white-space: normal;
+  }
 }
 
 /* ==========================================================================
@@ -713,19 +776,33 @@ button {
    ========================================================================== */
 
 .surfaces {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 28px;
-  padding-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-5);
+  padding-top: var(--space-5);
   border-top: var(--hairline) solid var(--line);
   color: var(--text-2);
   font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+/* Even columns, so the names line up whatever wraps. */
+@media (min-width: 600px) {
+  .surfaces {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  .surfaces {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
 }
 
 .surfaces li {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .surface-icon {
@@ -733,87 +810,73 @@ button {
 }
 
 .surface-icon svg {
-  width: 16px;
-  height: 16px;
+  width: var(--icon-size);
+  height: var(--icon-size);
 }
 
 /* ==========================================================================
-   Selected work
+   Selected work and Writing: hairline-ruled lists of links
    ========================================================================== */
 
-.work-list {
+.row-list {
   border-top: var(--hairline) solid var(--line);
 }
 
-.work-row {
+.row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 4px 24px;
-  padding-block: 18px;
+  gap: var(--space-1) var(--space-5);
+  padding-block: var(--space-4);
   border-bottom: var(--hairline) solid var(--line);
 }
 
-.work-title {
+.row-title {
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
   text-decoration: underline;
   text-decoration-color: transparent;
-  text-underline-offset: 4px;
+  text-underline-offset: var(--space-1);
   text-decoration-thickness: 1px;
   transition: text-decoration-color var(--fast) var(--ease);
 }
 
-.work-desc {
+.row-desc {
   grid-column: 1;
   color: var(--text-2);
   font-size: var(--text-sm);
+  line-height: var(--leading-normal);
 }
 
-.work-lang {
+.row .arrow {
   grid-column: 2;
   grid-row: 1;
-  align-self: baseline;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-3);
-  font-size: var(--text-sm);
-  white-space: nowrap;
+  margin: 0;
+  line-height: var(--leading-snug);
 }
 
-.work-lang svg {
-  width: 14px;
-  height: 14px;
-  color: var(--logo);
-  transition: color var(--fast) var(--ease);
-}
-
-.work-row:hover .work-lang svg {
-  color: var(--text);
-}
-
-.work-row:hover .work-title {
+.row:hover .row-title {
   text-decoration-color: currentColor;
 }
 
-.work-row:hover .arrow {
+.row:hover .arrow {
   color: var(--text);
 }
 
 @media (min-width: 720px) {
-  .work-row {
-    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr) 8.5rem;
+  .row {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr) auto;
     align-items: baseline;
   }
 
-  .work-desc {
+  .row-desc {
     grid-column: 2;
     grid-row: 1;
   }
 
-  .work-lang {
+  .row .arrow {
     grid-column: 3;
-    justify-content: flex-end;
   }
 }
 
@@ -826,12 +889,10 @@ button {
 }
 
 .contact-line {
-  max-width: 22em;
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   font-weight: var(--weight-medium);
   line-height: var(--leading-snug);
   letter-spacing: var(--tracking-title);
-  text-wrap: balance;
   overflow-wrap: anywhere;
 }
 
@@ -839,7 +900,7 @@ button {
   color: var(--text);
   text-decoration: underline;
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.14em;
+  text-underline-offset: 0.15em;
   text-decoration-color: var(--line-strong);
   transition: text-decoration-color var(--fast) var(--ease);
 }
@@ -848,26 +909,36 @@ button {
   text-decoration-color: currentColor;
 }
 
+/* Phone: one action per line. Wider: one row. */
 .contact-actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 24px;
-  margin-top: 28px;
-  font-size: var(--text-sm);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+@media (min-width: 600px) {
+  .contact-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
+  }
 }
 
 .copy-email {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 16px 0 14px;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 var(--space-5) 0 var(--space-4);
   border: var(--hairline) solid var(--line-strong);
   border-radius: 999px;
   background: transparent;
   color: var(--text);
   font-size: var(--text-sm);
+  line-height: var(--leading-snug);
   cursor: pointer;
   transition:
     background-color var(--fast) var(--ease),
@@ -894,10 +965,11 @@ button {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 8px 24px;
-  padding-block: 20px;
+  gap: var(--space-1) var(--space-5);
+  padding-block: var(--space-5);
   color: var(--text-3);
   font-size: var(--text-xs);
+  line-height: var(--leading-snug);
 }
 
 /* ==========================================================================

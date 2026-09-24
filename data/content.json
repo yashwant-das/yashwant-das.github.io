@@ -5,6 +5,7 @@
     "toolbox": true,
     "surfaces": true,
     "work": true,
+    "writing": true,
     "contact": true
   },
   "name": "Yashwant Das",
@@ -45,84 +46,59 @@
       { "id": "media", "label": "Streaming" }
     ],
     "items": [
-      {
-        "symbol": "Ts",
-        "name": "TypeScript",
-        "group": "lang",
-        "icon": "typescript",
-        "focus": true
-      },
-      { "symbol": "Py", "name": "Python", "group": "lang", "icon": "python", "focus": true },
-      { "symbol": "Jv", "name": "Java", "group": "lang", "icon": "openjdk" },
-      { "symbol": "Js", "name": "JavaScript", "group": "lang", "icon": "javascript" },
-      { "symbol": "Pg", "name": "PostgreSQL", "group": "lang", "icon": "postgresql" },
-      { "symbol": "My", "name": "MySQL", "group": "lang", "icon": "mysql" },
-      { "symbol": "Mg", "name": "MongoDB", "group": "lang", "icon": "mongodb" },
-
-      {
-        "symbol": "Pw",
-        "name": "Playwright",
-        "group": "auto",
-        "icon": "playwright",
-        "focus": true
-      },
-      { "symbol": "Se", "name": "Selenium", "group": "auto", "icon": "selenium" },
-      { "symbol": "Ap", "name": "Appium", "group": "auto", "icon": "appium" },
-      { "symbol": "Wd", "name": "WebdriverIO", "group": "auto", "icon": "webdriverio" },
-      { "symbol": "Cy", "name": "Cypress", "group": "auto", "icon": "cypress" },
-      { "symbol": "Ra", "name": "REST Assured", "group": "auto" },
-      { "symbol": "Pm", "name": "Postman", "group": "auto", "icon": "postman" },
-      { "symbol": "Gq", "name": "GraphQL", "group": "auto", "icon": "graphql" },
-
-      { "symbol": "Pt", "name": "pytest", "group": "frame", "icon": "pytest" },
-      { "symbol": "Tn", "name": "TestNG", "group": "frame" },
-      { "symbol": "Ju", "name": "JUnit", "group": "frame", "icon": "junit5" },
-      { "symbol": "Je", "name": "Jest", "group": "frame", "icon": "jest" },
-      { "symbol": "Cu", "name": "Cucumber", "group": "frame", "icon": "cucumber" },
-      { "symbol": "Al", "name": "Allure", "group": "frame", "icon": "allure" },
-
-      { "symbol": "Ol", "name": "Ollama", "group": "ai", "icon": "ollama", "focus": true },
-      { "symbol": "Ls", "name": "LM Studio", "group": "ai", "icon": "lmstudio", "focus": true },
-      { "symbol": "Mx", "name": "MLX", "group": "ai" },
-      {
-        "symbol": "Mc",
-        "name": "MCP",
-        "group": "ai",
-        "icon": "modelcontextprotocol",
-        "focus": true
-      },
-      { "symbol": "Pf", "name": "Promptfoo", "group": "ai", "icon": "promptfoo" },
-      { "symbol": "Pd", "name": "Pydantic", "group": "ai", "icon": "pydantic" },
-      { "symbol": "Gr", "name": "Gradio", "group": "ai", "icon": "gradio" },
-
-      { "symbol": "Cl", "name": "Claude Code", "group": "agents", "icon": "claude", "focus": true },
-      { "symbol": "Co", "name": "Copilot CLI", "group": "agents", "icon": "githubcopilot" },
-      { "symbol": "Cx", "name": "Codex CLI", "group": "agents" },
-      { "symbol": "Gm", "name": "Gemini CLI", "group": "agents", "icon": "googlegemini" },
-
-      { "symbol": "Gt", "name": "Git", "group": "ci", "icon": "git" },
-      { "symbol": "Gh", "name": "GitHub Actions", "group": "ci", "icon": "githubactions" },
-      { "symbol": "Jk", "name": "Jenkins", "group": "ci", "icon": "jenkins" },
-      { "symbol": "Ci", "name": "CircleCI", "group": "ci", "icon": "circleci" },
-      { "symbol": "Az", "name": "Azure DevOps", "group": "ci", "icon": "azuredevops" },
-      { "symbol": "Dk", "name": "Docker", "group": "ci", "icon": "docker" },
-      { "symbol": "Bs", "name": "BrowserStack", "group": "ci" },
-      { "symbol": "Ji", "name": "Jira", "group": "ci", "icon": "jira" },
-
-      { "symbol": "Jm", "name": "JMeter", "group": "perf", "icon": "apachejmeter" },
-      { "symbol": "Ga", "name": "Gatling", "group": "perf", "icon": "gatling" },
-      { "symbol": "Ar", "name": "Artillery", "group": "perf" },
-      { "symbol": "Lo", "name": "Locust", "group": "perf", "icon": "locust" },
-      { "symbol": "Pr", "name": "Prometheus", "group": "perf", "icon": "prometheus" },
-      { "symbol": "Gf", "name": "Grafana", "group": "perf", "icon": "grafana" },
-
-      { "symbol": "Ff", "name": "FFmpeg", "group": "media", "icon": "ffmpeg" },
-      { "symbol": "Hl", "name": "HLS", "group": "media" },
-      { "symbol": "Da", "name": "MPEG-DASH", "group": "media" },
-      { "symbol": "Wv", "name": "Widevine", "group": "media" },
-      { "symbol": "Fp", "name": "FairPlay", "group": "media" },
-      { "symbol": "Ae", "name": "AWS Elemental", "group": "media" },
-      { "symbol": "Cv", "name": "Conviva", "group": "media" }
+      { "name": "TypeScript", "group": "lang", "icon": "typescript", "focus": true },
+      { "name": "Python", "group": "lang", "icon": "python", "focus": true },
+      { "name": "Java", "group": "lang", "icon": "openjdk" },
+      { "name": "JavaScript", "group": "lang", "icon": "javascript" },
+      { "name": "PostgreSQL", "group": "lang", "icon": "postgresql" },
+      { "name": "MySQL", "group": "lang", "icon": "mysql" },
+      { "name": "MongoDB", "group": "lang", "icon": "mongodb" },
+      { "name": "Playwright", "group": "auto", "icon": "playwright", "focus": true },
+      { "name": "Selenium", "group": "auto", "icon": "selenium" },
+      { "name": "Appium", "group": "auto", "icon": "appium" },
+      { "name": "WebdriverIO", "group": "auto", "icon": "webdriverio" },
+      { "name": "Cypress", "group": "auto", "icon": "cypress" },
+      { "name": "REST Assured", "group": "auto", "icon": "restassured" },
+      { "name": "Postman", "group": "auto", "icon": "postman" },
+      { "name": "GraphQL", "group": "auto", "icon": "graphql" },
+      { "name": "pytest", "group": "frame", "icon": "pytest" },
+      { "name": "TestNG", "group": "frame", "icon": "testng" },
+      { "name": "JUnit", "group": "frame", "icon": "junit5" },
+      { "name": "Jest", "group": "frame", "icon": "jest" },
+      { "name": "Cucumber", "group": "frame", "icon": "cucumber" },
+      { "name": "Allure", "group": "frame", "icon": "allure" },
+      { "name": "Ollama", "group": "ai", "icon": "ollama", "focus": true },
+      { "name": "LM Studio", "group": "ai", "icon": "lmstudio", "focus": true },
+      { "name": "MLX", "group": "ai", "icon": "mlx" },
+      { "name": "MCP", "group": "ai", "icon": "modelcontextprotocol", "focus": true },
+      { "name": "Promptfoo", "group": "ai", "icon": "promptfoo" },
+      { "name": "Pydantic", "group": "ai", "icon": "pydantic" },
+      { "name": "Gradio", "group": "ai", "icon": "gradio" },
+      { "name": "Claude Code", "group": "agents", "icon": "claude", "focus": true },
+      { "name": "Copilot CLI", "group": "agents", "icon": "githubcopilot" },
+      { "name": "Codex CLI", "group": "agents", "icon": "openai" },
+      { "name": "Gemini CLI", "group": "agents", "icon": "googlegemini" },
+      { "name": "Git", "group": "ci", "icon": "git" },
+      { "name": "GitHub Actions", "group": "ci", "icon": "githubactions" },
+      { "name": "Jenkins", "group": "ci", "icon": "jenkins" },
+      { "name": "CircleCI", "group": "ci", "icon": "circleci" },
+      { "name": "Azure DevOps", "group": "ci", "icon": "azuredevops" },
+      { "name": "Docker", "group": "ci", "icon": "docker" },
+      { "name": "BrowserStack", "group": "ci", "icon": "browserstack" },
+      { "name": "Jira", "group": "ci", "icon": "jira" },
+      { "name": "JMeter", "group": "perf", "icon": "apache" },
+      { "name": "Gatling", "group": "perf", "icon": "gatling" },
+      { "name": "Artillery", "group": "perf", "icon": "artillery" },
+      { "name": "Locust", "group": "perf", "icon": "locust" },
+      { "name": "Prometheus", "group": "perf", "icon": "prometheus" },
+      { "name": "Grafana", "group": "perf", "icon": "grafana" },
+      { "name": "FFmpeg", "group": "media", "icon": "ffmpeg" },
+      { "name": "HLS", "group": "media", "icon": "hls" },
+      { "name": "MPEG-DASH", "group": "media", "icon": "mpegdash" },
+      { "name": "Widevine", "group": "media", "icon": "google" },
+      { "name": "FairPlay", "group": "media", "icon": "apple" },
+      { "name": "AWS Elemental", "group": "media", "icon": "aws" },
+      { "name": "Conviva", "group": "media", "icon": "conviva" }
     ]
   },
   "surfaces": [
@@ -139,46 +115,41 @@
   ],
   "projects": [
     {
-      "title": "Testing LLM Automation Engine",
-      "description": "Generates, heals and benchmarks Playwright specs with local LLMs.",
-      "language": "Python",
-      "icon": "python",
-      "code": "https://github.com/yashwant-das/ai-py-playwright-workbench"
+      "title": "ai-js-appium-mcp",
+      "description": "Generates Appium mobile tests from Markdown prompts through an Appium MCP server",
+      "code": "https://github.com/yashwant-das/ai-js-appium-mcp"
     },
     {
-      "title": "Smart Playwright Protocol",
-      "description": "A six-phase contract that keeps AI coding agents reviewable.",
-      "language": "TypeScript",
-      "icon": "typescript",
-      "code": "https://github.com/yashwant-das/ai-ts-playwright-protocol"
-    },
-    {
-      "title": "Offline AI toolkit for Apple Silicon",
-      "description": "Transcription, summaries and vision on-device with MLX and Ollama.",
-      "language": "Python",
-      "icon": "python",
-      "code": "https://github.com/yashwant-das/ai-py-mlx-playground"
-    },
-    {
-      "title": "Distributed load testing",
-      "description": "A Locust cluster with Prometheus metrics and Grafana dashboards.",
-      "language": "Python",
-      "icon": "python",
-      "code": "https://github.com/yashwant-das/qa-py-locust-grafana"
-    },
-    {
-      "title": "LLM evaluation with Promptfoo",
-      "description": "Offline translation-quality checks for local models.",
-      "language": "YAML",
-      "icon": "yaml",
+      "title": "ai-js-promptfoo-eval",
+      "description": "Evaluates LLM translation quality with Promptfoo and local models, no API keys needed",
       "code": "https://github.com/yashwant-das/ai-js-promptfoo-eval"
     },
     {
-      "title": "Selenium 4 reference framework",
-      "description": "Java 21, TestNG, Allure and REST Assured, with quality gates.",
-      "language": "Java",
-      "icon": "openjdk",
+      "title": "ai-py-playwright-workbench",
+      "description": "Generates and repairs Playwright tests with local LLMs, and benchmarks the results",
+      "code": "https://github.com/yashwant-das/ai-py-playwright-workbench"
+    },
+    {
+      "title": "ai-ts-playwright-protocol",
+      "description": "Guides AI coding agents through writing Playwright tests, using Markdown task files and verification checks",
+      "code": "https://github.com/yashwant-das/ai-ts-playwright-protocol"
+    },
+    {
+      "title": "qa-java-selenium",
+      "description": "Tests web UIs and APIs in Java 21 with Selenium, TestNG, REST Assured and Allure reports",
       "code": "https://github.com/yashwant-das/qa-java-selenium"
+    },
+    {
+      "title": "qa-py-locust-grafana",
+      "description": "Runs distributed load tests with Locust, with Prometheus and Grafana dashboards in Docker Compose",
+      "code": "https://github.com/yashwant-das/qa-py-locust-grafana"
+    }
+  ],
+  "articles": [
+    {
+      "title": "Upgrade Your Android Screen Mirroring: A Guide to Using Scrcpy",
+      "description": "Mirror and control an Android device from Linux, Windows or macOS with Scrcpy.",
+      "url": "https://medium.com/@yashwant-das/scrcpy-your-go-to-android-screen-mirroring-solution-2dd875395197"
     }
   ],
   "contact": {
