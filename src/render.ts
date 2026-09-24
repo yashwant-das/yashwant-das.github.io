@@ -68,6 +68,15 @@ function logoSize(svg: string, scale = 1): string {
   return ` style="width: ${(width * fit).toFixed(1)}px; aspect-ratio: ${ratio.toFixed(3)}"`;
 }
 
+// Social links lead with the logo whose slug is the label in lower case
+// (LinkedIn -> linkedin), so a new network only needs an icon to get a logo.
+function socialLink(label: string, url: string, icon: IconResolver): string {
+  const svg = icon(label.toLowerCase());
+  return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${
+    svg ? `<span class="link-icon">${decorate(svg)}</span>` : ''
+  }<span>${escapeHtml(label)}${ARROW}</span></a>`;
+}
+
 function pad(n: number): string {
   return String(n).padStart(2, '0');
 }
@@ -99,14 +108,11 @@ function renderHeader(data: PortfolioData, visible: Set<SectionId>): string {
 </header>`;
 }
 
-function renderHero(data: PortfolioData): string {
+function renderHero(data: PortfolioData, icon: IconResolver): string {
   const socials = data.contact.socials ?? {};
   const heroLinks = ['GitHub', 'LinkedIn']
     .filter((label) => socials[label])
-    .map(
-      (label) =>
-        `<a href="${escapeHtml(socials[label] ?? '')}" target="_blank" rel="noopener noreferrer">${label}${ARROW}</a>`
-    )
+    .map((label) => socialLink(label, socials[label] ?? '', icon))
     .join('');
   const role = [data.role, data.location].filter(Boolean).map((s) => escapeHtml(s as string));
 
@@ -115,7 +121,7 @@ function renderHero(data: PortfolioData): string {
       <div class="hero-id">
         ${
           data.avatar
-            ? `<img class="hero-avatar" src="/${escapeHtml(data.avatar)}" alt="Portrait of ${escapeHtml(data.name)}" width="56" height="56" fetchpriority="high" decoding="async" />`
+            ? `<img class="hero-avatar" src="/${escapeHtml(data.avatar)}" alt="Portrait of ${escapeHtml(data.name)}" width="64" height="64" fetchpriority="high" decoding="async" />`
             : ''
         }
         <div>
@@ -229,35 +235,33 @@ function renderSurfaces(data: PortfolioData, icon: IconResolver): string {
   </section>`;
 }
 
-function renderProject(project: Project): string {
+function renderProject(project: Project, icon: IconResolver): string {
+  const svg = icon(project.icon);
   return `<li>
           <a class="work-row" href="${escapeHtml(project.code)}" target="_blank" rel="noopener noreferrer">
             <span class="work-title">${escapeHtml(project.title)}</span>
             <span class="work-desc">${escapeHtml(project.description)}</span>
-            <span class="work-lang">${escapeHtml(project.language ?? '')}${ARROW}</span>
+            <span class="work-lang">${decorate(svg)}${escapeHtml(project.language ?? '')}${ARROW}</span>
           </a>
         </li>`;
 }
 
-function renderWork(data: PortfolioData): string {
+function renderWork(data: PortfolioData, icon: IconResolver): string {
   const projects = (data.projects ?? []).filter((p) => !p.disabled);
   return `<section class="section" id="work" aria-labelledby="work-title">
     <div class="container">
       ${sectionHeader('work', 'Selected work', 'Open source on GitHub')}
       <ol class="work-list" role="list">
-        ${projects.map(renderProject).join('\n        ')}
+        ${projects.map((p) => renderProject(p, icon)).join('\n        ')}
       </ol>
     </div>
   </section>`;
 }
 
-function renderContact(data: PortfolioData): string {
+function renderContact(data: PortfolioData, icon: IconResolver): string {
   const email = data.contact.email;
   const socials = Object.entries(data.contact.socials ?? {})
-    .map(
-      ([label, url]) =>
-        `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}${ARROW}</a>`
-    )
+    .map(([label, url]) => socialLink(label, url, icon))
     .join('');
 
   return `<section class="section section-contact" id="contact" aria-labelledby="contact-title">
@@ -272,7 +276,7 @@ function renderContact(data: PortfolioData): string {
         ${
           email
             ? `<button class="copy-email" id="copy-email-btn" type="button" data-email="${escapeHtml(email)}">
-          <span class="copy-label">Copy email</span>
+          <span class="link-icon">${decorate(icon('ui:mail'))}</span><span class="copy-label">Copy email</span>
         </button>`
             : ''
         }
@@ -326,12 +330,12 @@ export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPag
   if (isVisible(data, 'contact', hasContact)) visible.add('contact');
 
   const sections = [
-    renderHero(data),
+    renderHero(data, icon),
     visible.has('brands') ? renderBrands(data, icon) : '',
     visible.has('toolbox') ? renderToolbox(data, icon) : '',
     visible.has('surfaces') ? renderSurfaces(data, icon) : '',
-    visible.has('work') ? renderWork(data) : '',
-    visible.has('contact') ? renderContact(data) : '',
+    visible.has('work') ? renderWork(data, icon) : '',
+    visible.has('contact') ? renderContact(data, icon) : '',
   ].filter(Boolean);
 
   const body = `${renderHeader(data, visible)}
