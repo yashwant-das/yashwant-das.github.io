@@ -147,6 +147,16 @@
   ],
   "articles": [
     {
+      "title": "Appium XCUITest on Real iOS Devices",
+      "description": "Set up Appium on macOS to run automated tests on real iPhones and iPads.",
+      "url": "https://medium.com/@yashwant-das/appium-xcuitest-on-real-ios-devices-bd1ebe0dea55"
+    },
+    {
+      "title": "Charles Proxy macOS Setup Guide",
+      "description": "Inspect HTTP and HTTPS traffic between your machine, devices and the internet.",
+      "url": "https://medium.com/@yashwant-das/charles-proxy-macos-setup-guide-cfde50262b91"
+    },
+    {
       "title": "Upgrade Your Android Screen Mirroring: A Guide to Using Scrcpy",
       "description": "Mirror and control an Android device from Linux, Windows or macOS with Scrcpy.",
       "url": "https://medium.com/@yashwant-das/scrcpy-your-go-to-android-screen-mirroring-solution-2dd875395197"
