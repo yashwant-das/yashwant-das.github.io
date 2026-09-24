@@ -2,8 +2,8 @@
 
 /* ==========================================================================
    Tokens
-   Neutral greys, plus two markers: the accent (focus rings and "current
-   focus" in the toolbox) and the employer marker in "Worked with". Dark is the
+   Neutral greys only; one accent, used for focus rings and the cell markers
+   (employers in "Worked with", current focus in the toolbox). Dark is the
    default theme; light is designed to the same bar.
    ========================================================================== */
 
@@ -63,8 +63,8 @@
   --space-8: 64px;
   --space-9: 96px;
 
-  /* 19 x 56 + 1: both grids divide it exactly (see .container). */
-  --page-width: 1065px;
+  /* 44 x 24 + 1: both grids divide it exactly (see .container). */
+  --page-width: 1057px;
   --gutter: var(--space-4);
   --section-space: var(--space-8);
   --header-height: 56px;
@@ -85,7 +85,6 @@
   --line-strong: #3a3a3a;
   --logo: #8f8f8f;
   --accent: #8aa4ff;
-  --employer: #e2a64b;
   --status: #4cc38a;
   --selection: rgba(138, 164, 255, 0.28);
 
@@ -110,7 +109,6 @@
   --line-strong: #c9c9c5;
   --logo: #6a6a6a;
   --accent: #2448d8;
-  --employer: #b26b00;
   --status: #1a8a5a;
   --selection: rgba(36, 72, 216, 0.16);
 
@@ -229,8 +227,8 @@ button {
  * One right edge for every section. The brand wall and the periodic table use
  * whole-pixel cells, so each is a multiple of its column count (plus a 1px
  * hairline) wide. Snapping the content width to a multiple every column count
- * divides makes both grids fill it exactly: 2, 3 and 4 columns divide 12; 4, 7
- * and 8 divide 56.
+ * divides makes both grids fill it exactly: 2, 3 and 4 columns divide 12; 4, 6
+ * and 8 divide 24.
  */
 @supports (width: round(down, 100px, 1px)) {
   .container {
@@ -245,10 +243,10 @@ button {
   }
 }
 
-/* The grids switch to 7 and 8 columns at a 700px content width. */
+/* The grids switch to 6 and 8 columns at a 700px content width. */
 @media (min-width: 764px) {
   .container {
-    --step: 56px;
+    --step: 24px;
   }
 }
 
@@ -516,10 +514,6 @@ button {
   background: var(--accent);
 }
 
-.legend-swatch[data-kind='employer'] {
-  background: var(--employer);
-}
-
 /*
  * Hairline grids.
  * Every cell paints its right and bottom edge outside itself and its left and
@@ -538,18 +532,19 @@ button {
     0 var(--hairline) 0 0 var(--line) inset;
 }
 
-/* A two-pixel rule on a cell's bottom edge marks it (focus, employer). */
+/*
+ * A marked cell (employer, current focus) carries a short accent rule on its
+ * bottom edge. It stops short of the cell's sides, so marked neighbours read
+ * as separate marks rather than one continuous line.
+ */
 .el.is-focus::after,
 .brand[data-kind='employer']::after {
   content: '';
   position: absolute;
-  inset: auto 0 0 0;
+  inset: auto var(--space-4) 0;
   height: 2px;
+  border-radius: 2px 2px 0 0;
   background: var(--accent);
-}
-
-.brand[data-kind='employer']::after {
-  background: var(--employer);
 }
 
 /* Sizes to the grid inside it, so headings and notes align to its edges. */
@@ -585,13 +580,13 @@ button {
 
 @container (min-width: 480px) {
   .brand-grid {
-    --cols: 4;
+    --cols: 3;
   }
 }
 
 @container (min-width: 700px) {
   .brand-grid {
-    --cols: 7;
+    --cols: 6;
   }
 }
 
@@ -789,13 +784,13 @@ button {
 /* Even columns, so the names line up whatever wraps. */
 @media (min-width: 600px) {
   .surfaces {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1000px) {
   .surfaces {
-    grid-template-columns: repeat(10, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 

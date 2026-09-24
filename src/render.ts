@@ -171,7 +171,7 @@ function renderBrands(data: PortfolioData, icon: IconResolver): string {
           ${items.map((b) => renderBrand(b, icon)).join('\n          ')}
         </ul>
         <div class="legend">
-          <p class="legend-key"><span class="legend-swatch" data-kind="employer" aria-hidden="true"></span>Employer</p>
+          <p class="legend-key"><span class="legend-swatch" aria-hidden="true"></span>Employer</p>
           ${data.brands?.note ? `<p>${escapeHtml(data.brands.note)}</p>` : ''}
         </div>
       </div>
@@ -257,7 +257,7 @@ function renderWork(data: PortfolioData): string {
   const projects = (data.projects ?? []).filter((p) => !p.disabled);
   return `<section class="section" id="work" aria-labelledby="work-title">
     <div class="container">
-      ${sectionHeader('work', 'Selected work', 'Pinned on GitHub')}
+      ${sectionHeader('work', 'Selected work', 'Open source on GitHub')}
       <ol class="row-list" role="list">
         ${projects.map((p: Project) => renderRow(p.title, p.description, p.code)).join('\n        ')}
       </ol>
