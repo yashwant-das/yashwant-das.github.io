@@ -1,16 +1,8 @@
 # Future Enhancements
 
-These ideas are intentionally non-blocking. Treat them as options for future product work, not as current requirements.
+These are options, not requirements.
 
-## Content Model
-
-- Add structured project screenshots or thumbnails once real project assets are available.
-
-## Design And UX
-
-- Add a printable resume view generated from the same JSON content.
-- Integrate a contact form (e.g., Formspree or Netlify Forms) to avoid bot scraping of the email address while maintaining the Apple-inspired aesthetic.
-
-## Deployment
-
-- Add a scheduled dependency audit workflow and GitHub dependency review action for automated security posture monitoring.
+- Show a small detail card (years used, related repos) when a periodic table element is selected, while keeping the table static by default.
+- Add a writing section that lists Medium posts, pulled in at build time.
+- Generate an Open Graph image from the hero statement at build time.
+- Add a scheduled dependency audit workflow and the GitHub dependency review action.

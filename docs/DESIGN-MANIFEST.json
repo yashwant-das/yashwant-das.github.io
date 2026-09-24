@@ -1,169 +1,75 @@
 {
-  "schema": "portfolio.design-manifest.v1",
-  "title": "Portfolio Website Design System",
-  "updated": "2026-05-17",
-  "kind": "static-web",
+  "schema": "portfolio.design-manifest.v2",
+  "title": "Yashwant Das personal site",
+  "updated": "2026-09-23",
+  "kind": "static-web, prerendered at build time",
   "entryFile": "index.html",
   "sourceFiles": {
     "html": ["index.html"],
     "css": ["css/style.css"],
-    "typescript": ["src/main.ts", "src/render.ts", "src/theme.ts", "src/types.ts", "src/utils.ts"],
+    "typescript": {
+      "buildTime": ["src/render.ts", "src/icons.ts", "vite.config.ts"],
+      "browser": ["src/main.ts", "src/theme.ts", "src/utils.ts"],
+      "shared": ["src/types.ts"]
+    },
     "data": ["data/content.json", "data/schema.json"],
-    "assets": [
-      "assets/avatars/avatar.webp",
-      "assets/logos/atlassian.webp",
-      "assets/logos/cisco.webp",
-      "assets/logos/diagnal.webp",
-      "assets/logos/future-focus.webp",
-      "assets/logos/ibm.svg",
-      "assets/logos/ltimindtree.webp",
-      "assets/logos/publicis-sapient.webp",
-      "assets/logos/samsung.webp"
-    ]
+    "logos": "src/icons/*.svg (single-colour, currentColor), plus Simple Icons slugs",
+    "public": ["public/assets/avatars/avatar.webp", "public/favicon.svg"]
   },
-  "designReferences": {
-    "handoff": "DESIGN-HANDOFF.md"
-  },
-  "implementationSurfaces": [
+  "designReferences": { "handoff": "DESIGN-HANDOFF.md" },
+  "sections": [
     {
-      "id": "portfolio-home",
-      "file": "index.html",
-      "role": "primary-screen",
-      "description": "Single-page portfolio with hero, about, experience, projects, skills, education, certifications, and contact sections."
-    }
+      "id": "top",
+      "role": "hero",
+      "data": ["name", "role", "location", "avatar", "statement", "status"]
+    },
+    { "id": "brands", "role": "logo wall", "data": ["brands"] },
+    { "id": "toolbox", "role": "periodic table", "data": ["toolbox"] },
+    { "id": "surfaces", "role": "platform list", "data": ["surfaces"] },
+    { "id": "work", "role": "project index", "data": ["projects"] },
+    { "id": "contact", "role": "contact", "data": ["contact"] }
   ],
   "tokens": {
     "colors": {
-      "bgPrimary": { "light": "#ffffff", "dark": "#000000" },
-      "bgSecondary": { "light": "#f5f5f7", "dark": "#1d1d1f" },
-      "bgTertiary": { "light": "#fafafa", "dark": "#2c2c2e" },
-      "textPrimary": { "light": "#1d1d1f", "dark": "#f5f5f7" },
-      "textSecondary": { "light": "#6e6e73", "dark": "#a1a1a6" },
-      "textTertiary": { "light": "#86868b", "dark": "#86868b" },
-      "accentBlue": { "light": "#0071e3", "dark": "#0a84ff" },
-      "borderLight": { "light": "#d2d2d7", "dark": "#424245" }
+      "bg": { "dark": "#0b0b0b", "light": "#fbfbfa" },
+      "bgHover": { "dark": "#141414", "light": "#f1f1ef" },
+      "text": { "dark": "#ededed", "light": "#111111" },
+      "text2": { "dark": "#a3a3a3", "light": "#555555" },
+      "text3": { "dark": "#8a8a8a", "light": "#6e6e6e" },
+      "line": { "dark": "#232323", "light": "#e3e3e0" },
+      "lineStrong": { "dark": "#3a3a3a", "light": "#c9c9c5" },
+      "logo": { "dark": "#8f8f8f", "light": "#6a6a6a" },
+      "accent": { "dark": "#8aa4ff", "light": "#2448d8" },
+      "status": { "dark": "#4cc38a", "light": "#1a8a5a" }
     },
-    "radii": {
-      "sm": "8px",
-      "md": "10px",
-      "lg": "14px",
-      "xl": "18px"
-    },
-    "spacing": {
-      "xs": "8px",
-      "sm": "16px",
-      "md": "24px",
-      "lg": "40px",
-      "xl": "64px",
-      "2xl": "96px"
+    "type": {
+      "display": "Instrument Serif 400",
+      "ui": "system sans, 15px/1.6",
+      "label": "system mono, 12px",
+      "weights": [400, 500]
     },
     "layout": {
-      "containerMaxWidth": "1180px",
-      "containerGutterDesktop": "28px",
-      "containerGutterMobile": "18px-20px",
-      "headerHeight": "64px"
-    },
-    "typography": {
-      "fontStack": "system-ui, -apple-system, BlinkMacSystemFont, SF Pro Display, SF Pro Text, Segoe UI, Roboto, sans-serif",
-      "heroTitle": "clamp(44px, 6.6vw, 84px)",
-      "sectionTitle": "clamp(32px, 4.2vw, 48px)",
-      "body": "16px"
-    },
-    "motion": {
-      "fast": "0.18s ease",
-      "base": "0.28s ease",
-      "reducedMotionRequired": true
+      "pageWidth": "1040px",
+      "gutter": "clamp(16px, 4vw, 40px)",
+      "sectionSpace": "clamp(72px, 10vw, 128px)",
+      "hairline": "1px"
     }
   },
-  "components": [
-    {
-      "id": "site-header",
-      "selectors": [".site-header", ".site-nav", ".nav-toggle", ".theme-toggle"],
-      "states": ["default", "hover", "focus-visible", "mobile-open", "dark"]
-    },
-    {
-      "id": "hero",
-      "selectors": [".hero", ".hero-eyebrow", ".hero-title", ".hero-cta", ".hero-meta", ".avatar"],
-      "states": ["loading", "loaded", "desktop-two-column", "mobile-stacked", "dark"]
-    },
-    {
-      "id": "content-card",
-      "selectors": [
-        ".about-card",
-        ".timeline-item",
-        ".project-card",
-        ".skill-category",
-        ".edu li",
-        ".contact-card"
-      ],
-      "states": ["default", "hover", "focus-within", "dark"]
-    },
-    {
-      "id": "button-link",
-      "selectors": [".btn", ".project-card .links a", ".social a"],
-      "states": ["default", "hover", "focus-visible", "active", "dark"]
-    },
-    {
-      "id": "pills",
-      "selectors": [".tags li", ".skills li"],
-      "states": ["default", "hover", "dark"]
+  "breakpoints": {
+    "navHidden": "< 520px viewport",
+    "brandColumns": { "default": 2, "480px": 4, "700px": 7 },
+    "toolboxLayout": {
+      "default": "group blocks, 3 cols",
+      "480px": "group blocks, 4 cols",
+      "700px": "one column per group"
     }
-  ],
-  "interactions": [
-    {
-      "id": "section-navigation",
-      "owner": "src/main.ts",
-      "description": "Anchor navigation scrolls to sections and updates active nav state through IntersectionObserver."
-    },
-    {
-      "id": "mobile-navigation",
-      "owner": "src/main.ts",
-      "description": "Hamburger toggles the mobile menu and closes it after link selection."
-    },
-    {
-      "id": "theme-toggle",
-      "owner": "src/theme.ts",
-      "description": "Theme follows system preference unless manually changed and persisted in localStorage."
-    },
-    {
-      "id": "content-rendering",
-      "owner": "src/render.ts",
-      "description": "Portfolio data is fetched from data/content.json, rendered into stable DOM targets, and empty sections are hidden."
-    },
-    {
-      "id": "social-links",
-      "owner": "src/render.ts",
-      "description": "Social links are rendered from data/content.json contact.socials. The Email entry uses a mailto: href and is listed first. All external links open in a new tab with noopener noreferrer."
-    }
-  ],
-  "responsiveViewports": [
-    { "name": "mobile-compact", "width": 360, "height": 800, "mustAvoidHorizontalScroll": true },
-    { "name": "mobile-standard", "width": 390, "height": 844, "mustAvoidHorizontalScroll": true },
-    { "name": "mobile-large", "width": 430, "height": 932, "mustAvoidHorizontalScroll": true },
-    {
-      "name": "foldable-small-tablet",
-      "width": 600,
-      "height": 960,
-      "mustAvoidHorizontalScroll": true
-    },
-    { "name": "tablet-portrait", "width": 820, "height": 1180, "mustAvoidHorizontalScroll": true },
-    { "name": "tablet-landscape", "width": 1024, "height": 768, "mustAvoidHorizontalScroll": true },
-    { "name": "laptop", "width": 1366, "height": 768, "mustAvoidHorizontalScroll": true },
-    { "name": "desktop", "width": 1440, "height": 900, "mustAvoidHorizontalScroll": true },
-    { "name": "wide", "width": 1920, "height": 1080, "mustAvoidHorizontalScroll": true }
-  ],
-  "accessibilityRequirements": [
-    "Preserve skip link to main content.",
-    "Keep exactly one hero h1.",
-    "Maintain accessible names for icon-only controls.",
-    "Keep visible focus states in both themes.",
-    "Respect prefers-reduced-motion.",
-    "Do not rely on color alone for important state."
-  ],
-  "qualityGates": ["npm run validate"],
-  "contentContract": {
-    "source": "data/content.json",
-    "schema": "data/schema.json",
-    "rule": "Personal claims and profile-specific metrics must be backed by data/content.json fields such as heroStats, not hard-coded in index.html."
-  }
+  },
+  "viewportMatrix": [360, 390, 430, 600, 820, 1024, 1366, 1440, 1920],
+  "rules": [
+    "Neutral greys only; the accent is reserved for focus and the current-focus marker.",
+    "Hairline grids, never cards or shadows.",
+    "Every personal fact comes from data/content.json.",
+    "Logos are monochrome currentColor and sized by equal area.",
+    "Grid cells are whole pixels; hairlines are exactly 1px."
+  ]
 }
