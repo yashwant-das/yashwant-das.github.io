@@ -28,7 +28,7 @@ npm run format     # Prettier
   - One typeface (Inter). Set every `font-size` from the type-scale tokens in `css/style.css`; don't add one-off sizes or a second font.
   - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid).
   - No cards, shadows, gradients or decorative motion.
-- **Marker colours:** the accent is used only for focus rings and the "current focus" marker in the toolbox; `--employer` only for the employer marker in "Worked with". Every marker has a legend.
+- **Accent colour:** used only for focus rings and the cell markers (employers in "Worked with", current focus in the toolbox). Markers stop short of the cell edges so neighbours stay separate, and every marker has a legend.
 - **Themes:** dark is the default; light must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
 - **Logos:** single-colour `currentColor` SVGs only. Every toolbox item shows a logo; when a tool has none, use the closest matching icon (see `src/icons/`). Social links pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
 - **Grids:** the brand wall and the periodic table keep whole-pixel cells and exactly-1px hairlines, drawn with `box-shadow` edges. `.container` snaps its width so both grids fill it exactly and share one right edge with every other section.
