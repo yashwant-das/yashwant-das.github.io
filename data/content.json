@@ -142,37 +142,37 @@
       "title": "Testing LLM Automation Engine",
       "description": "Generates, heals and benchmarks Playwright specs with local LLMs.",
       "language": "Python",
-      "code": "https://github.com/yashwant-das/testing-llm-automation-engine"
+      "code": "https://github.com/yashwant-das/ai-py-playwright-workbench"
     },
     {
       "title": "Smart Playwright Protocol",
       "description": "A six-phase contract that keeps AI coding agents reviewable.",
       "language": "TypeScript",
-      "code": "https://github.com/yashwant-das/test-playwright-protocol"
+      "code": "https://github.com/yashwant-das/ai-ts-playwright-protocol"
     },
     {
       "title": "Offline AI toolkit for Apple Silicon",
       "description": "Transcription, summaries and vision on-device with MLX and Ollama.",
       "language": "Python",
-      "code": "https://github.com/yashwant-das/genai-mlx-playground"
+      "code": "https://github.com/yashwant-das/ai-py-mlx-playground"
     },
     {
       "title": "Distributed load testing",
       "description": "A Locust cluster with Prometheus metrics and Grafana dashboards.",
       "language": "Python",
-      "code": "https://github.com/yashwant-das/performance-locust-framework"
+      "code": "https://github.com/yashwant-das/qa-py-locust-grafana"
     },
     {
       "title": "LLM evaluation with Promptfoo",
       "description": "Offline translation-quality checks for local models.",
       "language": "YAML",
-      "code": "https://github.com/yashwant-das/llm-promptfoo-tests"
+      "code": "https://github.com/yashwant-das/ai-js-promptfoo-eval"
     },
     {
       "title": "Selenium 4 reference framework",
       "description": "Java 21, TestNG, Allure and REST Assured, with quality gates.",
       "language": "Java",
-      "code": "https://github.com/yashwant-das/web-selenium-java-framework"
+      "code": "https://github.com/yashwant-das/qa-java-selenium"
     }
   ],
   "contact": {

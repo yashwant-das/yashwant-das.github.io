@@ -41,8 +41,8 @@ Evaluated primarily by busy decision-makers on desktop and mobile screens, frequ
 
 - **Worked with:** Paramount, FOX, Optus Sport, Falabella, Pilot Flying J, Equifax, Travelers, Mediacorp, ALTBalaji and Nokia as clients; Samsung, LTIMindtree, Publicis Sapient and Diagnal as employers.
 - **Featured Repositories:**
-  - _Smart Playwright Protocol (SPP)_: `https://github.com/yashwant-das/test-playwright-protocol`
-  - _Testing LLM Automation Engine_: `https://github.com/yashwant-das/testing-llm-automation-engine`
+  - _Smart Playwright Protocol (SPP)_: `https://github.com/yashwant-das/ai-ts-playwright-protocol`
+  - _Testing LLM Automation Engine_: `https://github.com/yashwant-das/ai-py-playwright-workbench`
 - **Contact:** `mailto:yashworks@gmail.com`, LinkedIn, GitHub, Medium.
 
 ## Product Principles
