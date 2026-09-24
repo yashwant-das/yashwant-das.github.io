@@ -1,92 +1,18 @@
+# Dependencies and build output
+node_modules/
+dist/
 
-# Personal/Resume files (keep these private)
+# Test output
+test-results/
+playwright-report/
+
+# Private files
 resume.*
 *.pdf
-*.doc
-*.docx
-*resume*
+.env*
 
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# OS files
+# Editors and OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-Desktop.ini
-
-# Editor files
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
-.project
-.classpath
-.settings/
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-# Dependencies and package-manager artifacts
-node_modules/
-.pnp
-.pnp.js
-.npm/
-
-# Build outputs and generated reports
-dist/
-build/
-*.min.js
-*.min.css
-*.tsbuildinfo
-*.js.map
-coverage/
-.nyc_output/
-*.lcov
-playwright-report/
-test-results/
-blob-report/
-
-# Cache
-.cache/
-.parcel-cache/
-.eslintcache
-.stylelintcache
-
-# Python (if using Python tools)
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-venv/
-.venv/
-env/
-ENV/
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
-*.backup
-*~
-
-# Deployment artifacts
-.vercel
-.netlify
-
-.cursor/worktrees.json
-
-# Claude Code local preview config
 .claude/

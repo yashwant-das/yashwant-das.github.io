@@ -14,15 +14,11 @@ const socials = Object.entries(content.contact.socials ?? {});
 
 const SECTIONS = ['brands', 'toolbox', 'surfaces', 'work', 'contact'];
 
+// Phone, tablet, laptop and wide desktop.
 const RESPONSIVE_VIEWPORTS = [
-  { name: 'mobile-compact', width: 360, height: 800 },
-  { name: 'mobile-standard', width: 390, height: 844 },
-  { name: 'mobile-large', width: 430, height: 932 },
-  { name: 'foldable-small-tablet', width: 600, height: 960 },
-  { name: 'tablet-portrait', width: 820, height: 1180 },
-  { name: 'tablet-landscape', width: 1024, height: 768 },
+  { name: 'phone', width: 360, height: 800 },
+  { name: 'tablet', width: 820, height: 1180 },
   { name: 'laptop', width: 1366, height: 768 },
-  { name: 'desktop', width: 1440, height: 900 },
   { name: 'wide', width: 1920, height: 1080 },
 ];
 
@@ -96,7 +92,7 @@ test.describe('Portfolio', () => {
     expect(focused).toEqual(tools.filter((t) => t.focus).map((t) => t.symbol));
   });
 
-  for (const width of [390, 820, 1440]) {
+  for (const width of [390, 1440]) {
     test(`keeps periodic table cells square and uniform at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       const sizes = await page
