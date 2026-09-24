@@ -15,22 +15,20 @@ if (!validate(data)) {
   process.exit(1);
 }
 
-// Rules JSON Schema can't express: toolbox symbols are unique and every item
+// Rules JSON Schema can't express: toolbox names are unique and every item
 // belongs to a declared group.
 const problems = [];
 if (data.toolbox) {
   const groupIds = new Set(data.toolbox.groups.map((g) => g.id));
-  const seen = new Map();
+  const seen = new Set();
   for (const item of data.toolbox.items) {
     if (!groupIds.has(item.group)) {
       problems.push(`toolbox item "${item.name}" uses unknown group "${item.group}"`);
     }
-    if (seen.has(item.symbol)) {
-      problems.push(
-        `toolbox symbol "${item.symbol}" is used by both "${seen.get(item.symbol)}" and "${item.name}"`
-      );
+    if (seen.has(item.name)) {
+      problems.push(`toolbox item "${item.name}" is listed twice`);
     }
-    seen.set(item.symbol, item.name);
+    seen.add(item.name);
   }
 }
 

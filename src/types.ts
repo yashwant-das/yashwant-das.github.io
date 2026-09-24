@@ -1,6 +1,6 @@
 // Mirrors data/schema.json. Keep the two in step.
 
-export type SectionId = 'brands' | 'toolbox' | 'surfaces' | 'work' | 'contact';
+export type SectionId = 'brands' | 'toolbox' | 'surfaces' | 'work' | 'writing' | 'contact';
 
 export type VisibilityConfig = Partial<Record<SectionId, boolean>>;
 
@@ -18,10 +18,9 @@ export interface ToolGroup {
 }
 
 export interface Tool {
-  symbol: string;
   name: string;
   group: string;
-  icon?: string;
+  icon: string;
   scale?: number;
   focus?: boolean;
   disabled?: boolean;
@@ -35,9 +34,14 @@ export interface Surface {
 export interface Project {
   title: string;
   description: string;
-  language?: string;
-  icon?: string;
   code: string;
+  disabled?: boolean;
+}
+
+export interface Article {
+  title: string;
+  description?: string;
+  url: string;
   disabled?: boolean;
 }
 
@@ -59,5 +63,6 @@ export interface PortfolioData {
   toolbox?: { groups: ToolGroup[]; items: Tool[] };
   surfaces?: Surface[];
   projects?: Project[];
+  articles?: Article[];
   contact: Contact;
 }

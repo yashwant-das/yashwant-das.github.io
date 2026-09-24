@@ -10,9 +10,10 @@ const content = JSON.parse(readFileSync('data/content.json', 'utf8')) as Portfol
 const brands = (content.brands?.items ?? []).filter((b) => !b.disabled);
 const tools = (content.toolbox?.items ?? []).filter((t) => !t.disabled);
 const projects = (content.projects ?? []).filter((p) => !p.disabled);
+const articles = (content.articles ?? []).filter((a) => !a.disabled);
 const socials = Object.entries(content.contact.socials ?? {});
 
-const SECTIONS = ['brands', 'toolbox', 'surfaces', 'work', 'contact'];
+const SECTIONS = ['brands', 'toolbox', 'surfaces', 'work', 'writing', 'contact'];
 
 // Phone, tablet, laptop and wide desktop.
 const RESPONSIVE_VIEWPORTS = [
@@ -63,10 +64,16 @@ test.describe('Portfolio', () => {
     }
   });
 
-  test('renders one tile per brand, with a logo or a wordmark', async ({ page }) => {
+  test('renders one tile per brand, employers first, with a logo or a wordmark', async ({
+    page,
+  }) => {
     const tiles = page.locator('#brands .brand');
     await expect(tiles).toHaveCount(brands.length);
-    for (const [i, brand] of brands.entries()) {
+    const ordered = [
+      ...brands.filter((b) => b.kind === 'employer'),
+      ...brands.filter((b) => b.kind === 'client'),
+    ];
+    for (const [i, brand] of ordered.entries()) {
       const tile = tiles.nth(i);
       await expect(tile).toHaveAttribute('data-kind', brand.kind);
       // Logos carry an sr-only name; fallbacks show the name as text.
@@ -79,17 +86,20 @@ test.describe('Portfolio', () => {
     const cells = page.locator('#toolbox .el');
     await expect(cells).toHaveCount(tools.length);
 
-    // Atomic numbers run 1..n in data order, and symbols come from the data.
+    // Atomic numbers run 1..n in data order, and names come from the data.
     const numbers = await page.locator('#toolbox .el-num').allTextContents();
     expect(numbers).toEqual(tools.map((_, i) => String(i + 1)));
-    const symbols = await page.locator('#toolbox .el-sym').allTextContents();
-    expect(symbols).toEqual(tools.map((t) => t.symbol));
+    const names = await page.locator('#toolbox .el-name').allTextContents();
+    expect(names).toEqual(tools.map((t) => t.name));
+
+    // Every element shows a logo.
+    await expect(page.locator('#toolbox .el-logo svg')).toHaveCount(tools.length);
 
     // Current-focus markers match the focus flags exactly.
     const focused = await page
-      .locator('#toolbox .el.is-focus')
-      .evaluateAll((els) => els.map((el) => el.getAttribute('data-symbol')));
-    expect(focused).toEqual(tools.filter((t) => t.focus).map((t) => t.symbol));
+      .locator('#toolbox .el.is-focus .el-name')
+      .evaluateAll((els) => els.map((el) => el.textContent));
+    expect(focused).toEqual(tools.filter((t) => t.focus).map((t) => t.name));
   });
 
   for (const width of [390, 1440]) {
@@ -113,13 +123,24 @@ test.describe('Portfolio', () => {
   }
 
   test('lists selected work with external links', async ({ page }) => {
-    const rows = page.locator('#work .work-row');
+    const rows = page.locator('#work .row');
     await expect(rows).toHaveCount(projects.length);
     for (const [i, project] of projects.entries()) {
       await expect(rows.nth(i)).toHaveAttribute('href', project.code);
       await expect(rows.nth(i)).toHaveAttribute('target', '_blank');
       await expect(rows.nth(i)).toHaveAttribute('rel', 'noopener noreferrer');
       await expect(rows.nth(i)).toContainText(project.title);
+      await expect(rows.nth(i)).toContainText(project.description);
+    }
+  });
+
+  test('lists articles with external links', async ({ page }) => {
+    const rows = page.locator('#writing .row');
+    await expect(rows).toHaveCount(articles.length);
+    for (const [i, article] of articles.entries()) {
+      await expect(rows.nth(i)).toHaveAttribute('href', article.url);
+      await expect(rows.nth(i)).toHaveAttribute('rel', 'noopener noreferrer');
+      await expect(rows.nth(i)).toContainText(article.title);
     }
   });
 

@@ -2,6 +2,7 @@
 // on every dev-server request) from vite.config.ts, so the shipped page is plain
 // HTML with no client-side rendering, loading states or layout shift.
 import type {
+  Article,
   Brand,
   PortfolioData,
   Project,
@@ -21,6 +22,7 @@ export interface RenderedPage {
 const NAV: { id: SectionId; label: string }[] = [
   { id: 'toolbox', label: 'Toolbox' },
   { id: 'work', label: 'Work' },
+  { id: 'writing', label: 'Writing' },
   { id: 'contact', label: 'Contact' },
 ];
 
@@ -72,7 +74,7 @@ function logoSize(svg: string, scale = 1): string {
 // (LinkedIn -> linkedin), so a new network only needs an icon to get a logo.
 function socialLink(label: string, url: string, icon: IconResolver): string {
   const svg = icon(label.toLowerCase());
-  return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${
+  return `<a class="link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${
     svg ? `<span class="link-icon">${decorate(svg)}</span>` : ''
   }<span>${escapeHtml(label)}${ARROW}</span></a>`;
 }
@@ -114,7 +116,9 @@ function renderHero(data: PortfolioData, icon: IconResolver): string {
     .filter((label) => socials[label])
     .map((label) => socialLink(label, socials[label] ?? '', icon))
     .join('');
-  const role = [data.role, data.location].filter(Boolean).map((s) => escapeHtml(s as string));
+  const role = [data.role, data.location]
+    .filter(Boolean)
+    .map((s) => `<span>${escapeHtml(s as string)}</span>`);
 
   return `<section class="hero" id="top" aria-labelledby="hero-name">
     <div class="container">
@@ -148,14 +152,16 @@ function renderBrand(brand: Brand, icon: IconResolver): string {
   const inner = svg
     ? `<span class="brand-logo"${logoSize(svg, brand.scale)}>${decorate(svg)}</span><span class="sr-only">${escapeHtml(brand.name)}</span>`
     : `<span class="brand-word">${escapeHtml(brand.name)}</span>`;
-  return `<li class="brand" data-kind="${brand.kind}" title="${escapeHtml(brand.name)} · ${kind}">${inner}</li>`;
+  return `<li class="brand" data-kind="${brand.kind}" title="${escapeHtml(brand.name)} · ${kind}">${inner}<span class="sr-only"> (${kind.toLowerCase()})</span></li>`;
 }
 
 function renderBrands(data: PortfolioData, icon: IconResolver): string {
-  const items = (data.brands?.items ?? []).filter((b) => !b.disabled);
-  const clients = items.filter((b) => b.kind === 'client').length;
-  const employers = items.length - clients;
-  const meta = `${clients} clients, ${employers} employers`;
+  // Employers first, then clients, each in data order.
+  const all = (data.brands?.items ?? []).filter((b) => !b.disabled);
+  const employers = all.filter((b) => b.kind === 'employer');
+  const clients = all.filter((b) => b.kind === 'client');
+  const items = [...employers, ...clients];
+  const meta = `${employers.length} employers, ${clients.length} clients`;
 
   return `<section class="section" id="brands" aria-labelledby="brands-title">
     <div class="container">
@@ -164,7 +170,10 @@ function renderBrands(data: PortfolioData, icon: IconResolver): string {
         <ul class="brand-grid" role="list">
           ${items.map((b) => renderBrand(b, icon)).join('\n          ')}
         </ul>
-        ${data.brands?.note ? `<p class="footnote">${escapeHtml(data.brands.note)}</p>` : ''}
+        <div class="legend">
+          <p class="legend-key"><span class="legend-swatch" data-kind="employer" aria-hidden="true"></span>Employer</p>
+          ${data.brands?.note ? `<p>${escapeHtml(data.brands.note)}</p>` : ''}
+        </div>
       </div>
     </div>
   </section>`;
@@ -172,10 +181,9 @@ function renderBrands(data: PortfolioData, icon: IconResolver): string {
 
 function renderElement(tool: Tool, n: number, icon: IconResolver): string {
   const svg = icon(tool.icon);
-  return `<li class="el${tool.focus ? ' is-focus' : ''}" data-symbol="${escapeHtml(tool.symbol)}" title="${escapeHtml(tool.name)}">
+  return `<li class="el${tool.focus ? ' is-focus' : ''}" title="${escapeHtml(tool.name)}">
             <span class="el-num" aria-hidden="true">${n}</span>
-            ${svg ? `<span class="el-logo"${scaleStyle(tool.scale)} aria-hidden="true">${decorate(svg)}</span>` : ''}
-            <span class="el-sym" aria-hidden="true">${escapeHtml(tool.symbol)}</span>
+            <span class="el-logo"${scaleStyle(tool.scale)} aria-hidden="true">${decorate(svg)}</span>
             <span class="el-name">${escapeHtml(tool.name)}</span>${
               tool.focus ? '<span class="sr-only"> (current focus)</span>' : ''
             }
@@ -210,7 +218,7 @@ function renderToolbox(data: PortfolioData, icon: IconResolver): string {
       ${columns.join('\n      ')}
         </div>
         <div class="legend">
-          <p><span class="legend-focus" aria-hidden="true"></span>Current focus</p>
+          <p class="legend-key"><span class="legend-swatch" aria-hidden="true"></span>Current focus</p>
           <p>Logos belong to their owners</p>
         </div>
       </div>
@@ -235,24 +243,35 @@ function renderSurfaces(data: PortfolioData, icon: IconResolver): string {
   </section>`;
 }
 
-function renderProject(project: Project, icon: IconResolver): string {
-  const svg = icon(project.icon);
+function renderRow(title: string, description: string | undefined, url: string): string {
   return `<li>
-          <a class="work-row" href="${escapeHtml(project.code)}" target="_blank" rel="noopener noreferrer">
-            <span class="work-title">${escapeHtml(project.title)}</span>
-            <span class="work-desc">${escapeHtml(project.description)}</span>
-            <span class="work-lang">${decorate(svg)}${escapeHtml(project.language ?? '')}${ARROW}</span>
+          <a class="row" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+            <span class="row-title">${escapeHtml(title)}</span>
+            ${description ? `<span class="row-desc">${escapeHtml(description)}</span>` : ''}
+            ${ARROW}
           </a>
         </li>`;
 }
 
-function renderWork(data: PortfolioData, icon: IconResolver): string {
+function renderWork(data: PortfolioData): string {
   const projects = (data.projects ?? []).filter((p) => !p.disabled);
   return `<section class="section" id="work" aria-labelledby="work-title">
     <div class="container">
-      ${sectionHeader('work', 'Selected work', 'Open source on GitHub')}
-      <ol class="work-list" role="list">
-        ${projects.map((p) => renderProject(p, icon)).join('\n        ')}
+      ${sectionHeader('work', 'Selected work', 'Pinned on GitHub')}
+      <ol class="row-list" role="list">
+        ${projects.map((p: Project) => renderRow(p.title, p.description, p.code)).join('\n        ')}
+      </ol>
+    </div>
+  </section>`;
+}
+
+function renderWriting(data: PortfolioData): string {
+  const articles = (data.articles ?? []).filter((a) => !a.disabled);
+  return `<section class="section" id="writing" aria-labelledby="writing-title">
+    <div class="container">
+      ${sectionHeader('writing', 'Writing', 'On Medium')}
+      <ol class="row-list" role="list">
+        ${articles.map((a: Article) => renderRow(a.title, a.description, a.url)).join('\n        ')}
       </ol>
     </div>
   </section>`;
@@ -320,6 +339,7 @@ export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPag
   const hasBrands = (data.brands?.items ?? []).some((b) => !b.disabled);
   const hasTools = (data.toolbox?.items ?? []).some((t) => !t.disabled);
   const hasWork = (data.projects ?? []).some((p) => !p.disabled);
+  const hasWriting = (data.articles ?? []).some((a) => !a.disabled);
   const hasContact = !!data.contact.email || Object.keys(data.contact.socials ?? {}).length > 0;
 
   const visible = new Set<SectionId>();
@@ -327,6 +347,7 @@ export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPag
   if (isVisible(data, 'toolbox', hasTools)) visible.add('toolbox');
   if (isVisible(data, 'surfaces', (data.surfaces ?? []).length > 0)) visible.add('surfaces');
   if (isVisible(data, 'work', hasWork)) visible.add('work');
+  if (isVisible(data, 'writing', hasWriting)) visible.add('writing');
   if (isVisible(data, 'contact', hasContact)) visible.add('contact');
 
   const sections = [
@@ -334,7 +355,8 @@ export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPag
     visible.has('brands') ? renderBrands(data, icon) : '',
     visible.has('toolbox') ? renderToolbox(data, icon) : '',
     visible.has('surfaces') ? renderSurfaces(data, icon) : '',
-    visible.has('work') ? renderWork(data, icon) : '',
+    visible.has('work') ? renderWork(data) : '',
+    visible.has('writing') ? renderWriting(data) : '',
     visible.has('contact') ? renderContact(data, icon) : '',
   ].filter(Boolean);
 
