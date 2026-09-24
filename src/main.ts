@@ -6,29 +6,29 @@ import { handleError } from './utils.ts';
 
 function initCopyEmail() {
   const button = document.getElementById('copy-email-btn');
-  const label = button?.querySelector('.copy-label');
+  const status = document.getElementById('copy-email-status');
   const email = button?.dataset.email;
-  if (!button || !label || !email) return;
+  if (!button || !status || !email) return;
 
   let resetTimer: number | undefined;
   button.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(email);
-      label.textContent = 'Copied';
     } catch (err) {
+      // No clipboard (an insecure context or a denied permission): hand the
+      // address to the mail app instead.
       handleError(err, 'Clipboard unavailable');
-      label.textContent = 'Press Ctrl+C';
-      const selection = window.getSelection();
-      const link = document.querySelector('.contact-line a');
-      if (selection && link) {
-        selection.selectAllChildren(link);
-      }
+      window.location.href = `mailto:${email}`;
+      return;
     }
+    // Both labels always occupy the button, so swapping them never shifts
+    // the links beside it; the status line tells screen readers.
     button.classList.add('is-done');
+    status.textContent = 'Email address copied';
     window.clearTimeout(resetTimer);
     resetTimer = window.setTimeout(() => {
-      label.textContent = 'Copy email';
       button.classList.remove('is-done');
+      status.textContent = '';
     }, 2000);
   });
 }

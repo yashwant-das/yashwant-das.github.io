@@ -23,6 +23,7 @@ npm run format     # Prettier
 ## Design rules
 
 - This is a personal site, not a resume. Don't add job timelines, dates, education or certifications.
+- Don't print the email address anywhere on the page. The Contact section's "Copy email" action copies it (falling back to `mailto:` without a clipboard).
 - **Quiet and typographic:**
   - Neutral greys, hairline grids.
   - One typeface (Inter). Set every `font-size` from the type-scale tokens in `css/style.css`; don't add one-off sizes or a second font.

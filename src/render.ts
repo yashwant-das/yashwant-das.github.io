@@ -277,6 +277,15 @@ function renderWriting(data: PortfolioData): string {
   </section>`;
 }
 
+// The address is never shown: the Email action copies it, and falls back to
+// opening the mail app where the clipboard is unavailable.
+function renderEmailAction(email: string, icon: IconResolver): string {
+  return `<button class="link copy-email" id="copy-email-btn" type="button" data-email="${escapeHtml(email)}">
+          <span class="link-icon">${decorate(icon('ui:mail'))}</span><span class="copy-label"><span class="copy-idle">Copy email<span class="copy-glyph" aria-hidden="true">${decorate(icon('ui:copy'))}</span></span><span class="copy-done">Email copied<span class="copy-glyph" aria-hidden="true">${decorate(icon('ui:check'))}</span></span></span>
+        </button>
+        <span class="sr-only" id="copy-email-status" role="status"></span>`;
+}
+
 function renderContact(data: PortfolioData, icon: IconResolver): string {
   const email = data.contact.email;
   const socials = Object.entries(data.contact.socials ?? {})
@@ -286,19 +295,8 @@ function renderContact(data: PortfolioData, icon: IconResolver): string {
   return `<section class="section section-contact" id="contact" aria-labelledby="contact-title">
     <div class="container">
       ${sectionHeader('contact', 'Contact')}
-      ${
-        email
-          ? `<p class="contact-line">Say hello at <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>`
-          : ''
-      }
       <div class="contact-actions" id="social-list">
-        ${
-          email
-            ? `<button class="copy-email" id="copy-email-btn" type="button" data-email="${escapeHtml(email)}">
-          <span class="link-icon">${decorate(icon('ui:mail'))}</span><span class="copy-label">Copy email</span>
-        </button>`
-            : ''
-        }
+        ${email ? renderEmailAction(email, icon) : ''}
         ${socials}
       </div>
     </div>
