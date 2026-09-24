@@ -23,15 +23,13 @@
 
   /*
    * Type scale. Every font-size on the page is one of these steps.
-   *   display  hero statement
-   *   xl       page title (name), contact line
-   *   lg       section titles
+   *   xl       page title (name)
+   *   lg       section titles, hero statement
    *   base     body text, item titles
    *   sm       subtitles, secondary text, nav, buttons
    *   xs       captions, labels, footer
    *   2xs      periodic table cell labels only
    */
-  --text-display: 28px;
   --text-xl: 24px;
   --text-lg: 20px;
   --text-base: 16px;
@@ -43,11 +41,9 @@
   --weight-medium: 500;
   --weight-semibold: 600;
 
-  --leading-tight: 1.2;
   --leading-snug: 1.35;
   --leading-normal: 1.55;
 
-  --tracking-display: -0.025em;
   --tracking-title: -0.015em;
 
   /*
@@ -93,7 +89,6 @@
 
 @media (min-width: 720px) {
   :root {
-    --text-display: 36px;
     --gutter: var(--space-6);
     --section-space: var(--space-9);
   }
@@ -420,13 +415,11 @@ button {
 }
 
 .hero-statement {
-  max-width: 24em;
-  margin-top: var(--space-6);
-  font-size: var(--text-display);
-  font-weight: var(--weight-semibold);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-display);
-  text-wrap: balance;
+  max-width: 32em;
+  margin-top: var(--space-5);
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  text-wrap: pretty;
 }
 
 .hero-meta {
@@ -434,7 +427,7 @@ button {
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3) var(--space-5);
-  margin-top: var(--space-6);
+  margin-top: var(--space-5);
 }
 
 .status {
@@ -618,10 +611,12 @@ button {
 }
 
 .brand-word {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
   line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-title);
   text-align: center;
+  text-wrap: balance;
 }
 
 /* ==========================================================================
@@ -883,34 +878,14 @@ button {
   padding-bottom: var(--section-space);
 }
 
-.contact-line {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-title);
-  overflow-wrap: anywhere;
-}
-
-.contact-line a {
-  color: var(--text);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.15em;
-  text-decoration-color: var(--line-strong);
-  transition: text-decoration-color var(--fast) var(--ease);
-}
-
-.contact-line a:hover {
-  text-decoration-color: currentColor;
-}
-
 /* Phone: one action per line. Wider: one row. */
 .contact-actions {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-4);
-  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: var(--hairline) solid var(--line);
 }
 
 @media (min-width: 600px) {
@@ -918,34 +893,66 @@ button {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-3) var(--space-5);
+    gap: var(--space-3) var(--space-6);
   }
 }
 
+/* The Email action is a button that reads like the links beside it. */
 .copy-email {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  height: 40px;
-  padding: 0 var(--space-5) 0 var(--space-4);
-  border: var(--hairline) solid var(--line-strong);
-  border-radius: 999px;
+  padding: 0;
+  border: 0;
   background: transparent;
-  color: var(--text);
-  font-size: var(--text-sm);
-  line-height: var(--leading-snug);
   cursor: pointer;
-  transition:
-    background-color var(--fast) var(--ease),
-    border-color var(--fast) var(--ease);
 }
 
-.copy-email:hover {
-  background: var(--bg-hover);
+/*
+ * Both labels share one grid cell, so the button keeps the wider one's width
+ * and the links beside it never move when the label swaps.
+ */
+.copy-label {
+  display: inline-grid;
+  justify-items: start;
+}
+
+.copy-idle,
+.copy-done {
+  grid-area: 1 / 1;
+}
+
+.copy-done,
+.copy-email.is-done .copy-idle {
+  visibility: hidden;
+}
+
+.copy-email.is-done .copy-done {
+  visibility: visible;
+}
+
+/* The copy glyph sits where the other links carry their arrow. */
+.copy-glyph {
+  display: inline-block;
+  margin-left: var(--space-1);
+  color: var(--text-3);
+  transition: color var(--fast) var(--ease);
+}
+
+.copy-glyph svg {
+  display: inline;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+
+.copy-email:hover .copy-glyph {
+  color: var(--text);
 }
 
 .copy-email.is-done {
-  border-color: var(--text-3);
+  color: var(--text);
+}
+
+.copy-done .copy-glyph {
+  color: var(--status);
 }
 
 /* ==========================================================================

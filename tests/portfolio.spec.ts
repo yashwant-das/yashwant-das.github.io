@@ -144,23 +144,40 @@ test.describe('Portfolio', () => {
     }
   });
 
-  test('renders contact email and social links', async ({ page }) => {
+  test('offers email as a copy action without printing the address', async ({ page }) => {
     const email = content.contact.email ?? '';
-    await expect(page.locator('.contact-line a')).toHaveAttribute('href', `mailto:${email}`);
+    await expect(page.locator('#copy-email-btn')).toHaveAttribute('data-email', email);
+    await expect(page.locator('#copy-email-btn .copy-idle')).toBeVisible();
+    await expect(page.locator('#copy-email-btn .copy-done')).toBeHidden();
+    // The address itself never appears as visible text or a mailto link.
+    await expect(page.locator('body')).not.toContainText(email);
+    await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
+  });
+
+  test('renders social links with logos', async ({ page }) => {
     for (const [label, url] of socials) {
       const link = page.locator(`#social-list a[href="${url}"]`);
       await expect(link).toContainText(label);
       await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+      await expect(link.locator('svg').first()).toBeVisible();
     }
   });
 
   test('copies the email address', async ({ page, context }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     const button = page.locator('#copy-email-btn');
+    const width = (await button.boundingBox())?.width;
     await button.click();
-    await expect(button).toContainText('Copied');
+    await expect(button).toHaveClass(/is-done/);
+    await expect(button.locator('.copy-done')).toBeVisible();
+    await expect(button.locator('.copy-idle')).toBeHidden();
+    await expect(page.locator('#copy-email-status')).toHaveText('Email address copied');
+    // Swapping the label never changes the button's width.
+    expect((await button.boundingBox())?.width).toBe(width);
     const copied = await page.evaluate(() => navigator.clipboard.readText());
     expect(copied).toBe(content.contact.email);
+    // It resets, so it can be used again.
+    await expect(button.locator('.copy-idle')).toBeVisible({ timeout: 4000 });
   });
 
   test('marks the nav link for the section in view', async ({ page }) => {
