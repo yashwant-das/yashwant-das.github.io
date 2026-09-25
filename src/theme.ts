@@ -1,16 +1,16 @@
 import { handleError } from './utils.ts';
 
-// Dark is the default. A choice made with the toggle is remembered; the inline
-// script in index.html applies it before first paint.
+// Light (warm cream) is the default. A choice made with the toggle is
+// remembered; the inline script in index.html applies it before first paint.
 type Theme = 'light' | 'dark';
 
 const STORAGE_KEY = 'yd-theme';
-const THEME_COLOR: Record<Theme, string> = { dark: '#1a1a1a', light: '#fbfbfa' };
+const THEME_COLOR: Record<Theme, string> = { dark: '#14120b', light: '#f7f7f4' };
 
 const root = document.documentElement;
 
 function currentTheme(): Theme {
-  return root.dataset.theme === 'light' ? 'light' : 'dark';
+  return root.dataset.theme === 'dark' ? 'dark' : 'light';
 }
 
 function applyTheme(theme: Theme) {
@@ -26,7 +26,7 @@ function applyTheme(theme: Theme) {
 
 function saveTheme(theme: Theme) {
   try {
-    if (theme === 'dark') {
+    if (theme === 'light') {
       localStorage.removeItem(STORAGE_KEY);
     } else {
       localStorage.setItem(STORAGE_KEY, theme);

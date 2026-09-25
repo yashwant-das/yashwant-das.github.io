@@ -1,3 +1,15 @@
 {
-  "buildPath": "code"
+  "buildPath": "code",
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "inter fallback",
+        "createdAt": "2026-09-25T15:35:25.899Z",
+        "reason": "Claude: metric-matched local fallback for Inter, which DESIGN.md names as the CursorGothic substitute"
+      }
+    ]
+  }
 }

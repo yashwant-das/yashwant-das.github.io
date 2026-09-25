@@ -25,7 +25,7 @@ const RESPONSIVE_VIEWPORTS = [
 
 async function useTheme(page: Page, theme: 'light' | 'dark') {
   await page.addInitScript((t) => {
-    if (t === 'light') localStorage.setItem('yd-theme', 'light');
+    if (t === 'dark') localStorage.setItem('yd-theme', 'dark');
     else localStorage.removeItem('yd-theme');
   }, theme);
 }
@@ -123,7 +123,7 @@ test.describe('Portfolio', () => {
   }
 
   test('lists selected work with external links', async ({ page }) => {
-    const rows = page.locator('#work .row');
+    const rows = page.locator('#work .card');
     await expect(rows).toHaveCount(projects.length);
     for (const [i, project] of projects.entries()) {
       await expect(rows.nth(i)).toHaveAttribute('href', project.code);
@@ -186,21 +186,21 @@ test.describe('Portfolio', () => {
     await expect(link).toHaveAttribute('aria-current', 'true');
   });
 
-  test('defaults to dark and toggles to light and back', async ({ page }) => {
+  test('defaults to light and toggles to dark and back', async ({ page }) => {
     const html = page.locator('html');
     const toggle = page.locator('#theme-toggle');
-    await expect(html).toHaveAttribute('data-theme', 'dark');
+    await expect(html).toHaveAttribute('data-theme', 'light');
 
     await toggle.click();
-    await expect(html).toHaveAttribute('data-theme', 'light');
-    await expect(toggle).toHaveAttribute('aria-label', 'Switch to dark theme');
+    await expect(html).toHaveAttribute('data-theme', 'dark');
+    await expect(toggle).toHaveAttribute('aria-label', 'Switch to light theme');
 
     // The choice survives a reload.
     await page.reload();
-    await expect(html).toHaveAttribute('data-theme', 'light');
+    await expect(html).toHaveAttribute('data-theme', 'dark');
 
     await toggle.click();
-    await expect(html).toHaveAttribute('data-theme', 'dark');
+    await expect(html).toHaveAttribute('data-theme', 'light');
   });
 
   for (const theme of ['dark', 'light'] as const) {

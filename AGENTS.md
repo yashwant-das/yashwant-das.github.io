@@ -24,15 +24,16 @@ npm run format     # Prettier
 
 - This is a personal site, not a resume. Don't add job timelines, dates, education or certifications.
 - Don't print the email address anywhere on the page. The Contact section's "Copy email" action copies it (falling back to `mailto:` without a clipboard).
-- **Quiet and typographic:**
-  - Neutral greys, hairline grids.
-  - One typeface (Inter). Set every `font-size` from the type-scale tokens in `css/style.css`; don't add one-off sizes or a second font.
-  - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid).
-  - No cards, shadows, gradients or decorative motion.
-- **Accent colour:** used only for focus rings and the cell markers (employers in "Worked with", current focus in the toolbox). Markers stop short of the cell edges so neighbours stay separate, and every marker has a legend.
-- **Themes:** dark is the default; light must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
+- **Cursor-style editorial calm** (see `DESIGN.md`, adapted in `css/style.css`):
+  - Warm-cream canvas and warm near-black ink; depth from hairlines and white-on-cream surfaces only. No shadows, gradients or decorative motion.
+  - Inter (standing in for CursorGothic) for text, with display sizes at weight 400 and negative tracking. JetBrains Mono only on code-like surfaces: the IDE mockup, repo names, counts and meta. Set every `font-size` from the type-scale tokens; don't add one-off sizes.
+  - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid). Radii come from the `--radius-*` tokens: 8px for buttons and tiles, 12px for cards.
+- **Orange:** `--primary` is for the wordmark mark and focus rings; `--primary-fill` (a step darker, so white labels pass AA) is for the one primary action, Copy email. Everything else uses ink or secondary buttons.
+- **Timeline pastels** stay inside the hero's IDE mockup. The mockup is built from `content.json`, repeats facts stated elsewhere, and is `aria-hidden`.
+- **Markers:** current focus in the toolbox inverts the tile to ink, with a legend and screen-reader text. Employers and clients are separate labelled groups rather than marked tiles.
+- **Themes:** light (cream) is the default; the warm dark theme must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
 - **Logos:** single-colour `currentColor` SVGs only. Every toolbox item shows a logo; when a tool has none, use the closest matching icon (see `src/icons/`). `lava`, `gionee`, `altbalaji`, `ffi` and `marquistech` in `src/icons/` are stand-in wordmarks set from Inter's outlines; swap in the official marks when available. Social links pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
-- **Grids:** the brand wall and the periodic table keep whole-pixel cells and exactly-1px hairlines, drawn with `box-shadow` edges. `.container` snaps its width so both grids fill it exactly and share one right edge with every other section.
+- **Toolbox grid:** tiles are whole-pixel squares, sized with `round()` against the table's container width so every row lines up.
 - **Accessibility:**
   - Keep the skip link, one `h1`, visible focus rings in both themes, and support for `prefers-reduced-motion`.
   - Don't rely on colour alone to convey meaning.
