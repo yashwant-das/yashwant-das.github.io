@@ -17,7 +17,7 @@ A calm personal site, deliberately not a resume. In under a minute it shows who 
 ## Brand Commitments
 
 - **Tone:** measured, confident and engineering-minded. Concrete mechanics over AI hype.
-- **Visual language:** quiet and typographic. Neutral greys, a single typeface on a fixed type scale, hairline grids and monochrome logos, with one accent reserved for focus. Dark by default, with light held to the same standard.
+- **Visual language:** editorial developer-tool calm, after Cursor's design system (`DESIGN.md`). A warm-cream canvas, weight-400 display type, monospace on code surfaces, hairline tiles and monochrome logos, with Cursor Orange reserved for the primary action. Light by default, with a warm dark theme held to the same standard.
 
 ## Product Principles
 
