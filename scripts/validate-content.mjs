@@ -32,6 +32,17 @@ if (data.toolbox) {
   }
 }
 
+// Project stacks name toolbox items, so every tag on a card is a tool the
+// Stack section lists.
+const toolNames = new Set((data.toolbox?.items ?? []).map((t) => t.name));
+for (const project of data.projects ?? []) {
+  for (const name of project.stack ?? []) {
+    if (!toolNames.has(name)) {
+      problems.push(`project "${project.title}" lists "${name}", which is not a toolbox item`);
+    }
+  }
+}
+
 if (problems.length > 0) {
   console.error('Content validation failed:');
   problems.forEach((p) => console.error(`  - ${p}`));
