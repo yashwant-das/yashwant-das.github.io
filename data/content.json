@@ -126,32 +126,38 @@
     {
       "title": "ai-js-appium-mcp",
       "description": "Generates Appium mobile tests from Markdown prompts through an Appium MCP server",
-      "code": "https://github.com/yashwant-das/ai-js-appium-mcp"
+      "code": "https://github.com/yashwant-das/ai-js-appium-mcp",
+      "stack": ["Appium", "MCP", "WebdriverIO", "JavaScript"]
     },
     {
       "title": "ai-js-promptfoo-eval",
       "description": "Evaluates LLM translation quality with Promptfoo and local models, no API keys needed",
-      "code": "https://github.com/yashwant-das/ai-js-promptfoo-eval"
+      "code": "https://github.com/yashwant-das/ai-js-promptfoo-eval",
+      "stack": ["Promptfoo", "Ollama", "MLX", "JavaScript"]
     },
     {
       "title": "ai-py-playwright-workbench",
       "description": "Generates and repairs Playwright tests with local LLMs, and benchmarks the results",
-      "code": "https://github.com/yashwant-das/ai-py-playwright-workbench"
+      "code": "https://github.com/yashwant-das/ai-py-playwright-workbench",
+      "stack": ["Playwright", "Python", "Pydantic", "Gradio"]
     },
     {
       "title": "ai-ts-playwright-protocol",
       "description": "Guides AI coding agents through writing Playwright tests, using Markdown task files and verification checks",
-      "code": "https://github.com/yashwant-das/ai-ts-playwright-protocol"
+      "code": "https://github.com/yashwant-das/ai-ts-playwright-protocol",
+      "stack": ["Playwright", "TypeScript"]
     },
     {
       "title": "qa-java-selenium",
       "description": "Tests web UIs and APIs in Java 21 with Selenium, TestNG, REST Assured and Allure reports",
-      "code": "https://github.com/yashwant-das/qa-java-selenium"
+      "code": "https://github.com/yashwant-das/qa-java-selenium",
+      "stack": ["Java", "Selenium", "TestNG", "REST Assured", "Allure"]
     },
     {
       "title": "qa-py-locust-grafana",
       "description": "Runs distributed load tests with Locust, with Prometheus and Grafana dashboards in Docker Compose",
-      "code": "https://github.com/yashwant-das/qa-py-locust-grafana"
+      "code": "https://github.com/yashwant-das/qa-py-locust-grafana",
+      "stack": ["Locust", "Prometheus", "Grafana", "Docker"]
     }
   ],
   "articles": [

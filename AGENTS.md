@@ -24,22 +24,23 @@ npm run format     # Prettier
 
 - This is a personal site, not a resume. Don't add job timelines, dates, education or certifications.
 - Don't print the email address anywhere on the page. The Contact section's "Copy email" action copies it (falling back to `mailto:` without a clipboard).
-- **Cursor-style editorial calm** (see `DESIGN.md`, adapted in `css/style.css`):
-  - Warm-cream canvas and warm near-black ink; depth from hairlines and white-on-cream surfaces only. No shadows, gradients or decorative motion.
-  - Inter (standing in for CursorGothic) for text, with display sizes at weight 400 and negative tracking. JetBrains Mono only on code-like surfaces: the IDE mockup, repo names, counts and meta. Set every `font-size` from the type-scale tokens; don't add one-off sizes.
-  - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid). Radii come from the `--radius-*` tokens: 8px for buttons and tiles, 12px for cards.
-- **Orange:** `--primary` is for the wordmark mark and focus rings; `--primary-fill` (a step darker, so white labels pass AA) is for the one primary action, Copy email. Everything else uses ink or secondary buttons.
-- **Timeline pastels** stay inside the hero's IDE mockup. The mockup is built from `content.json`, repeats facts stated elsewhere, and is `aria-hidden`.
-- **Markers:** current focus in the toolbox inverts the tile to ink, with a legend and screen-reader text. Employers and clients are separate labelled groups rather than marked tiles.
-- **Themes:** light (cream) is the default; the warm dark theme must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
-- **Logos:** single-colour `currentColor` SVGs only. Every toolbox item shows a logo; when a tool has none, use the closest matching icon (see `src/icons/`). `lava`, `gionee`, `altbalaji`, `ffi` and `marquistech` in `src/icons/` are stand-in wordmarks set from Inter's outlines; swap in the official marks when available. Social links pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
-- **Toolbox grid:** tiles are whole-pixel squares, sized with `round()` against the table's container width so every row lines up.
+- **Minimal, after cursor.com:** every section must earn its space. Order: hero, Shipped for, Selected work, Stack, Writing, footer.
+  - Warm-cream (`#f7f7f4`) or warm-dark (`#14120b`) canvas. Depth comes from filled surfaces (4px radius), not borders; the only lines are the hairlines between Stack rows. No shadows, gradients or decorative motion.
+  - Inter (standing in for CursorGothic) at weight 400 for display type. JetBrains Mono only for code-like text: repo names, stacks and kickers. Set every `font-size` from the type-scale tokens; don't add one-off sizes.
+  - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid).
+  - Buttons are pills: the primary is an ink inversion (Copy email), the secondary a soft fill.
+- **Orange:** `--primary` is for the wordmark mark and focus rings; `--link` is for text links ("More on Medium →"). Nothing else is orange.
+- **Hero:** name and statement read as one two-tone block, with Copy email and the LinkedIn and GitHub buttons beneath. Other socials go in the footer.
+- **Shipped for:** client logos in one row; employers are named in a line beneath, not shown as logos.
+- **Stack:** text, not tiles. A "Current focus" row of logo pills, one line per toolbox group, and the platforms tested on. Project cards list their `stack`, and the build checks each entry is a toolbox item.
+- **Themes:** follow the system setting until the toggle is used; the choice is remembered. Both themes must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
+- **Logos:** single-colour `currentColor` SVGs only. Focus tools and client brands show logos; when a tool has none, use the closest matching icon (see `src/icons/`). Social buttons pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
 - **Accessibility:**
   - Keep the skip link, one `h1`, visible focus rings in both themes, and support for `prefers-reduced-motion`.
   - Don't rely on colour alone to convey meaning.
 
 ## Before you finish
 
-Run `npm run validate`. The tests check that content renders from the JSON, that table cells stay square and uniform, the copy button, the theme toggle, axe in both themes, and that nothing overflows horizontally from phone to wide desktop.
+Run `npm run validate`. The tests check that content renders from the JSON (logos, stack rows, cards), the copy button, the system theme and toggle, axe in both themes, and that nothing overflows horizontally from phone to wide desktop.
 
 Work on a branch, and keep changes scoped.

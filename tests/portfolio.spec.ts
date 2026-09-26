@@ -8,12 +8,15 @@ import type { PortfolioData } from '../src/types.ts';
 const content = JSON.parse(readFileSync('data/content.json', 'utf8')) as PortfolioData;
 
 const brands = (content.brands?.items ?? []).filter((b) => !b.disabled);
+const clients = brands.filter((b) => b.kind === 'client');
+const employers = brands.filter((b) => b.kind === 'employer');
 const tools = (content.toolbox?.items ?? []).filter((t) => !t.disabled);
+const groups = (content.toolbox?.groups ?? []).filter((g) => tools.some((t) => t.group === g.id));
 const projects = (content.projects ?? []).filter((p) => !p.disabled);
 const articles = (content.articles ?? []).filter((a) => !a.disabled);
 const socials = Object.entries(content.contact.socials ?? {});
 
-const SECTIONS = ['brands', 'toolbox', 'surfaces', 'work', 'writing', 'contact'];
+const SECTIONS = ['brands', 'work', 'toolbox', 'writing', 'contact'];
 
 // Phone, tablet, laptop and wide desktop.
 const RESPONSIVE_VIEWPORTS = [
@@ -24,10 +27,7 @@ const RESPONSIVE_VIEWPORTS = [
 ];
 
 async function useTheme(page: Page, theme: 'light' | 'dark') {
-  await page.addInitScript((t) => {
-    if (t === 'dark') localStorage.setItem('yd-theme', 'dark');
-    else localStorage.removeItem('yd-theme');
-  }, theme);
+  await page.addInitScript((t) => localStorage.setItem('yd-theme', t), theme);
 }
 
 test.describe('Portfolio', () => {
@@ -64,83 +64,65 @@ test.describe('Portfolio', () => {
     }
   });
 
-  test('renders one tile per brand, employers first, with a logo or a wordmark', async ({
-    page,
-  }) => {
+  test('shows client logos and names the employers', async ({ page }) => {
     const tiles = page.locator('#brands .brand');
-    await expect(tiles).toHaveCount(brands.length);
-    const ordered = [
-      ...brands.filter((b) => b.kind === 'employer'),
-      ...brands.filter((b) => b.kind === 'client'),
-    ];
-    for (const [i, brand] of ordered.entries()) {
-      const tile = tiles.nth(i);
-      await expect(tile).toHaveAttribute('data-kind', brand.kind);
+    await expect(tiles).toHaveCount(clients.length);
+    for (const [i, brand] of clients.entries()) {
       // Logos carry an sr-only name; fallbacks show the name as text.
-      await expect(tile).toContainText(brand.name);
-      if (brand.logo) await expect(tile.locator('svg')).toHaveCount(1);
+      await expect(tiles.nth(i)).toContainText(brand.name);
+      if (brand.logo) await expect(tiles.nth(i).locator('svg')).toHaveCount(1);
+    }
+    for (const employer of employers) {
+      await expect(page.locator('#brands .brand-note')).toContainText(employer.name);
     }
   });
 
-  test('renders the periodic table from content data', async ({ page }) => {
-    const cells = page.locator('#toolbox .el');
-    await expect(cells).toHaveCount(tools.length);
+  test('renders the stack from content data', async ({ page }) => {
+    // Current focus: one pill with a logo per focus tool, in data order.
+    const pills = page.locator('#toolbox .tool-pill');
+    await expect(pills).toHaveText(tools.filter((t) => t.focus).map((t) => t.name));
+    await expect(page.locator('#toolbox .tool-pill svg')).toHaveCount(
+      tools.filter((t) => t.focus).length
+    );
 
-    // Atomic numbers run 1..n in data order, and names come from the data.
-    const numbers = await page.locator('#toolbox .el-num').allTextContents();
-    expect(numbers).toEqual(tools.map((_, i) => String(i + 1)));
-    const names = await page.locator('#toolbox .el-name').allTextContents();
-    expect(names).toEqual(tools.map((t) => t.name));
+    // One row per group, listing every tool in that group.
+    for (const group of groups) {
+      const row = page.locator('#toolbox .stack-row', {
+        has: page.locator('dt', { hasText: group.label }),
+      });
+      await expect(row.locator('.inline-list li')).toHaveText(
+        tools.filter((t) => t.group === group.id).map((t) => t.name)
+      );
+    }
 
-    // Every element shows a logo.
-    await expect(page.locator('#toolbox .el-logo svg')).toHaveCount(tools.length);
-
-    // Current-focus markers match the focus flags exactly.
-    const focused = await page
-      .locator('#toolbox .el.is-focus .el-name')
-      .evaluateAll((els) => els.map((el) => el.textContent));
-    expect(focused).toEqual(tools.filter((t) => t.focus).map((t) => t.name));
+    // Platforms tested on.
+    const platforms = page.locator('#toolbox .stack-row', {
+      has: page.locator('dt', { hasText: 'Platforms' }),
+    });
+    await expect(platforms.locator('li')).toHaveText((content.surfaces ?? []).map((s) => s.name));
   });
 
-  for (const width of [390, 1440]) {
-    test(`keeps periodic table cells square and uniform at ${width}px`, async ({ page }) => {
-      await page.setViewportSize({ width, height: 900 });
-      const sizes = await page
-        .locator('#toolbox .el')
-        .evaluateAll((els) => els.map((el) => el.getBoundingClientRect()))
-        .then((rects) => rects.map((r) => [r.width, r.height]));
-
-      const [w, h] = sizes[0] ?? [0, 0];
-      expect(w).toBeGreaterThan(60);
-      // Whole pixels, so hairlines never land on a half pixel.
-      expect(Number.isInteger(w)).toBe(true);
-      expect(h).toBe(w);
-      for (const [cw, ch] of sizes) {
-        expect(cw).toBe(w);
-        expect(ch).toBe(h);
-      }
-    });
-  }
-
-  test('lists selected work with external links', async ({ page }) => {
-    const rows = page.locator('#work .card');
-    await expect(rows).toHaveCount(projects.length);
+  test('lists selected work with external links and stacks', async ({ page }) => {
+    const cards = page.locator('#work .card');
+    await expect(cards).toHaveCount(projects.length);
     for (const [i, project] of projects.entries()) {
-      await expect(rows.nth(i)).toHaveAttribute('href', project.code);
-      await expect(rows.nth(i)).toHaveAttribute('target', '_blank');
-      await expect(rows.nth(i)).toHaveAttribute('rel', 'noopener noreferrer');
-      await expect(rows.nth(i)).toContainText(project.title);
-      await expect(rows.nth(i)).toContainText(project.description);
+      const card = cards.nth(i);
+      await expect(card).toHaveAttribute('href', project.code);
+      await expect(card).toHaveAttribute('target', '_blank');
+      await expect(card).toHaveAttribute('rel', 'noopener noreferrer');
+      await expect(card).toContainText(project.title);
+      await expect(card).toContainText(project.description);
+      for (const name of project.stack ?? []) await expect(card).toContainText(name);
     }
   });
 
   test('lists articles with external links', async ({ page }) => {
-    const rows = page.locator('#writing .row');
-    await expect(rows).toHaveCount(articles.length);
+    const cards = page.locator('#writing .card');
+    await expect(cards).toHaveCount(articles.length);
     for (const [i, article] of articles.entries()) {
-      await expect(rows.nth(i)).toHaveAttribute('href', article.url);
-      await expect(rows.nth(i)).toHaveAttribute('rel', 'noopener noreferrer');
-      await expect(rows.nth(i)).toContainText(article.title);
+      await expect(cards.nth(i)).toHaveAttribute('href', article.url);
+      await expect(cards.nth(i)).toHaveAttribute('rel', 'noopener noreferrer');
+      await expect(cards.nth(i)).toContainText(article.title);
     }
   });
 
@@ -154,11 +136,15 @@ test.describe('Portfolio', () => {
     await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
   });
 
-  test('renders social links with logos', async ({ page }) => {
+  test('links every social profile', async ({ page }) => {
     for (const [label, url] of socials) {
       const link = page.locator(`#social-list a[href="${url}"]`);
-      await expect(link).toContainText(label);
+      await expect(link).toHaveText(label);
       await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    }
+    // The hero's social buttons lead with a logo.
+    const heroLinks = page.locator('#contact a');
+    for (const link of await heroLinks.all()) {
       await expect(link.locator('svg').first()).toBeVisible();
     }
   });
@@ -186,16 +172,23 @@ test.describe('Portfolio', () => {
     await expect(link).toHaveAttribute('aria-current', 'true');
   });
 
-  test('defaults to light and toggles to dark and back', async ({ page }) => {
+  test('follows the system theme and toggles, remembering the choice', async ({ page }) => {
     const html = page.locator('html');
     const toggle = page.locator('#theme-toggle');
+
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.reload();
+    await expect(html).toHaveAttribute('data-theme', 'dark');
+
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.reload();
     await expect(html).toHaveAttribute('data-theme', 'light');
 
     await toggle.click();
     await expect(html).toHaveAttribute('data-theme', 'dark');
     await expect(toggle).toHaveAttribute('aria-label', 'Switch to light theme');
 
-    // The choice survives a reload.
+    // The choice survives a reload, even against the system setting.
     await page.reload();
     await expect(html).toHaveAttribute('data-theme', 'dark');
 
