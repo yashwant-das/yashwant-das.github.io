@@ -27,9 +27,11 @@ const SUN_ICON =
   '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>';
 const MOON_ICON =
   '<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.1A8.5 8.5 0 1 1 9.9 3.5a6.8 6.8 0 0 0 10.6 10.6Z"/></svg>';
-// The wordmark's mark: an orange tile with a prompt chevron.
+
+// The wordmark's mark: a run button seen as a faceted pyramid, in the text
+// colour, with its three faces in three shades so it reads in either theme.
 const MARK =
-  '<svg class="wordmark-mark" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect width="20" height="20" rx="5"/><path d="m6 6.5 3.5 3.5L6 13.5M11 13.5h3.5" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  '<svg class="wordmark-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M4 2.5 21 12H9.67Z"/><path d="M4 21.5 21 12H9.67Z" fill-opacity=".55"/><path d="M4 2.5 9.67 12 4 21.5Z" fill-opacity=".28"/></svg>';
 
 export function escapeHtml(value: string): string {
   return value
