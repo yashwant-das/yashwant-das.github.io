@@ -1,7 +1,7 @@
 // Turns data/content.json into the page's static HTML. Runs at build time (and
 // on every dev-server request) from vite.config.ts, so the shipped page is plain
 // HTML with no client-side rendering, loading states or layout shift.
-import type { Article, PortfolioData, Project, SectionId, Tool } from './types.ts';
+import type { Article, PortfolioData, SectionId, Tool } from './types.ts';
 
 export type IconResolver = (name: string | undefined) => string | null;
 
@@ -27,9 +27,6 @@ const SUN_ICON =
   '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>';
 const MOON_ICON =
   '<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.1A8.5 8.5 0 1 1 9.9 3.5a6.8 6.8 0 0 0 10.6 10.6Z"/></svg>';
-const CHEVRON =
-  '<svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4"/></svg>';
-
 // The wordmark's mark: an orange tile with a prompt chevron.
 const MARK =
   '<svg class="wordmark-mark" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect width="20" height="20" rx="5"/><path d="m6 6.5 3.5 3.5L6 13.5M11 13.5h3.5" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -224,28 +221,11 @@ function renderBrands(data: PortfolioData, icon: IconResolver): string {
   </section>`;
 }
 
-// Work and writing share one row: the title in ink, a grey line beneath, and
-// quiet metadata on the right.
-function renderProject(project: Project): string {
-  const stack = project.stack?.length
-    ? `<span class="row-stack">${project.stack.map(escapeHtml).join(', ')}</span>`
-    : '';
-  return `<li>
-          <a class="row" ${external(project.code)}>
-            <span class="row-main">
-              <span class="row-title">${escapeHtml(project.description)}</span>
-              ${stack}
-            </span>
-            <span class="row-meta"><span class="row-repo">${escapeHtml(project.title)}</span>${ARROW}</span>
-          </a>
-        </li>`;
-}
-
 /* --------------------------------------------------------------------------
    Feature blocks, after cursor.com: two-tone text on one side and an app
    window on a tinted panel on the other. The window is a real control: its
    sidebar is a tab list (click or arrow keys, see src/main.ts) that swaps the
-   main pane. Phones get a plain fallback instead, since the window needs room.
+   main pane. On a phone the sidebar becomes a row of tabs above the pane.
    -------------------------------------------------------------------------- */
 
 interface WindowTab {
@@ -319,7 +299,6 @@ function featureBlock(
   title: string,
   lede: string,
   media: string,
-  fallback: string,
   reverse = false
 ): string {
   return `<section class="section" id="${id}" aria-labelledby="${id}-title">
@@ -332,9 +311,6 @@ function featureBlock(
         <div class="feature-media">
       ${media}
         </div>
-      </div>
-      <div class="feature-fallback">
-      ${fallback}
       </div>
     </div>
   </section>`;
@@ -360,24 +336,11 @@ function renderWork(data: PortfolioData, icon: IconResolver): string {
     'work',
     'Selected work',
     `${projects.length} open-source projects on GitHub. Pick one to see what it does and what it is built with.`,
-    renderWindow('work', 'yashwant-das', 'Repositories', tabs),
-    `<ol class="rows" role="list">
-        ${projects.map(renderProject).join('\n        ')}
-      </ol>`
+    renderWindow('work', 'yashwant-das', 'Repositories', tabs)
   );
 }
 
-function renderFocus(tool: Tool, icon: IconResolver): string {
-  const svg = icon(tool.icon);
-  return `<li class="tool-pill">${svg ? `<span class="tool-icon">${decorate(svg)}</span>` : ''}${escapeHtml(tool.name)}</li>`;
-}
-
-function inlineList(names: string[]): string {
-  return `<ul class="inline-list" role="list">${names.map((n) => `<li>${escapeHtml(n)}</li>`).join('')}</ul>`;
-}
-
-// Current focus leads; the window lists every group, and the phone fallback
-// keeps the full toolbox behind one disclosure.
+// Current focus leads the window's tabs, then every toolbox group.
 function renderStack(data: PortfolioData, icon: IconResolver): string {
   const items = (data.toolbox?.items ?? []).filter((t) => !t.disabled);
   const tools = new Map(items.map((t) => [t.name, t]));
@@ -403,34 +366,11 @@ function renderStack(data: PortfolioData, icon: IconResolver): string {
             </div>`,
   }));
 
-  const fallback = `${
-    focus.length > 0
-      ? `<div class="focus">
-        <p class="focus-label" id="focus-label">Current focus</p>
-        <ul class="focus-list" role="list" aria-labelledby="focus-label">${focus.map((t) => renderFocus(t, icon)).join('')}</ul>
-      </div>`
-      : ''
-  }
-      <details class="toolbox">
-        <summary>All ${items.length} tools${CHEVRON}</summary>
-        <dl class="stack">
-          ${groups
-            .map(
-              (g) => `<div class="stack-row">
-            <dt>${escapeHtml(g.label)}</dt>
-            <dd>${inlineList(g.names)}</dd>
-          </div>`
-            )
-            .join('\n          ')}
-        </dl>
-      </details>`;
-
   return featureBlock(
     'toolbox',
     'Stack',
     `What I work with most right now, and the full toolbox of ${items.length} tools.`,
     renderWindow('stack', 'toolbox.json', 'Groups', tabs),
-    fallback,
     true
   );
 }

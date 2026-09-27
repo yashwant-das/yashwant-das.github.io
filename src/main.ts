@@ -39,9 +39,19 @@ function initCopyEmail() {
 
 // The feature windows' sidebars are tab lists: a click or the arrow keys
 // select a tab and show its panel (roving tabindex, per the ARIA tabs pattern).
+// On a phone the list runs across the top of the window instead of down its
+// side, so it takes left and right arrows too, and scrolls the choice into view.
 function initWindowTabs() {
+  const phone = window.matchMedia('(max-width: 767px)');
+
   document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((win) => {
+    const list = win.querySelector<HTMLElement>('[role="tablist"]');
     const tabs = [...win.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+
+    const orient = () =>
+      list?.setAttribute('aria-orientation', phone.matches ? 'horizontal' : 'vertical');
+    orient();
+    phone.addEventListener('change', orient);
 
     const select = (next: HTMLButtonElement, focus: boolean) => {
       tabs.forEach((tab) => {
@@ -51,16 +61,25 @@ function initWindowTabs() {
         const panel = document.getElementById(tab.getAttribute('aria-controls') ?? '');
         if (panel) panel.hidden = !on;
       });
-      if (focus) next.focus();
+      if (focus) next.focus({ preventScroll: true });
+      // Scroll the list itself, never the page.
+      if (list && list.scrollWidth > list.clientWidth) {
+        const left = next.offsetLeft - (list.clientWidth - next.offsetWidth) / 2;
+        list.scrollTo({ left, behavior: reducedMotion() ? 'auto' : 'smooth' });
+      }
     };
 
     tabs.forEach((tab, i) => {
       tab.addEventListener('click', () => select(tab, false));
       tab.addEventListener('keydown', (event) => {
         const last = tabs.length - 1;
+        const back = i === 0 ? last : i - 1;
+        const forward = i === last ? 0 : i + 1;
         const target = {
-          ArrowDown: i === last ? 0 : i + 1,
-          ArrowUp: i === 0 ? last : i - 1,
+          ArrowDown: forward,
+          ArrowRight: forward,
+          ArrowUp: back,
+          ArrowLeft: back,
           Home: 0,
           End: last,
         }[event.key];
@@ -71,6 +90,10 @@ function initWindowTabs() {
       });
     });
   });
+}
+
+function reducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 // Marks the nav link for the section currently in view.
