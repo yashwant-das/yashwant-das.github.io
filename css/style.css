@@ -854,7 +854,7 @@ button {
 .window-body {
   display: grid;
   grid-template-columns: 208px minmax(0, 1fr);
-  height: 420px;
+  height: 440px;
 }
 
 .window-side {
@@ -888,6 +888,7 @@ button {
   background: transparent;
   text-align: left;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   transition: background-color var(--fast) var(--ease);
 }
 
