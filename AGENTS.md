@@ -29,7 +29,8 @@ npm run format     # Prettier
   - Inter (standing in for CursorGothic) at weight 400 for display type. Sizes follow cursor.com's: 26px hero (`--text-headline`), 22px section titles and block text (`--text-title`), 14px captions, and one large closing line (`--text-display`, like "Try Cursor now."). Below 640px, text follows Apple's iOS sizes: 17px body, 15px secondary text, nothing under 11px, and every touch target at least 44px. JetBrains Mono only for repo names. No labels or kickers above headings. Set every `font-size` from the type-scale tokens; don't add one-off sizes.
   - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid).
   - Buttons are pills: the primary is an ink inversion (Copy email), the secondary a soft fill.
-- **Orange:** `--primary` is for the wordmark mark and focus rings; `--link` is for text links ("More on Medium →"). Nothing else is orange.
+- **Orange:** `--primary` is for focus rings; `--link` is for text links ("More on Medium →"). Nothing else is orange.
+- **Mark:** as on cursor.com, a single-colour faceted mark in ink beside the name: a run button seen as a pyramid, its three faces at full, 55% and 28% opacity, so it follows the theme. `public/favicon.svg` is the same mark, switching to the dark theme's ink with the system setting.
 - **Hero:** avatar, then one two-tone block at headline size (the name in ink; role, place and statement in grey), the LinkedIn (primary) and GitHub buttons, and a "Tested on" line of platforms with icons. No Copy email here.
 - **Shipped for:** a cursor.com logo band: a small centred caption over one row of filled 100px tiles, client logos in full ink, ordered by market value (largest first; private companies placed by scale). Employers are named in one line beneath.
 - **Closing:** "Get in touch." at display size, centred, with Copy email and every social.

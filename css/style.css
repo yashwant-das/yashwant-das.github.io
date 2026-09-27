@@ -106,7 +106,6 @@
     0 28px 70px rgba(0, 0, 0, 0.14), 0 14px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--line);
 
   --primary: #f54e00;
-  --on-primary: #ffffff;
   --link: #b83a00;
   --success: #1f8a65;
   --selection: rgba(245, 78, 0, 0.16);
@@ -352,8 +351,7 @@ button {
 .wordmark-mark {
   width: 20px;
   height: 20px;
-  fill: var(--primary);
-  stroke: var(--on-primary);
+  color: var(--ink);
 }
 
 .site-nav {
