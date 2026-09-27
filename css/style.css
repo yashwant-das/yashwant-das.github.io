@@ -25,19 +25,20 @@
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
 
   /*
-   * Type scale. Every font-size on the page is one of these steps.
-   *   hero       the name: the one large thing on the page
-   *   title      section titles, the footer's call to action
-   *   lede       the hero paragraph
+   * Type scale. Every font-size on the page is one of these steps, matched to
+   * the sizes cursor.com uses (Inter renders about 3% larger than CursorGothic).
+   *   display    the closing "Get in touch." (cursor.com's "Try Cursor now.")
+   *   headline   the hero block (cursor.com's hero, 26px)
+   *   title      section titles, feature-block text, window headings (22px)
    *   base       body text, row titles, buttons
    *   sm         nav, secondary text, lists
    *   caption    repo names, footnotes, window text
    *   ui         secondary lines inside the feature windows
    *   ui-label   uppercase labels inside the feature windows
    */
-  --text-hero: 44px;
-  --text-title: 22px;
-  --text-lede: 19px;
+  --text-display: 40px;
+  --text-headline: 22px;
+  --text-title: 20px;
   --text-base: 16px;
   --text-sm: 14px;
   --text-caption: 13px;
@@ -47,13 +48,12 @@
   --weight-regular: 400;
   --weight-medium: 500;
 
-  --leading-hero: 1.05;
+  --leading-display: 1.1;
   --leading-title: 1.25;
-  --leading-lede: 1.4;
   --leading-snug: 1.4;
   --leading-normal: 1.5;
 
-  --tracking-hero: -0.03em;
+  --tracking-display: -0.03em;
   --tracking-title: -0.0125em;
 
   /* Spacing, on a 4px grid. Every margin, padding and gap uses a step. */
@@ -117,16 +117,16 @@
   :root {
     --gutter: var(--space-7);
     --section-space: var(--space-10);
-    --text-hero: 56px;
-    --text-title: 26px;
-    --text-lede: 22px;
+    --text-display: 56px;
+    --text-headline: 26px;
+    --text-title: 22px;
   }
 }
 
 @media (min-width: 1024px) {
   :root {
     --gutter: var(--space-8);
-    --text-hero: 64px;
+    --text-display: 72px;
   }
 }
 
@@ -435,31 +435,29 @@ button {
 }
 
 .hero-avatar {
-  width: 56px;
-  height: 56px;
+  width: var(--space-8);
+  height: var(--space-8);
   margin-bottom: var(--space-6);
   border-radius: 50%;
   object-fit: cover;
   background: var(--surface);
 }
 
-.hero-name {
-  font-size: var(--text-hero);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-hero);
-  letter-spacing: var(--tracking-hero);
+.hero-text {
+  max-width: 30em;
+  font-size: var(--text-headline);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
 }
 
+.hero-name,
 .hero-lede {
-  max-width: 34em;
-  margin-top: var(--space-5);
-  font-size: var(--text-lede);
-  line-height: var(--leading-lede);
-  letter-spacing: var(--tracking-title);
+  font-size: inherit;
+  font-weight: var(--weight-regular);
   text-wrap: pretty;
 }
 
-.hero-statement {
+.hero-lede {
   color: var(--muted);
 }
 
@@ -486,15 +484,14 @@ button {
   margin-top: var(--space-7);
 }
 
-/* Phone: Copy email takes a row; the profile links share the rows below. */
+/* Phone: buttons share rows evenly; Copy email takes a row of its own. */
 @media (max-width: 559px) {
   .hero-actions .btn,
-  .footer-actions .btn {
+  .closing-actions .btn {
     flex: 1 1 40%;
   }
 
-  .hero-actions .btn-primary,
-  .footer-actions .btn-primary {
+  .closing-actions .copy-email {
     flex-basis: 100%;
   }
 }
@@ -574,21 +571,33 @@ button {
   letter-spacing: var(--tracking-title);
 }
 
-.section-note {
-  margin-top: var(--space-4);
+/* ==========================================================================
+   Shipped for: a cursor.com logo band. A small centred caption over one row
+   of filled tiles, logos in full ink.
+   ========================================================================== */
+
+.section-brands {
+  text-align: center;
+}
+
+.brands-title {
+  margin-bottom: var(--space-5);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+}
+
+.brand-note {
+  margin-top: var(--space-5);
   color: var(--muted);
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
 }
 
-/* ==========================================================================
-   Shipped for: one row of filled logo tiles
-   ========================================================================== */
-
 .brand-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 @media (min-width: 560px) {
@@ -608,7 +617,7 @@ button {
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
   height: var(--space-9);
-  padding: var(--space-3);
+  padding: 0 var(--space-2);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--logo);
@@ -616,7 +625,7 @@ button {
 
 @media (min-width: 560px) {
   .brand {
-    height: var(--space-10);
+    height: 100px;
   }
 }
 
@@ -733,14 +742,19 @@ button {
    alone carries a shadow. Below 768px the window gives way to a fallback.
    ========================================================================== */
 
-.feature,
+/* Phone: the block's text stays as the section heading; the window goes. */
 .feature-media {
   display: none;
+}
+
+.feature {
+  margin-bottom: var(--space-6);
 }
 
 @media (min-width: 768px) {
   .feature {
     display: grid;
+    margin-bottom: 0;
     gap: var(--space-6);
     padding: var(--space-4);
     border-radius: var(--radius-sm);
@@ -756,8 +770,10 @@ button {
   }
 }
 
-.feature-text {
-  padding: var(--space-4) var(--space-2) 0;
+@media (min-width: 768px) {
+  .feature-text {
+    padding: var(--space-4) var(--space-2) 0;
+  }
 }
 
 .feature-title,
@@ -1129,35 +1145,36 @@ button {
 }
 
 /* ==========================================================================
-   Footer: the contact, as a filled band
+   Closing: one large line and the contact actions, as cursor.com ends with
+   "Try Cursor now." Then a slim filled footer.
    ========================================================================== */
 
+.closing {
+  padding-block: calc(var(--section-space) * 1.5);
+  text-align: center;
+}
+
+.closing-title {
+  font-size: var(--text-display);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.closing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+}
+
 .site-footer {
-  margin-top: var(--section-space);
-  padding-block: var(--space-10) var(--space-7);
+  padding-block: var(--space-7);
   background: var(--surface);
 }
 
-.footer-title {
-  font-size: var(--text-title);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-title);
-  letter-spacing: var(--tracking-title);
-}
-
-.footer-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-6);
-}
-
-.footer-actions .btn-secondary {
-  background: var(--fill);
-}
-
 .footer-base {
-  margin-top: var(--space-9);
   color: var(--muted);
   font-size: var(--text-caption);
 }

@@ -23,15 +23,16 @@ npm run format     # Prettier
 ## Design rules
 
 - This is a personal site, not a resume. Don't add job timelines, dates, education or certifications.
-- Don't print the email address anywhere on the page. The Copy email buttons (hero and footer) copy it, falling back to `mailto:` without a clipboard.
-- **Minimal, after cursor.com:** every section must earn its space, and nothing is said twice. Order: hero, Shipped for, Selected work, Stack, Writing, then the footer, which is the contact. Everything aligns to one left edge.
+- Don't print the email address anywhere on the page. The Copy email button in the closing contact copies it, falling back to `mailto:` without a clipboard.
+- **Minimal, after cursor.com:** every section must earn its space, and nothing is said twice. Order, as on cursor.com: hero, Selected work (its window is the page's focal point), Shipped for, Stack, Writing, the closing contact, and a slim footer. Sections align to one left edge; the logo band and the closing are centred, as on cursor.com.
   - Warm-cream (`#f7f7f4`) or warm-dark (`#14120b`) canvas. Depth comes from filled surfaces (4px radius), not borders or rules. The feature windows are the only raised things and the only shadows (`--shadow-window`, measured from cursor.com). No gradients or decorative motion.
-  - Inter (standing in for CursorGothic) at weight 400 for display type. The name is the one large thing on the page (`--text-hero`); section titles sit well below it. JetBrains Mono only for repo names. No labels or kickers above headings. Set every `font-size` from the type-scale tokens; don't add one-off sizes.
+  - Inter (standing in for CursorGothic) at weight 400 for display type. Sizes follow cursor.com's: 26px hero (`--text-headline`), 22px section titles and block text (`--text-title`), 14px captions, and one large closing line (`--text-display`, like "Try Cursor now."). JetBrains Mono only for repo names. No labels or kickers above headings. Set every `font-size` from the type-scale tokens; don't add one-off sizes.
   - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid).
   - Buttons are pills: the primary is an ink inversion (Copy email), the secondary a soft fill.
 - **Orange:** `--primary` is for the wordmark mark and focus rings; `--link` is for text links ("More on Medium →"). Nothing else is orange.
-- **Hero:** avatar, the name, then one two-tone lede (role and place in ink, the statement in grey), Copy email with the LinkedIn and GitHub buttons, and a "Tested on" line of platforms with icons.
-- **Shipped for:** client logos in one row; employers are named in a line beneath, not shown as logos.
+- **Hero:** avatar, then one two-tone block at headline size (the name in ink; role, place and statement in grey), the LinkedIn (primary) and GitHub buttons, and a "Tested on" line of platforms with icons. No Copy email here.
+- **Shipped for:** a cursor.com logo band: a small centred caption over one row of filled 100px tiles, client logos in full ink, ordered by market value (largest first; private companies placed by scale). Employers are named in one line beneath.
+- **Closing:** "Get in touch." at display size, centred, with Copy email and every social.
 - **Feature blocks (Selected work, Stack):** as on cursor.com, a filled block with two-tone text on one side and an app window on a tinted `--media` panel on the other, alternating sides. Each window's sidebar is an ARIA tab list (click, arrow keys, Home and End; `src/main.ts`) that swaps a README-style pane: repositories with their description, logos and GitHub link; toolbox groups with their tools. Everything in them comes from `content.json`. Below 768px the windows give way to plain fallbacks: work rows, focus pills and an "All N tools" disclosure.
 - **Writing:** full-width filled rows: title in ink, a grey line beneath, the arrow on the right.
 - Project `stack` entries must be toolbox item names; the build checks this.

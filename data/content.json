@@ -25,16 +25,16 @@
       { "name": "Lava", "kind": "employer", "logo": "lava" },
       { "name": "Marquistech", "kind": "employer", "logo": "marquistech" },
       { "name": "Samsung", "kind": "employer", "logo": "samsung" },
+      { "name": "Travelers", "kind": "client", "logo": "travelers", "scale": 1.05 },
+      { "name": "Nokia", "kind": "client", "logo": "nokia" },
+      { "name": "Equifax", "kind": "client", "logo": "equifax" },
+      { "name": "FOX", "kind": "client", "logo": "fox", "scale": 0.85 },
       { "name": "Pilot Flying J", "kind": "client", "logo": "pilot" },
       { "name": "Paramount", "kind": "client", "logo": "paramount", "scale": 1.2 },
-      { "name": "Travelers", "kind": "client", "logo": "travelers", "scale": 1.05 },
-      { "name": "Equifax", "kind": "client", "logo": "equifax" },
       { "name": "Falabella", "kind": "client", "logo": "falabella", "scale": 1.1 },
       { "name": "Optus Sport", "kind": "client", "logo": "optus" },
-      { "name": "ALTBalaji", "kind": "client", "logo": "altbalaji" },
       { "name": "Mediacorp", "kind": "client", "logo": "mediacorp" },
-      { "name": "FOX", "kind": "client", "logo": "fox", "scale": 0.85 },
-      { "name": "Nokia", "kind": "client", "logo": "nokia" }
+      { "name": "ALTBalaji", "kind": "client", "logo": "altbalaji" }
     ]
   },
   "toolbox": {
@@ -161,19 +161,19 @@
   ],
   "articles": [
     {
-      "title": "Appium XCUITest on Real iOS Devices",
-      "description": "Set up Appium on macOS to run automated tests on real iPhones and iPads.",
-      "url": "https://medium.com/@yashwant-das/appium-xcuitest-on-real-ios-devices-bd1ebe0dea55"
-    },
-    {
       "title": "Charles Proxy macOS Setup Guide",
       "description": "Inspect HTTP and HTTPS traffic between your machine, devices and the internet.",
       "url": "https://medium.com/@yashwant-das/charles-proxy-macos-setup-guide-cfde50262b91"
     },
     {
-      "title": "Upgrade Your Android Screen Mirroring: A Guide to Using Scrcpy",
-      "description": "Mirror and control an Android device from Linux, Windows or macOS with Scrcpy.",
-      "url": "https://medium.com/@yashwant-das/scrcpy-your-go-to-android-screen-mirroring-solution-2dd875395197"
+      "title": "Appium XCUITest on Real iOS Devices",
+      "description": "Set up Appium on macOS to run automated tests on real iPhones and iPads.",
+      "url": "https://medium.com/@yashwant-das/appium-xcuitest-on-real-ios-devices-bd1ebe0dea55"
+    },
+    {
+      "title": "Setting up Distributed Load Testing with JMeter",
+      "description": "Run JMeter in distributed mode across machines to simulate more concurrent users than one computer can.",
+      "url": "https://medium.com/@yashwant-das/how-to-setup-distributed-load-testing-with-jmeter-fba703f41a32"
     }
   ],
   "contact": {

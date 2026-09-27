@@ -16,7 +16,8 @@ const NAV: { id: SectionId; label: string }[] = [
   { id: 'writing', label: 'Writing' },
 ];
 
-// Socials that sit beside Copy email in the hero. The footer carries them all.
+// Socials in the hero; the first is the primary button. The closing contact
+// carries them all, with Copy email.
 const HERO_SOCIALS = ['LinkedIn', 'GitHub'];
 
 const ARROW = '<span class="arrow" aria-hidden="true">↗</span>';
@@ -65,9 +66,9 @@ function decorate(svg: string | null): string {
 
 // Logo walls look even when every logo covers roughly the same area, not the
 // same height: a wide wordmark gets shorter, a compact mark gets taller.
-const LOGO_AREA = 40; // square root of the target area, in px
-const LOGO_MAX_W = 104;
-const LOGO_MAX_H = 30;
+const LOGO_AREA = 50; // square root of the target area, in px
+const LOGO_MAX_W = 120;
+const LOGO_MAX_H = 40;
 
 function logoSize(svg: string, scale = 1): string {
   const box = svg
@@ -99,9 +100,9 @@ function external(url: string): string {
 
 // Social links lead with the logo whose slug is the label in lower case
 // (LinkedIn -> linkedin), so a new network only needs an icon to get a logo.
-function socialButton(label: string, url: string, icon: IconResolver): string {
+function socialButton(label: string, url: string, icon: IconResolver, primary = false): string {
   const svg = icon(label.toLowerCase());
-  return `<a class="btn btn-secondary" ${external(url)}>${
+  return `<a class="btn ${primary ? 'btn-primary' : 'btn-secondary'}" ${external(url)}>${
     svg ? `<span class="btn-icon">${decorate(svg)}</span>` : ''
   }<span>${escapeHtml(label)}${ARROW}</span></a>`;
 }
@@ -154,26 +155,29 @@ function renderPlatforms(data: PortfolioData, icon: IconResolver): string {
 
 function renderHero(data: PortfolioData, icon: IconResolver, visible: Set<SectionId>): string {
   const socials = data.contact.socials ?? {};
-  // Role and place open the lede in ink; the statement follows in grey.
   const role = data.location ? `${data.role} in ${data.location}.` : `${data.role}.`;
-  const actions = visible.has('contact')
-    ? `<div class="hero-actions" id="contact">
-        ${data.contact.email ? emailButton(data.contact.email, 'copy-email-btn') : ''}
-        ${HERO_SOCIALS.filter((label) => socials[label])
-          .map((label) => socialButton(label, socials[label] ?? '', icon))
-          .join('\n        ')}
+  const links = HERO_SOCIALS.filter((label) => socials[label]);
+  const actions =
+    visible.has('contact') && links.length > 0
+      ? `<div class="hero-actions">
+        ${links.map((label, i) => socialButton(label, socials[label] ?? '', icon, i === 0)).join('\n        ')}
       </div>`
-    : '';
+      : '';
 
+  // As on cursor.com, the hero is one two-tone block at headline size: the
+  // name in ink, then role, place and statement in grey. The work window
+  // right below is the page's focal point.
   return `<section class="hero" id="top" aria-labelledby="hero-name">
     <div class="container">
       ${
         data.avatar
-          ? `<img class="hero-avatar" src="/${escapeHtml(data.avatar)}" alt="Portrait of ${escapeHtml(data.name)}" width="56" height="56" fetchpriority="high" decoding="async" />`
+          ? `<img class="hero-avatar" src="/${escapeHtml(data.avatar)}" alt="Portrait of ${escapeHtml(data.name)}" width="48" height="48" fetchpriority="high" decoding="async" />`
           : ''
       }
-      <h1 class="hero-name" id="hero-name">${escapeHtml(data.name)}</h1>
-      <p class="hero-lede"><span class="hero-role">${escapeHtml(role)}</span> <span class="hero-statement">${escapeHtml(data.statement)}</span></p>
+      <div class="hero-text">
+        <h1 class="hero-name" id="hero-name">${escapeHtml(data.name)}</h1>
+        <p class="hero-lede"><span class="hero-role">${escapeHtml(role)}</span> <span class="hero-statement">${escapeHtml(data.statement)}</span></p>
+      </div>
       ${
         data.status
           ? `<p class="status"><span class="status-dot" aria-hidden="true"></span>${escapeHtml(data.status)}</p>`
@@ -205,12 +209,13 @@ function renderBrands(data: PortfolioData, icon: IconResolver): string {
 
   const through =
     clients.length > 0 && employers.length > 0
-      ? `<p class="section-note brand-note">Through ${escapeHtml(joinList(employers))}.</p>`
+      ? `<p class="brand-note">Through ${escapeHtml(joinList(employers))}.</p>`
       : '';
 
-  return `<section class="section" id="brands" aria-labelledby="brands-title">
+  // A cursor.com logo band: one small centred caption over a row of tiles.
+  return `<section class="section section-brands" id="brands" aria-labelledby="brands-title">
     <div class="container">
-      ${sectionHeader('brands', 'Shipped for')}
+      <h2 class="brands-title" id="brands-title">${clients.length > 0 ? 'Shipped for these clients' : 'Worked with'}</h2>
       <ul class="brand-row" role="list" style="--count: ${wall.length}">
         ${tiles}
       </ul>
@@ -457,22 +462,26 @@ function renderWriting(data: PortfolioData): string {
 }
 
 // The page ends where a reader who got this far wants to act: on contact.
-function renderFooter(data: PortfolioData, icon: IconResolver, visible: Set<SectionId>): string {
+// The page closes the way cursor.com's does: one large line and the action.
+function renderContact(data: PortfolioData, icon: IconResolver): string {
   const socials = Object.entries(data.contact.socials ?? {})
     .map(([label, url]) => socialButton(label, url, icon))
     .join('\n        ');
 
-  const contact = visible.has('contact')
-    ? `<h2 class="footer-title" id="footer-title">Get in touch</h2>
-      <div class="footer-actions" id="social-list">
-        ${data.contact.email ? emailButton(data.contact.email) : ''}
+  return `<section class="closing" id="contact" aria-labelledby="contact-title">
+    <div class="container">
+      <h2 class="closing-title" id="contact-title">Get in touch.</h2>
+      <div class="closing-actions" id="social-list">
+        ${data.contact.email ? emailButton(data.contact.email, 'copy-email-btn') : ''}
         ${socials}
-      </div>`
-    : '';
+      </div>
+    </div>
+  </section>`;
+}
 
-  return `<footer class="site-footer"${contact ? ' aria-labelledby="footer-title"' : ''}>
+function renderFooter(data: PortfolioData): string {
+  return `<footer class="site-footer">
   <div class="container">
-    ${contact}
     <p class="footer-base">© ${new Date().getFullYear()} ${escapeHtml(data.name)}</p>
   </div>
 </footer>
@@ -517,17 +526,18 @@ export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPag
 
   const sections = [
     renderHero(data, icon, visible),
-    visible.has('brands') ? renderBrands(data, icon) : '',
     visible.has('work') ? renderWork(data, icon) : '',
+    visible.has('brands') ? renderBrands(data, icon) : '',
     visible.has('toolbox') ? renderStack(data, icon) : '',
     visible.has('writing') ? renderWriting(data) : '',
+    visible.has('contact') ? renderContact(data, icon) : '',
   ].filter(Boolean);
 
   const body = `${renderHeader(data, visible)}
 <main id="main">
   ${sections.join('\n\n  ')}
 </main>
-${renderFooter(data, icon, visible)}`;
+${renderFooter(data)}`;
 
   return { head: renderHead(data), body };
 }
