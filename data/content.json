@@ -13,7 +13,6 @@
   "location": "Bengaluru, India",
   "avatar": "assets/avatars/avatar.webp",
   "statement": "I make sure software works on every screen it ships to. Lately, I teach language models to help.",
-  "status": "Building with local LLMs",
   "description": "Yashwant Das is a test automation architect in Bengaluru, working across web, mobile, streaming and TV, and building AI-assisted Playwright tooling with local LLMs.",
   "brands": {
     "note": "Client work was delivered through the employers listed.",
@@ -26,16 +25,16 @@
       { "name": "Lava", "kind": "employer", "logo": "lava" },
       { "name": "Marquistech", "kind": "employer", "logo": "marquistech" },
       { "name": "Samsung", "kind": "employer", "logo": "samsung" },
+      { "name": "Travelers", "kind": "client", "logo": "travelers", "scale": 1.05 },
+      { "name": "Nokia", "kind": "client", "logo": "nokia" },
+      { "name": "Equifax", "kind": "client", "logo": "equifax" },
+      { "name": "FOX", "kind": "client", "logo": "fox", "scale": 0.85 },
       { "name": "Pilot Flying J", "kind": "client", "logo": "pilot" },
       { "name": "Paramount", "kind": "client", "logo": "paramount", "scale": 1.2 },
-      { "name": "Travelers", "kind": "client", "logo": "travelers", "scale": 1.05 },
-      { "name": "Equifax", "kind": "client", "logo": "equifax" },
       { "name": "Falabella", "kind": "client", "logo": "falabella", "scale": 1.1 },
       { "name": "Optus Sport", "kind": "client", "logo": "optus" },
-      { "name": "ALTBalaji", "kind": "client", "logo": "altbalaji" },
       { "name": "Mediacorp", "kind": "client", "logo": "mediacorp" },
-      { "name": "FOX", "kind": "client", "logo": "fox", "scale": 0.85 },
-      { "name": "Nokia", "kind": "client", "logo": "nokia" }
+      { "name": "ALTBalaji", "kind": "client", "logo": "altbalaji" }
     ]
   },
   "toolbox": {
@@ -126,49 +125,55 @@
     {
       "title": "ai-js-appium-mcp",
       "description": "Generates Appium mobile tests from Markdown prompts through an Appium MCP server",
-      "code": "https://github.com/yashwant-das/ai-js-appium-mcp"
+      "code": "https://github.com/yashwant-das/ai-js-appium-mcp",
+      "stack": ["Appium", "MCP", "WebdriverIO", "JavaScript"]
     },
     {
       "title": "ai-js-promptfoo-eval",
       "description": "Evaluates LLM translation quality with Promptfoo and local models, no API keys needed",
-      "code": "https://github.com/yashwant-das/ai-js-promptfoo-eval"
+      "code": "https://github.com/yashwant-das/ai-js-promptfoo-eval",
+      "stack": ["Promptfoo", "Ollama", "MLX", "JavaScript"]
     },
     {
       "title": "ai-py-playwright-workbench",
       "description": "Generates and repairs Playwright tests with local LLMs, and benchmarks the results",
-      "code": "https://github.com/yashwant-das/ai-py-playwright-workbench"
+      "code": "https://github.com/yashwant-das/ai-py-playwright-workbench",
+      "stack": ["Playwright", "Python", "Pydantic", "Gradio"]
     },
     {
       "title": "ai-ts-playwright-protocol",
       "description": "Guides AI coding agents through writing Playwright tests, using Markdown task files and verification checks",
-      "code": "https://github.com/yashwant-das/ai-ts-playwright-protocol"
+      "code": "https://github.com/yashwant-das/ai-ts-playwright-protocol",
+      "stack": ["Playwright", "TypeScript"]
     },
     {
       "title": "qa-java-selenium",
       "description": "Tests web UIs and APIs in Java 21 with Selenium, TestNG, REST Assured and Allure reports",
-      "code": "https://github.com/yashwant-das/qa-java-selenium"
+      "code": "https://github.com/yashwant-das/qa-java-selenium",
+      "stack": ["Java", "Selenium", "TestNG", "REST Assured", "Allure"]
     },
     {
       "title": "qa-py-locust-grafana",
       "description": "Runs distributed load tests with Locust, with Prometheus and Grafana dashboards in Docker Compose",
-      "code": "https://github.com/yashwant-das/qa-py-locust-grafana"
+      "code": "https://github.com/yashwant-das/qa-py-locust-grafana",
+      "stack": ["Locust", "Prometheus", "Grafana", "Docker"]
     }
   ],
   "articles": [
-    {
-      "title": "Appium XCUITest on Real iOS Devices",
-      "description": "Set up Appium on macOS to run automated tests on real iPhones and iPads.",
-      "url": "https://medium.com/@yashwant-das/appium-xcuitest-on-real-ios-devices-bd1ebe0dea55"
-    },
     {
       "title": "Charles Proxy macOS Setup Guide",
       "description": "Inspect HTTP and HTTPS traffic between your machine, devices and the internet.",
       "url": "https://medium.com/@yashwant-das/charles-proxy-macos-setup-guide-cfde50262b91"
     },
     {
-      "title": "Upgrade Your Android Screen Mirroring: A Guide to Using Scrcpy",
-      "description": "Mirror and control an Android device from Linux, Windows or macOS with Scrcpy.",
-      "url": "https://medium.com/@yashwant-das/scrcpy-your-go-to-android-screen-mirroring-solution-2dd875395197"
+      "title": "Appium XCUITest on Real iOS Devices",
+      "description": "Set up Appium on macOS to run automated tests on real iPhones and iPads.",
+      "url": "https://medium.com/@yashwant-das/appium-xcuitest-on-real-ios-devices-bd1ebe0dea55"
+    },
+    {
+      "title": "Setting up Distributed Load Testing with JMeter",
+      "description": "Run JMeter in distributed mode across machines to simulate more concurrent users than one computer can.",
+      "url": "https://medium.com/@yashwant-das/how-to-setup-distributed-load-testing-with-jmeter-fba703f41a32"
     }
   ],
   "contact": {

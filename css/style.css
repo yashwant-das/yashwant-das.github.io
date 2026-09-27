@@ -3,10 +3,10 @@
 
 /* ==========================================================================
    Tokens
-   Adapted from DESIGN.md (Cursor): a warm-cream canvas with warm near-black
-   ink, display type at weight 400, JetBrains Mono on every code surface,
-   hairline-only depth and one orange for the primary action. Light (cream)
-   is the default theme; the warm dark theme is designed to the same bar.
+   After cursor.com: a warm-cream or warm-dark canvas that follows the system
+   setting, filled surfaces instead of borders, pill buttons, display type at
+   weight 400, and orange kept for text links and the mark. Greys are solid
+   tokens chosen to pass WCAG AA on every surface they sit on.
    ========================================================================== */
 
 /* Metric-matched fallback so the Inter swap doesn't shift the layout. */
@@ -20,45 +20,41 @@
 }
 
 :root {
-  /* Inter stands in for CursorGothic; JetBrains Mono for code surfaces. */
+  /* Inter stands in for CursorGothic; JetBrains Mono for code-like text. */
   --font: 'Inter Variable', 'Inter Fallback', system-ui, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
 
   /*
-   * Type scale. Every font-size on the page is one of these steps.
-   *   mega       hero name (display-mega)
-   *   display    section titles, contact band (display-lg)
-   *   lead       hero statement (display-sm)
-   *   title      card and component titles (title-md)
-   *   base       body text
-   *   sm         secondary text, nav, buttons
-   *   caption    meta, code, captions
-   *   label      uppercase labels, timeline pills, table cells
+   * Type scale. Every font-size on the page is one of these steps, matched to
+   * the sizes cursor.com uses (Inter renders about 3% larger than CursorGothic).
+   *   display    the closing "Get in touch." (cursor.com's "Try Cursor now.")
+   *   headline   the hero block (cursor.com's hero, 26px)
+   *   title      section titles, feature-block text, window headings (22px)
+   *   base       body text, row titles, buttons
+   *   sm         nav, secondary text, lists
+   *   caption    repo names, footnotes, window text
+   *   ui         secondary lines inside the feature windows
+   *   ui-label   uppercase labels inside the feature windows
    */
-  --text-mega: 44px;
-  --text-display: 28px;
-  --text-lead: 19px;
-  --text-title: 18px;
+  --text-display: 40px;
+  --text-headline: 22px;
+  --text-title: 20px;
   --text-base: 16px;
   --text-sm: 14px;
   --text-caption: 13px;
-  --text-label: 11px;
+  --text-ui: 12px;
+  --text-ui-label: 11px;
 
   --weight-regular: 400;
   --weight-medium: 500;
-  --weight-semibold: 600;
 
-  --leading-tight: 1.1;
-  --leading-display: 1.2;
+  --leading-display: 1.1;
+  --leading-title: 1.25;
   --leading-snug: 1.4;
   --leading-normal: 1.5;
-  --leading-code: 1.7;
 
-  /* Negative tracking on display type only. */
-  --tracking-mega: -0.03em;
-  --tracking-display: -0.02em;
-  --tracking-lead: -0.005em;
-  --tracking-label: 0.08em;
+  --tracking-display: -0.03em;
+  --tracking-title: -0.0125em;
 
   /* Spacing, on a 4px grid. Every margin, padding and gap uses a step. */
   --space-1: 4px;
@@ -70,62 +66,49 @@
   --space-7: 32px;
   --space-8: 48px;
   --space-9: 64px;
-  --space-10: 80px;
-  --space-11: 96px;
+  --space-10: 96px;
 
   --page-width: 1200px;
   --gutter: var(--space-4);
   --section-space: var(--space-9);
-  --header-height: 64px;
+  --header-height: 56px;
   --icon-size: 16px;
+  --label-col: 176px;
 
-  --hairline: 1px;
-  --radius-xs: 4px;
-  --radius-sm: 6px;
+  --radius-sm: 4px;
   --radius-md: 8px;
-  --radius-lg: 12px;
   --radius-pill: 9999px;
+  --radius-window: 10px;
 
   --ease: cubic-bezier(0.2, 0, 0, 1);
   --fast: 150ms;
 
-  /* Light: warm cream (default) */
+  /* Light: warm cream */
   --canvas: #f7f7f4;
-  --canvas-soft: #fafaf7;
-  --surface: #ffffff;
-  --surface-strong: #ebeae5;
-  --hairline-color: #e6e5e0;
-  --hairline-soft: #efeee8;
-  --hairline-strong: #cfcdc4;
+  --surface: #f2f1ed;
+  --surface-hover: #ebeae5;
+  --fill: #e6e5e0;
+  --fill-hover: #dcdbd5;
+  --line: rgba(38, 37, 30, 0.1);
   --ink: #26251e;
   --ink-hover: #3b3a31;
-  --body: #5a5852;
-  --muted: #6e6b61;
-  --logo: #7a776d;
+  --muted: #66655e;
   --on-ink: #f7f7f4;
-  --on-ink-muted: #c9c6bb;
+  --logo: var(--ink);
 
-  /* Cursor Orange. The fill is a step darker so white labels pass AA. */
+  /* Feature windows, measured from cursor.com. */
+  --media: #d9d5cf;
+  --window-chrome: #f2f1ed;
+  --window-editor: #f7f7f4;
+  --window-hover: rgba(38, 37, 30, 0.04);
+  --shadow-window:
+    0 28px 70px rgba(0, 0, 0, 0.14), 0 14px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--line);
+
   --primary: #f54e00;
-  --primary-fill: #d04200;
-  --primary-fill-active: #b33900;
   --on-primary: #ffffff;
+  --link: #b83a00;
   --success: #1f8a65;
   --selection: rgba(245, 78, 0, 0.16);
-
-  /* Agent timeline pastels: only inside the IDE mockup's timeline. */
-  --timeline-thinking: #dfa88f;
-  --timeline-grep: #9fc9a2;
-  --timeline-read: #9fbbe0;
-  --timeline-edit: #c0a8dd;
-  --timeline-done: #c08532;
-  --on-timeline: #26251e;
-
-  /* Syntax, for the IDE mockup. */
-  --code-keyword: #a0441c;
-  --code-string: #1f7a5a;
-  --code-fn: #3c5fa0;
-  --code-number: #8a4fb0;
 
   color-scheme: light;
 }
@@ -134,45 +117,41 @@
   :root {
     --gutter: var(--space-7);
     --section-space: var(--space-10);
-    --text-mega: 56px;
-    --text-display: 32px;
-    --text-lead: 20px;
+    --text-display: 56px;
+    --text-headline: 26px;
+    --text-title: 22px;
   }
 }
 
 @media (min-width: 1024px) {
   :root {
     --gutter: var(--space-8);
-    --text-mega: 72px;
-    --text-display: 36px;
-    --text-lead: 22px;
+    --text-display: 72px;
   }
 }
 
 /* Dark: warm near-black, not grey. */
 :root[data-theme='dark'] {
   --canvas: #14120b;
-  --canvas-soft: #1a1811;
-  --surface: #1d1b14;
-  --surface-strong: #2b2920;
-  --hairline-color: #2b2920;
-  --hairline-soft: #221f18;
-  --hairline-strong: #3d3a30;
-  --ink: #edece6;
-  --ink-hover: #d7d5cd;
-  --body: #b5b2a8;
-  --muted: #948f84;
-  --logo: #8f8b80;
+  --surface: #1b1913;
+  --surface-hover: #221f19;
+  --fill: #26241e;
+  --fill-hover: #302e27;
+  --line: rgba(237, 236, 236, 0.1);
+  --ink: #edecec;
+  --ink-hover: #d7d5cf;
+  --muted: #9a988f;
   --on-ink: #14120b;
-  --on-ink-muted: #5a5852;
+  --logo: var(--ink);
 
+  --media: #4a443b;
+  --window-chrome: #14120b;
+  --window-editor: #1b1913;
+  --window-hover: rgba(237, 236, 236, 0.04);
+
+  --link: #f54e00;
   --success: #3fb68b;
   --selection: rgba(245, 78, 0, 0.28);
-
-  --code-keyword: #e8875a;
-  --code-string: #7cc4a0;
-  --code-fn: #8fb4ec;
-  --code-number: #c7a6e8;
 
   color-scheme: dark;
 }
@@ -191,7 +170,7 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header-height) + var(--space-4));
+  scroll-padding-top: calc(var(--header-height) + var(--space-6));
 }
 
 body {
@@ -211,13 +190,19 @@ body {
   background: var(--selection);
 }
 
+html {
+  accent-color: var(--primary);
+  caret-color: var(--primary);
+  scrollbar-color: var(--fill-hover) var(--canvas);
+}
+
 h1,
 h2,
-h3,
 p,
 ol,
 ul,
-pre {
+dl,
+dd {
   margin: 0;
 }
 
@@ -245,7 +230,7 @@ button {
 :focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-sm);
 }
 
 .sr-only {
@@ -265,8 +250,8 @@ button {
   top: var(--space-3);
   left: var(--space-3);
   z-index: 100;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
   background: var(--ink);
   color: var(--on-ink);
   font-size: var(--text-sm);
@@ -287,17 +272,11 @@ button {
 .arrow {
   display: inline-block;
   margin-left: var(--space-1);
-  color: var(--muted);
-  transition: color var(--fast) var(--ease);
-}
-
-.link-icon svg {
-  width: var(--icon-size);
-  height: var(--icon-size);
+  transition: transform var(--fast) var(--ease);
 }
 
 /* ==========================================================================
-   Buttons
+   Buttons and links
    ========================================================================== */
 
 .btn {
@@ -307,73 +286,37 @@ button {
   gap: var(--space-2);
   height: 44px;
   padding: 0 var(--space-5);
-  border: var(--hairline) solid transparent;
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-base);
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
-  transition:
-    background-color var(--fast) var(--ease),
-    border-color var(--fast) var(--ease),
-    color var(--fast) var(--ease);
+  transition: background-color var(--fast) var(--ease);
 }
 
-.btn-sm {
-  height: 36px;
-  padding: 0 var(--space-4);
-}
-
-/* Cursor Orange: the one primary action. */
+/* Primary: an ink inversion. */
 .btn-primary {
-  background: var(--primary-fill);
-  color: var(--on-primary);
-}
-
-.btn-primary:hover,
-.btn-primary:active {
-  background: var(--primary-fill-active);
-}
-
-/* Ink inversion: download-style CTAs. */
-.btn-ink {
   background: var(--ink);
   color: var(--on-ink);
 }
 
-.btn-ink:hover {
+.btn-primary:hover {
   background: var(--ink-hover);
 }
 
 .btn-secondary {
-  background: var(--surface);
-  border-color: var(--hairline-strong);
+  background: var(--fill);
   color: var(--ink);
 }
 
 .btn-secondary:hover {
-  border-color: var(--muted);
+  background: var(--fill-hover);
 }
 
-.btn .arrow {
-  color: inherit;
-  opacity: 0.6;
-}
-
-/* Tertiary: an inline ink text link with a logo and an arrow. */
-.link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-snug);
-  color: var(--ink);
-}
-
-.link:hover .arrow {
-  color: var(--ink);
+.btn-icon svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
 }
 
 /* ==========================================================================
@@ -385,13 +328,13 @@ button {
   top: 0;
   z-index: 10;
   background: var(--canvas);
-  border-bottom: var(--hairline) solid var(--hairline-soft);
 }
 
 .header-inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: var(--space-7);
+  gap: var(--space-6);
   height: var(--header-height);
 }
 
@@ -399,8 +342,9 @@ button {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+  justify-self: start;
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
   white-space: nowrap;
 }
 
@@ -413,13 +357,12 @@ button {
 
 .site-nav {
   display: flex;
-  gap: var(--space-6);
+  gap: var(--space-7);
   font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
 }
 
 .site-nav a {
-  color: var(--body);
+  color: var(--muted);
   transition: color var(--fast) var(--ease);
 }
 
@@ -428,23 +371,17 @@ button {
   color: var(--ink);
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-left: auto;
-}
-
 .theme-toggle {
   display: grid;
   place-items: center;
+  justify-self: end;
   width: 36px;
   height: 36px;
   padding: 0;
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: transparent;
-  color: var(--body);
+  color: var(--muted);
   cursor: pointer;
   transition:
     color var(--fast) var(--ease),
@@ -453,7 +390,7 @@ button {
 
 .theme-toggle:hover {
   color: var(--ink);
-  background: var(--surface-strong);
+  background: var(--fill);
 }
 
 .theme-toggle svg {
@@ -471,7 +408,11 @@ button {
   display: block;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 559px) {
+  .header-inner {
+    grid-template-columns: 1fr auto;
+  }
+
   .site-nav {
     display: none;
   }
@@ -479,64 +420,54 @@ button {
 
 /* ==========================================================================
    Hero
+   The name is the one large thing on the page. Role and place open the lede
+   in ink and the statement follows in grey, as one two-tone paragraph.
    ========================================================================== */
 
 .hero {
-  padding-top: var(--section-space);
+  padding-top: var(--space-9);
 }
 
-.hero-id {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3) var(--space-4);
+@media (min-width: 640px) {
+  .hero {
+    padding-top: var(--space-10);
+  }
 }
 
 .hero-avatar {
-  flex: none;
-  width: 40px;
-  height: 40px;
+  width: var(--space-8);
+  height: var(--space-8);
+  margin-bottom: var(--space-6);
   border-radius: 50%;
   object-fit: cover;
-  background: var(--surface-strong);
-  box-shadow: 0 0 0 var(--hairline) var(--hairline-color);
+  background: var(--surface);
 }
 
-.hero-role {
-  color: var(--body);
-  font-size: var(--text-sm);
-  line-height: var(--leading-snug);
+.hero-text {
+  max-width: 30em;
+  font-size: var(--text-headline);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
 }
 
-.sep {
-  margin-inline: var(--space-2);
+.hero-name,
+.hero-lede {
+  font-size: inherit;
+  font-weight: var(--weight-regular);
+  text-wrap: pretty;
+}
+
+.hero-lede {
   color: var(--muted);
 }
 
-/* Phone: role and location on their own lines instead of a ragged wrap. */
-@media (max-width: 639px) {
-  .hero-role span {
-    display: block;
-  }
-
-  .hero-role .sep {
-    display: none;
-  }
-}
-
-/* The status reads as a badge pill, like an announcement above a headline. */
 .status {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  height: 28px;
-  padding: 0 var(--space-3);
-  border: var(--hairline) solid var(--hairline-color);
-  border-radius: var(--radius-pill);
-  background: var(--surface);
-  color: var(--body);
-  font-size: var(--text-caption);
-  line-height: 1;
+  margin-top: var(--space-4);
+  color: var(--muted);
+  font-size: var(--text-sm);
 }
 
 .status-dot {
@@ -546,850 +477,59 @@ button {
   background: var(--success);
 }
 
-.hero-name {
-  margin-top: var(--space-7);
-  font-size: var(--text-mega);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-mega);
-}
-
-.hero-statement {
-  max-width: 30em;
-  margin-top: var(--space-5);
-  color: var(--body);
-  font-size: var(--text-lead);
-  line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-lead);
-  text-wrap: pretty;
-}
-
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-4) var(--space-6);
-  margin-top: var(--space-7);
-}
-
-/* Phone: the main action takes its own row; the links share the next. */
-@media (max-width: 639px) {
-  .hero-actions .btn {
-    width: 100%;
-  }
-}
-
-/* ==========================================================================
-   IDE mockup
-   A white card holding editor panes, the one "elevated" surface, drawn
-   with hairlines only. Sidebar and agent panes collapse on narrow screens.
-   ========================================================================== */
-
-.ide {
-  margin-top: var(--space-9);
-  overflow: hidden;
-  border: var(--hairline) solid var(--hairline-strong);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-}
-
-.ide-bar {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  height: 40px;
-  padding: 0 var(--space-4);
-  border-bottom: var(--hairline) solid var(--hairline-color);
-  background: var(--canvas-soft);
-}
-
-.ide-dots {
-  display: flex;
-  gap: var(--space-2);
-}
-
-.ide-dots span {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--hairline-strong);
-}
-
-.ide-title,
-.ide-tab,
-.ide-tree,
-.ide-code,
-.ide-step {
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-}
-
-.ide-title {
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-.ide-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.ide-pane {
-  min-width: 0;
-}
-
-.ide-side,
-.ide-agent {
-  display: none;
-  background: var(--canvas-soft);
-}
-
-@media (min-width: 720px) {
-  .ide-body {
-    grid-template-columns: minmax(0, 1fr) 300px;
-  }
-
-  .ide-agent {
-    display: flex;
-    border-left: var(--hairline) solid var(--hairline-color);
-  }
-}
-
-@media (min-width: 1024px) {
-  .ide-body {
-    grid-template-columns: 216px minmax(0, 1fr) 340px;
-  }
-
-  .ide-side {
-    display: block;
-    border-right: var(--hairline) solid var(--hairline-color);
-  }
-}
-
-.ide-label {
-  color: var(--muted);
-  font-size: var(--text-label);
-  font-weight: var(--weight-semibold);
-  line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-}
-
-/* Explorer */
-.ide-side {
-  padding: var(--space-4) var(--space-3);
-}
-
-.ide-side .ide-label {
-  padding: 0 var(--space-2) var(--space-3);
-}
-
-.ide-tree {
-  color: var(--body);
-  line-height: var(--leading-snug);
-}
-
-.ide-tree li {
-  overflow: hidden;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.ide-dir::before {
-  content: '▾ ';
-  color: var(--muted);
-}
-
-.ide-indent {
-  padding-left: var(--space-5) !important;
-}
-
-.ide-indent-2 {
-  padding-left: var(--space-8) !important;
-}
-
-.ide-tree .is-active {
-  background: var(--surface-strong);
-  color: var(--ink);
-}
-
-/* Editor */
-.ide-tabs {
-  display: flex;
-  border-bottom: var(--hairline) solid var(--hairline-color);
-  background: var(--canvas-soft);
-}
-
-.ide-tab {
-  padding: var(--space-2) var(--space-4);
-  border-right: var(--hairline) solid var(--hairline-color);
-  color: var(--ink);
-  background: var(--surface);
-  margin-bottom: calc(var(--hairline) * -1);
-  white-space: nowrap;
-}
-
-.ide-tab.is-muted {
-  color: var(--muted);
-  background: transparent;
-}
-
-.ide-code {
-  counter-reset: line;
-  overflow: hidden;
-  padding: var(--space-4) 0 var(--space-5);
-  color: var(--ink);
-  line-height: var(--leading-code);
-}
-
-.ide-line {
-  display: block;
-  padding-right: var(--space-4);
-  white-space: pre;
-}
-
-.ide-line::before {
-  counter-increment: line;
-  content: counter(line);
-  display: inline-block;
-  width: 5ch;
-  padding-right: 2ch;
-  color: var(--muted);
-  text-align: right;
-}
-
-.tk-com {
-  color: var(--muted);
-  font-style: italic;
-}
-
-.tk-kw {
-  color: var(--code-keyword);
-}
-
-.tk-str {
-  color: var(--code-string);
-}
-
-.tk-fn {
-  color: var(--code-fn);
-}
-
-.tk-num {
-  color: var(--code-number);
-}
-
-.tk-key {
-  color: var(--ink);
-}
-
-.tk-pun {
-  color: var(--body);
-}
-
-/* Agent */
-.ide-agent {
-  flex-direction: column;
-  gap: var(--space-4);
-  padding: var(--space-4);
-}
-
-.ide-prompt {
-  align-self: flex-end;
-  padding: var(--space-2) var(--space-3);
-  border: var(--hairline) solid var(--hairline-color);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  font-size: var(--text-sm);
-  line-height: var(--leading-snug);
-}
-
-.ide-timeline {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-}
-
-.ide-timeline li {
-  display: contents;
-}
-
-.ide-step {
-  overflow: hidden;
-  color: var(--body);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.ide-reply {
-  color: var(--body);
-  font-size: var(--text-sm);
-  line-height: var(--leading-normal);
-}
-
-/* Timeline pills: the pastel stage markers. */
-.pill {
-  justify-self: start;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-pill);
-  color: var(--on-timeline);
-  font-size: var(--text-label);
-  font-weight: var(--weight-semibold);
-  line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-}
-
-.pill-thinking {
-  background: var(--timeline-thinking);
-}
-
-.pill-read {
-  background: var(--timeline-read);
-}
-
-.pill-grep {
-  background: var(--timeline-grep);
-}
-
-.pill-edit {
-  background: var(--timeline-edit);
-}
-
-.pill-done {
-  background: var(--timeline-done);
-}
-
-/* ==========================================================================
-   Sections
-   ========================================================================== */
-
-.section {
-  padding-top: var(--section-space);
-}
-
-.section-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-6);
-  margin-bottom: var(--space-7);
-}
-
-.section-title {
-  font-size: var(--text-display);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
-}
-
-.section-meta {
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  line-height: var(--leading-snug);
-}
-
-/* Small heads inside a section: brand groups, toolbox rows. */
-.group-head {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-snug);
-}
-
-.group-count {
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  font-weight: var(--weight-regular);
-}
-
-.note,
-.legend {
-  margin-top: var(--space-4);
-  color: var(--muted);
-  font-size: var(--text-caption);
-  line-height: var(--leading-snug);
-}
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-6);
-}
-
-.legend-key {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.legend-swatch {
-  width: var(--space-3);
-  height: var(--space-3);
-  border-radius: 3px;
-  background: var(--ink);
-}
-
-/* ==========================================================================
-   Worked with
-   Employers and clients as two groups of equal tiles. Wide screens set each
-   group in two rows, side by side on one shared column grid.
-   ========================================================================== */
-
-.brand-groups {
-  display: grid;
-  gap: var(--space-7);
-}
-
-.brand-group {
-  display: grid;
-  gap: var(--space-3);
-}
-
-.brand-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-2);
-}
-
-@media (min-width: 640px) {
-  .brand-grid {
-    grid-template-columns: repeat(var(--span), minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .brand-groups {
-    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-    gap: var(--space-2);
-  }
-
-  .brand-group {
-    grid-column: span var(--span);
-    grid-template-columns: subgrid;
-    row-gap: var(--space-3);
-  }
-
-  .brand-group .group-head,
-  .brand-grid {
-    grid-column: 1 / -1;
-  }
-
-  .brand-grid {
-    grid-template-columns: subgrid;
-  }
-}
-
-.brand {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  place-items: center;
-  height: var(--space-9);
-  padding: var(--space-3);
-  border: var(--hairline) solid var(--hairline-color);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  color: var(--logo);
-  transition:
-    color var(--fast) var(--ease),
-    border-color var(--fast) var(--ease);
-}
-
-.brand:hover {
-  color: var(--ink);
-  border-color: var(--hairline-strong);
-}
-
-@media (min-width: 640px) {
-  .brand {
-    height: var(--space-10);
-  }
-}
-
-.brand-logo {
-  display: block;
-  max-width: 100%;
-}
-
-.brand-logo svg {
-  width: 100%;
-  height: 100%;
-}
-
-.brand-word {
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
-  line-height: var(--leading-snug);
-  text-align: center;
-  text-wrap: balance;
-}
-
-/* ==========================================================================
-   Toolbox: the periodic table
-   One row per group: its label, then its elements as square tiles. Tiles are
-   whole pixels wide, so every row lines up and hairlines stay crisp. Current
-   focus inverts to ink, the way a featured tier does.
-   ========================================================================== */
-
-.ptable {
-  container-type: inline-size;
-  border-top: var(--hairline) solid var(--hairline-color);
-}
-
-.pgroup {
-  padding-block: var(--space-5);
-  border-bottom: var(--hairline) solid var(--hairline-color);
-}
-
-.pgroup-head {
-  margin-bottom: var(--space-3);
-}
-
-.pgroup-num {
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  font-weight: var(--weight-regular);
-}
-
-.pgroup-cells {
-  --cols: 4;
-  --gap: var(--space-2);
-  --label: 0px;
-  /* The 0.01px absorbs float error, so an exact fit never rounds a pixel short. */
-  --cell: round(
-    down,
-    calc((100cqi - var(--label) - var(--gap) * (var(--cols) - 1)) / var(--cols) + 0.01px),
-    1px
-  );
-  display: grid;
-  grid-template-columns: repeat(var(--cols), var(--cell));
-  gap: var(--gap);
-}
-
-@supports not (width: round(down, 100px, 1px)) {
-  .pgroup-cells {
-    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-  }
-}
-
-@container (min-width: 440px) {
-  .pgroup-cells {
-    --cols: 6;
-  }
-}
-
-@container (min-width: 600px) {
-  .pgroup-cells {
-    --cols: 8;
-  }
-}
-
-/* Wide: the label takes a column of its own and each group is one row. */
-@container (min-width: 960px) {
-  .pgroup {
-    --label: 176px;
-    display: grid;
-    grid-template-columns: var(--label) minmax(0, 1fr);
-    gap: var(--space-6);
-  }
-
-  .pgroup-head {
-    flex-wrap: wrap;
-    align-content: start;
-    margin: 0;
-    padding-top: var(--space-1);
-  }
-
-  .pgroup-cells {
-    --cols: 10;
-    --label: calc(176px + var(--space-6));
-  }
-}
-
-.el {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  aspect-ratio: 1;
-  min-width: 0;
-  padding: var(--space-2);
-  border: var(--hairline) solid var(--hairline-color);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  transition: border-color var(--fast) var(--ease);
-}
-
-.el:hover {
-  border-color: var(--hairline-strong);
-}
-
-.el-num {
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  line-height: var(--space-4);
-}
-
-.el-logo {
-  display: grid;
-  place-items: center;
-  min-height: 0;
-  color: var(--logo);
-  transition: color var(--fast) var(--ease);
-}
-
-.el:hover .el-logo {
-  color: var(--ink);
-}
-
-.el-logo svg {
-  width: calc(28px * var(--scale, 1));
-  height: calc(28px * var(--scale, 1));
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.el-name {
-  overflow: hidden;
-  color: var(--body);
-  font-size: var(--text-label);
-  font-weight: var(--weight-medium);
-  line-height: var(--space-4);
-  text-align: center;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.el.is-focus {
-  border-color: var(--ink);
-  background: var(--ink);
-}
-
-.el.is-focus .el-logo,
-.el.is-focus .el-name {
-  color: var(--on-ink);
-}
-
-.el.is-focus .el-num {
-  color: var(--on-ink-muted);
-}
-
-/* ==========================================================================
-   Tested on: badge pills
-   ========================================================================== */
-
-.surfaces {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.surfaces li {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  height: 36px;
-  padding: 0 var(--space-4) 0 var(--space-3);
-  border: var(--hairline) solid var(--hairline-color);
-  border-radius: var(--radius-pill);
-  background: var(--surface);
-  font-size: var(--text-sm);
-  line-height: 1;
-}
-
-.surface-icon {
-  color: var(--logo);
-}
-
-.surface-icon svg {
-  width: var(--icon-size);
-  height: var(--icon-size);
-}
-
-/* ==========================================================================
-   Selected work: feature cards
-   ========================================================================== */
-
-.cards {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-4);
-}
-
-@media (min-width: 640px) {
-  .cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .cards {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  height: 100%;
-  padding: var(--space-6);
-  border: var(--hairline) solid var(--hairline-color);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  transition: border-color var(--fast) var(--ease);
-}
-
-.card:hover {
-  border-color: var(--hairline-strong);
-}
-
-.card-title {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-snug);
-  overflow-wrap: anywhere;
-}
-
-.card-desc {
-  color: var(--body);
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
-}
-
-.card-foot {
-  margin-top: auto;
-  padding-top: var(--space-4);
-  color: var(--muted);
-  font-size: var(--text-caption);
-  line-height: var(--leading-snug);
-}
-
-.card:hover .card-foot,
-.card:hover .arrow {
-  color: var(--ink);
-}
-
-/* ==========================================================================
-   Writing: one card of hairline-ruled rows
-   ========================================================================== */
-
-.row-list {
-  overflow: hidden;
-  border: var(--hairline) solid var(--hairline-color);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-}
-
-.row-list li + li {
-  border-top: var(--hairline) solid var(--hairline-color);
-}
-
-.row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-1) var(--space-6);
-  padding: var(--space-5) var(--space-6);
-  transition: background-color var(--fast) var(--ease);
-}
-
-.row:hover {
-  background: var(--canvas-soft);
-}
-
-.row-title {
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
-  line-height: var(--leading-snug);
-  overflow-wrap: anywhere;
-}
-
-.row-desc {
-  grid-column: 1;
-  color: var(--body);
-  font-size: var(--text-sm);
-  line-height: var(--leading-normal);
-}
-
-.row .arrow {
-  grid-column: 2;
-  grid-row: 1;
-  margin: 0;
-  line-height: var(--leading-snug);
-}
-
-.row:hover .arrow {
-  color: var(--ink);
-}
-
-@media (min-width: 768px) {
-  .row {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr) auto;
-    align-items: baseline;
-  }
-
-  .row-desc {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .row .arrow {
-    grid-column: 3;
-  }
-}
-
-/* ==========================================================================
-   Contact: the CTA band
-   ========================================================================== */
-
-.cta-band {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: var(--section-space);
-  padding: var(--space-10) 0;
-  border-top: var(--hairline) solid var(--hairline-color);
-  text-align: center;
-}
-
-.cta-title {
-  font-size: var(--text-display);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
-}
-
-.cta-lead {
-  margin-top: var(--space-3);
-  color: var(--body);
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
-}
-
-.contact-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   gap: var(--space-3);
   margin-top: var(--space-7);
 }
 
-/* Phone: one full-width action per row. */
-@media (max-width: 639px) {
-  .contact-actions {
-    flex-direction: column;
-    align-self: stretch;
+/* Phone: buttons share rows evenly; Copy email takes a row of its own. */
+@media (max-width: 559px) {
+  .hero-actions .btn,
+  .closing-actions .btn {
+    flex: 1 1 40%;
   }
+
+  .closing-actions .copy-email {
+    flex-basis: 100%;
+  }
+}
+
+/* Tested on: one quiet line of platforms with their icons. */
+.platforms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-8);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.platforms-label {
+  color: var(--muted);
+}
+
+.platform-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+}
+
+.platform-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.platform-icon {
+  color: var(--muted);
+}
+
+.platform-icon svg {
+  width: 14px;
+  height: 14px;
 }
 
 /*
@@ -1404,9 +544,6 @@ button {
 .copy-idle,
 .copy-done {
   grid-area: 1 / 1;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
 }
 
 .copy-done,
@@ -1418,74 +555,628 @@ button {
   visibility: visible;
 }
 
-.copy-glyph {
-  opacity: 0.7;
+/* ==========================================================================
+   Sections
+   ========================================================================== */
+
+.section {
+  padding-top: var(--section-space);
 }
 
-.copy-glyph svg {
-  width: 14px;
-  height: 14px;
+.section-title {
+  margin-bottom: var(--space-6);
+  font-size: var(--text-title);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
 }
 
 /* ==========================================================================
-   Footer
+   Shipped for: a cursor.com logo band. A small centred caption over one row
+   of filled tiles, logos in full ink.
    ========================================================================== */
 
-.site-footer {
-  border-top: var(--hairline) solid var(--hairline-color);
+.section-brands {
+  text-align: center;
 }
 
-.footer-inner {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-7) var(--space-6);
-  padding-block: var(--space-9) var(--space-8);
-  color: var(--body);
+.brands-title {
+  margin-bottom: var(--space-5);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+}
+
+.brand-note {
+  margin-top: var(--space-5);
+  color: var(--muted);
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
 }
 
-.footer-brand {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+.brand-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
 }
 
-.footer-brand p {
+@media (min-width: 560px) {
+  .brand-row {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .brand-row {
+    grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+  }
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  height: var(--space-9);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--logo);
+}
+
+@media (min-width: 560px) {
+  .brand {
+    height: 100px;
+  }
+}
+
+.brand-logo {
+  display: block;
+  max-width: 100%;
+}
+
+.brand-logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-note {
+  text-wrap: balance;
+}
+
+.brand-word {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-align: center;
+}
+
+/* ==========================================================================
+   Rows: selected work and writing
+   Full-width filled strips, stacked with a small gap. The title leads; the
+   metadata sits quietly to the right.
+   ========================================================================== */
+
+.rows {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2) var(--space-6);
+  align-items: start;
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  transition: background-color var(--fast) var(--ease);
+}
+
+.row:hover {
+  background: var(--surface-hover);
+}
+
+.row-main {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.row-title {
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  text-wrap: pretty;
+}
+
+.row-desc,
+.row-stack {
   color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.row-meta {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+/* Repo names are identifiers, so they are the one mono text on the page. */
+.row-repo {
+  font-family: var(--font-mono);
   font-size: var(--text-caption);
 }
 
-@media (min-width: 768px) {
-  .footer-inner {
-    grid-template-columns: 2fr repeat(3, minmax(0, 1fr));
+.row:hover .row-meta {
+  color: var(--ink);
+}
+
+.row:hover .arrow {
+  transform: translate(1px, -1px);
+}
+
+/* Phone: the repo name drops beneath the title; the arrow pins top-right. */
+@media (max-width: 639px) {
+  .row {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--space-4) var(--space-8) var(--space-4) var(--space-5);
   }
 
-  .footer-brand {
-    grid-column: auto;
+  .row-meta .arrow {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-5);
+  }
+
+  .row-meta:not(:has(.row-repo)) {
+    display: contents;
   }
 }
 
-.footer-head {
-  margin-bottom: var(--space-3);
+/* ==========================================================================
+   Feature blocks, after cursor.com
+   A filled block: two-tone text on one side, and on the other an app window
+   on a tinted panel. The window is the only raised thing on the page, so it
+   alone carries a shadow. Below 768px the window gives way to a fallback.
+   ========================================================================== */
+
+/* Phone: the block's text stays as the section heading; the window goes. */
+.feature-media {
+  display: none;
+}
+
+.feature {
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .feature {
+    display: grid;
+    margin-bottom: 0;
+    gap: var(--space-6);
+    padding: var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+  }
+
+  .feature-media {
+    display: block;
+  }
+
+  .feature-fallback {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .feature-text {
+    padding: var(--space-4) var(--space-2) 0;
+  }
+}
+
+.feature-title,
+.feature-lede {
+  font-size: var(--text-title);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
+}
+
+.feature-lede {
+  max-width: 24em;
   color: var(--muted);
-  font-size: var(--text-label);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-label);
+  text-wrap: pretty;
+}
+
+@media (min-width: 1024px) {
+  .feature {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    align-items: center;
+  }
+
+  .feature-text {
+    padding: 0 var(--space-6) 0 var(--space-2);
+  }
+
+  .feature-reverse {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+
+  .feature-reverse .feature-text {
+    order: 2;
+    padding: 0 var(--space-2) 0 var(--space-6);
+  }
+}
+
+/* The tinted panel the window sits on; the window runs off its right edge. */
+.feature-media {
+  overflow: hidden;
+  padding: var(--space-8) 0 var(--space-8) var(--space-8);
+  border-radius: var(--radius-sm);
+  background: var(--media);
+}
+
+/* ==========================================================================
+   Window: an app frame with a tab-list sidebar and an editor pane
+   ========================================================================== */
+
+.window {
+  width: calc(100% + var(--space-6));
+  overflow: hidden;
+  border-radius: var(--radius-window);
+  background: var(--window-chrome);
+  box-shadow: var(--shadow-window);
+  font-size: var(--text-caption);
+  line-height: var(--leading-snug);
+}
+
+.window-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 32px;
+  padding: 0 var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.window-dots {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.window-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--fill-hover);
+}
+
+.window-name {
+  color: var(--muted);
+}
+
+.window-body {
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr);
+  height: 420px;
+}
+
+.window-side {
+  overflow-y: auto;
+  padding: var(--space-3) var(--space-2);
+  border-right: 1px solid var(--line);
+}
+
+.window-label {
+  display: flex;
+  gap: var(--space-2);
+  padding: 0 var(--space-2) var(--space-2);
+  color: var(--muted);
+  font-size: var(--text-ui-label);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.footer-col li + li {
-  margin-top: var(--space-2);
+.window-tabs {
+  display: grid;
+  gap: var(--space-1);
 }
 
-.footer-col a {
-  transition: color var(--fast) var(--ease);
+.window-tab {
+  display: grid;
+  gap: 0;
+  width: 100%;
+  padding: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--fast) var(--ease);
 }
 
-.footer-col a:hover {
-  color: var(--ink);
+.window-tab:hover {
+  background: var(--window-hover);
+}
+
+.window-tab[aria-selected='true'] {
+  background: var(--fill);
+}
+
+.window-tab-title,
+.window-tab-sub {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.window-tab-sub {
+  color: var(--muted);
+  font-size: var(--text-ui);
+}
+
+/* A compact tab: the title with a count on the right, on one line. */
+.window-tab:has(.window-tab-count) {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+}
+
+.window-tab-count {
+  color: var(--muted);
+  font-size: var(--text-ui);
+}
+
+.window-main {
+  overflow: hidden;
+  background: var(--window-editor);
+}
+
+.window-panel {
+  height: 100%;
+}
+
+.window-panel:focus-visible {
+  outline-offset: -2px;
+}
+
+.editor-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  background: var(--window-chrome);
+}
+
+.editor-tab {
+  padding: var(--space-2) var(--space-4);
+  border-right: 1px solid var(--line);
+  background: var(--window-editor);
+  margin-bottom: -1px;
+}
+
+.editor-crumb {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  color: var(--muted);
+}
+
+/* The README pane: a small document, set like Cursor's plan view. */
+.doc {
+  max-width: 34em;
+  padding: var(--space-5) var(--space-8) var(--space-6);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.doc-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-title);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
+}
+
+.doc-head {
+  margin-top: var(--space-5);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.doc-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-6);
+  margin-top: var(--space-3);
+}
+
+.doc-tools li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.doc-tool-icon svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+.doc-link {
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+}
+
+/* ==========================================================================
+   Stack: current focus, then the full toolbox behind one disclosure
+   ========================================================================== */
+
+.focus,
+.stack-row {
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .focus,
+  .stack-row {
+    grid-template-columns: var(--label-col) minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+.focus-label,
+.stack-row dt {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+@media (min-width: 768px) {
+  .focus-label {
+    padding-top: var(--space-1);
+  }
+}
+
+.focus-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tool-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 32px;
+  padding: 0 var(--space-3) 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--fill);
+  font-size: var(--text-sm);
+  line-height: 1;
+}
+
+.tool-icon svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+.toolbox {
+  margin-top: var(--space-6);
+}
+
+/* The toggle lines up with the focus pills, under their label column. */
+@media (min-width: 768px) {
+  .toolbox summary {
+    margin-left: calc(var(--label-col) + var(--space-6));
+  }
+}
+
+.toolbox summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--link);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  cursor: pointer;
+  list-style: none;
+}
+
+.toolbox summary::-webkit-details-marker {
+  display: none;
+}
+
+.chevron {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  transition: transform var(--fast) var(--ease);
+}
+
+.toolbox[open] .chevron {
+  transform: rotate(180deg);
+}
+
+.stack {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  padding: var(--space-6);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.stack-row {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+/* Inside the padded panel, the list column still lines up with the pills. */
+@media (min-width: 768px) {
+  .stack-row {
+    grid-template-columns: calc(var(--label-col) - var(--space-6)) minmax(0, 1fr);
+  }
+}
+
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-1);
+}
+
+.inline-list li:not(:last-child)::after {
+  content: ',';
+}
+
+/* ==========================================================================
+   Text link: "More on Medium →"
+   ========================================================================== */
+
+.text-link {
+  display: inline-flex;
+  margin-top: var(--space-5);
+  color: var(--link);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+.text-link:hover .arrow {
+  transform: translateX(2px);
+}
+
+/* ==========================================================================
+   Closing: one large line and the contact actions, as cursor.com ends with
+   "Try Cursor now." Then a slim filled footer.
+   ========================================================================== */
+
+.closing {
+  padding-block: calc(var(--section-space) * 1.5);
+  text-align: center;
+}
+
+.closing-title {
+  font-size: var(--text-display);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.closing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+}
+
+.site-footer {
+  padding-block: var(--space-7);
+  background: var(--surface);
+}
+
+.footer-base {
+  color: var(--muted);
+  font-size: var(--text-caption);
 }
 
 /* ==========================================================================

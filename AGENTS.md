@@ -23,23 +23,28 @@ npm run format     # Prettier
 ## Design rules
 
 - This is a personal site, not a resume. Don't add job timelines, dates, education or certifications.
-- Don't print the email address anywhere on the page. The Contact section's "Copy email" action copies it (falling back to `mailto:` without a clipboard).
-- **Cursor-style editorial calm** (see `DESIGN.md`, adapted in `css/style.css`):
-  - Warm-cream canvas and warm near-black ink; depth from hairlines and white-on-cream surfaces only. No shadows, gradients or decorative motion.
-  - Inter (standing in for CursorGothic) for text, with display sizes at weight 400 and negative tracking. JetBrains Mono only on code-like surfaces: the IDE mockup, repo names, counts and meta. Set every `font-size` from the type-scale tokens; don't add one-off sizes.
-  - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid). Radii come from the `--radius-*` tokens: 8px for buttons and tiles, 12px for cards.
-- **Orange:** `--primary` is for the wordmark mark and focus rings; `--primary-fill` (a step darker, so white labels pass AA) is for the one primary action, Copy email. Everything else uses ink or secondary buttons.
-- **Timeline pastels** stay inside the hero's IDE mockup. The mockup is built from `content.json`, repeats facts stated elsewhere, and is `aria-hidden`.
-- **Markers:** current focus in the toolbox inverts the tile to ink, with a legend and screen-reader text. Employers and clients are separate labelled groups rather than marked tiles.
-- **Themes:** light (cream) is the default; the warm dark theme must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
-- **Logos:** single-colour `currentColor` SVGs only. Every toolbox item shows a logo; when a tool has none, use the closest matching icon (see `src/icons/`). `lava`, `gionee`, `altbalaji`, `ffi` and `marquistech` in `src/icons/` are stand-in wordmarks set from Inter's outlines; swap in the official marks when available. Social links pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
-- **Toolbox grid:** tiles are whole-pixel squares, sized with `round()` against the table's container width so every row lines up.
+- Don't print the email address anywhere on the page. The Copy email button in the closing contact copies it, falling back to `mailto:` without a clipboard.
+- **Minimal, after cursor.com:** every section must earn its space, and nothing is said twice. Order, as on cursor.com: hero, Selected work (its window is the page's focal point), Shipped for, Stack, Writing, the closing contact, and a slim footer. Sections align to one left edge; the logo band and the closing are centred, as on cursor.com.
+  - Warm-cream (`#f7f7f4`) or warm-dark (`#14120b`) canvas. Depth comes from filled surfaces (4px radius), not borders or rules. The feature windows are the only raised things and the only shadows (`--shadow-window`, measured from cursor.com). No gradients or decorative motion.
+  - Inter (standing in for CursorGothic) at weight 400 for display type. Sizes follow cursor.com's: 26px hero (`--text-headline`), 22px section titles and block text (`--text-title`), 14px captions, and one large closing line (`--text-display`, like "Try Cursor now."). JetBrains Mono only for repo names. No labels or kickers above headings. Set every `font-size` from the type-scale tokens; don't add one-off sizes.
+  - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid).
+  - Buttons are pills: the primary is an ink inversion (Copy email), the secondary a soft fill.
+- **Orange:** `--primary` is for the wordmark mark and focus rings; `--link` is for text links ("More on Medium →"). Nothing else is orange.
+- **Hero:** avatar, then one two-tone block at headline size (the name in ink; role, place and statement in grey), the LinkedIn (primary) and GitHub buttons, and a "Tested on" line of platforms with icons. No Copy email here.
+- **Shipped for:** a cursor.com logo band: a small centred caption over one row of filled 100px tiles, client logos in full ink, ordered by market value (largest first; private companies placed by scale). Employers are named in one line beneath.
+- **Closing:** "Get in touch." at display size, centred, with Copy email and every social.
+- **Feature blocks (Selected work, Stack):** as on cursor.com, a filled block with two-tone text on one side and an app window on a tinted `--media` panel on the other, alternating sides. Each window's sidebar is an ARIA tab list (click, arrow keys, Home and End; `src/main.ts`) that swaps a README-style pane: repositories with their description, logos and GitHub link; toolbox groups with their tools. Everything in them comes from `content.json`. Below 768px the windows give way to plain fallbacks: work rows, focus pills and an "All N tools" disclosure.
+- **Writing:** full-width filled rows: title in ink, a grey line beneath, the arrow on the right.
+- Project `stack` entries must be toolbox item names; the build checks this.
+- Inlined icons get per-copy ids (see `decorate` in `src/render.ts`), since one icon can appear several times, some of them in hidden panels.
+- **Themes:** follow the system setting until the toggle is used; the choice is remembered. Both themes must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
+- **Logos:** single-colour `currentColor` SVGs only. Focus tools and client brands show logos; when a tool has none, use the closest matching icon (see `src/icons/`). Social buttons pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
 - **Accessibility:**
   - Keep the skip link, one `h1`, visible focus rings in both themes, and support for `prefers-reduced-motion`.
   - Don't rely on colour alone to convey meaning.
 
 ## Before you finish
 
-Run `npm run validate`. The tests check that content renders from the JSON, that table cells stay square and uniform, the copy button, the theme toggle, axe in both themes, and that nothing overflows horizontally from phone to wide desktop.
+Run `npm run validate`. The tests check that content renders from the JSON (logos, windows, rows, fallbacks), the window tabs by click and keyboard, the copy buttons, the system theme and toggle, axe in both themes, and that nothing overflows horizontally from phone to wide desktop.
 
 Work on a branch, and keep changes scoped.

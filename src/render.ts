@@ -1,16 +1,7 @@
 // Turns data/content.json into the page's static HTML. Runs at build time (and
 // on every dev-server request) from vite.config.ts, so the shipped page is plain
 // HTML with no client-side rendering, loading states or layout shift.
-import type {
-  Article,
-  Brand,
-  PortfolioData,
-  Project,
-  SectionId,
-  Surface,
-  Tool,
-  ToolGroup,
-} from './types.ts';
+import type { Article, PortfolioData, Project, SectionId, Tool } from './types.ts';
 
 export type IconResolver = (name: string | undefined) => string | null;
 
@@ -20,18 +11,24 @@ export interface RenderedPage {
 }
 
 const NAV: { id: SectionId; label: string }[] = [
-  { id: 'brands', label: 'Worked with' },
-  { id: 'toolbox', label: 'Toolbox' },
   { id: 'work', label: 'Work' },
+  { id: 'toolbox', label: 'Stack' },
   { id: 'writing', label: 'Writing' },
 ];
 
+// Socials in the hero; the first is the primary button. The closing contact
+// carries them all, with Copy email.
+const HERO_SOCIALS = ['LinkedIn', 'GitHub'];
+
 const ARROW = '<span class="arrow" aria-hidden="true">↗</span>';
+const RIGHT = '<span class="arrow" aria-hidden="true">→</span>';
 
 const SUN_ICON =
   '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>';
 const MOON_ICON =
   '<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.1A8.5 8.5 0 1 1 9.9 3.5a6.8 6.8 0 0 0 10.6 10.6Z"/></svg>';
+const CHEVRON =
+  '<svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4"/></svg>';
 
 // The wordmark's mark: an orange tile with a prompt chevron.
 const MARK =
@@ -46,19 +43,32 @@ export function escapeHtml(value: string): string {
     .replace(/'/g, '&#39;');
 }
 
-function decorate(svg: string | null): string {
-  return svg ? svg.replace('<svg ', '<svg aria-hidden="true" focusable="false" ') : '';
-}
+// An icon can be inlined several times (a hero pill, a hidden window panel),
+// so ids inside it, such as a mask's, get a per-copy suffix. Otherwise every
+// copy would point at the first, which may sit in a hidden element and not paint.
+let iconCopy = 0;
 
-function scaleStyle(scale: number | undefined): string {
-  return scale && scale !== 1 ? ` style="--scale: ${scale}"` : '';
+function decorate(svg: string | null): string {
+  if (!svg) return '';
+  const ids = [...svg.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1] as string);
+  let out = svg.replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+  if (ids.length > 0) {
+    const n = ++iconCopy;
+    for (const id of ids) {
+      out = out
+        .replaceAll(`id="${id}"`, `id="${id}-${n}"`)
+        .replaceAll(`url(#${id})`, `url(#${id}-${n})`)
+        .replaceAll(`href="#${id}"`, `href="#${id}-${n}"`);
+    }
+  }
+  return out;
 }
 
 // Logo walls look even when every logo covers roughly the same area, not the
 // same height: a wide wordmark gets shorter, a compact mark gets taller.
-const LOGO_AREA = 42; // square root of the target area, in px
-const LOGO_MAX_W = 112;
-const LOGO_MAX_H = 32;
+const LOGO_AREA = 50; // square root of the target area, in px
+const LOGO_MAX_W = 120;
+const LOGO_MAX_H = 40;
 
 function logoSize(svg: string, scale = 1): string {
   const box = svg
@@ -80,28 +90,34 @@ function joinList(items: string[]): string {
   return `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
 }
 
-function pad(n: number): string {
-  return String(n).padStart(2, '0');
-}
-
 function isVisible(data: PortfolioData, id: SectionId, hasContent: boolean): boolean {
   return data.visibility?.[id] !== false && hasContent;
 }
 
+function external(url: string): string {
+  return `href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer"`;
+}
+
 // Social links lead with the logo whose slug is the label in lower case
 // (LinkedIn -> linkedin), so a new network only needs an icon to get a logo.
-function socialLink(label: string, url: string, icon: IconResolver, className: string): string {
+function socialButton(label: string, url: string, icon: IconResolver, primary = false): string {
   const svg = icon(label.toLowerCase());
-  return `<a class="${className}" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${
-    svg ? `<span class="link-icon">${decorate(svg)}</span>` : ''
+  return `<a class="btn ${primary ? 'btn-primary' : 'btn-secondary'}" ${external(url)}>${
+    svg ? `<span class="btn-icon">${decorate(svg)}</span>` : ''
   }<span>${escapeHtml(label)}${ARROW}</span></a>`;
 }
 
-function sectionHeader(id: string, title: string, meta = ''): string {
-  return `<header class="section-head">
-        <h2 class="section-title" id="${id}-title">${escapeHtml(title)}</h2>
-        ${meta ? `<p class="section-meta">${escapeHtml(meta)}</p>` : ''}
-      </header>`;
+// The address is never shown: the button copies it, and falls back to opening
+// the mail app where the clipboard is unavailable. The hero's button carries
+// the id; every copy button reports through one status line.
+function emailButton(email: string, id = ''): string {
+  return `<button class="btn btn-primary copy-email"${id ? ` id="${id}"` : ''} type="button" data-email="${escapeHtml(email)}">
+          <span class="copy-label"><span class="copy-idle">Copy email</span><span class="copy-done">Email copied</span></span>
+        </button>`;
+}
+
+function sectionHeader(id: string, title: string): string {
+  return `<h2 class="section-title" id="${id}-title">${escapeHtml(title)}</h2>`;
 }
 
 function renderHeader(data: PortfolioData, visible: Set<SectionId>): string {
@@ -113,385 +129,363 @@ function renderHeader(data: PortfolioData, visible: Set<SectionId>): string {
   <div class="container header-inner">
     <a class="wordmark" href="#top">${MARK}<span>${escapeHtml(data.name)}</span></a>
     <nav class="site-nav" id="site-nav" aria-label="Sections">${links}</nav>
-    <div class="header-actions">
-      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme">
-        ${SUN_ICON}${MOON_ICON}
-      </button>
-      ${visible.has('contact') ? '<a class="btn btn-ink btn-sm" href="#contact">Get in touch</a>' : ''}
-    </div>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">
+      ${SUN_ICON}${MOON_ICON}
+    </button>
   </div>
 </header>`;
 }
 
-/* --------------------------------------------------------------------------
-   IDE mockup: the hero's signature surface. Everything in it is drawn from
-   content.json, and it repeats facts the page states elsewhere, so it is
-   hidden from assistive technology.
-   -------------------------------------------------------------------------- */
-
-const tk = (kind: string, text: string) => `<span class="tk-${kind}">${escapeHtml(text)}</span>`;
-const str = (text: string) => tk('str', `'${text}'`);
-const line = (html = '') => `<span class="ide-line">${html}</span>`;
-
-function renderCode(data: PortfolioData): string {
-  const tools = (data.toolbox?.items ?? []).filter((t) => !t.disabled);
-  const focus = tools.filter((t) => t.focus).map((t) => t.name);
-  const fields: [string, string | undefined][] = [
-    ['name', data.name],
-    ['role', data.role],
-    ['location', data.location],
-    ['status', data.status],
-  ];
-
-  const lines = [
-    line(tk('com', '// Rendered into index.html at build time')),
-    line(`${tk('kw', 'export const')} ${tk('fn', 'profile')} ${tk('pun', '= {')}`),
-    ...fields
-      .filter((f): f is [string, string] => Boolean(f[1]))
-      .map(([key, value]) =>
-        line(`  ${tk('key', key)}${tk('pun', ':')} ${str(value)}${tk('pun', ',')}`)
-      ),
-  ];
-
-  if (focus.length > 0) {
-    lines.push(line(`  ${tk('key', 'focus')}${tk('pun', ': [')}`));
-    for (let i = 0; i < focus.length; i += 3) {
-      const chunk = focus.slice(i, i + 3).map((f) => `${str(f)}${tk('pun', ',')}`);
-      lines.push(line(`    ${chunk.join(' ')}`));
-    }
-    lines.push(line(`  ${tk('pun', '],')}`));
-  }
-
-  lines.push(
-    line(
-      `  ${tk('key', 'tools')}${tk('pun', ':')} ${tk('num', String(tools.length))}${tk('pun', ',')}`
-    )
-  );
-  if (data.surfaces?.length) {
-    lines.push(
-      line(
-        `  ${tk('key', 'surfaces')}${tk('pun', ':')} ${tk('num', String(data.surfaces.length))}${tk('pun', ',')}`
-      )
-    );
-  }
-  lines.push(
-    line(`${tk('pun', '}')} ${tk('kw', 'satisfies')} ${tk('fn', 'Person')}${tk('pun', ';')}`)
-  );
-
-  return `<pre class="ide-code">${lines.join('')}</pre>`;
-}
-
-function renderIde(data: PortfolioData): string {
-  const projects = (data.projects ?? []).filter((p) => !p.disabled);
-  const focusCount = (data.toolbox?.items ?? []).filter((t) => t.focus && !t.disabled).length;
-
-  const tree = [
-    `<li class="ide-dir">yashwant-das</li>`,
-    projects.length
-      ? `<li class="ide-dir ide-indent">work</li>${projects
-          .map((p) => `<li class="ide-indent-2">${escapeHtml(p.title)}</li>`)
-          .join('')}`
-      : '',
-    `<li class="ide-indent is-active">profile.ts</li>`,
-    `<li class="ide-indent">toolbox.json</li>`,
-    data.articles?.length ? `<li class="ide-indent">writing.md</li>` : '',
-  ].join('');
-
-  const steps: [string, string][] = [
-    ['thinking', 'Planning a summary'],
-    ['read', 'profile.ts'],
-    ['grep', `focus: true · ${focusCount} results`],
-    ['edit', 'index.html'],
-    ['done', 'Rendered'],
-  ];
-  const labels: Record<string, string> = {
-    thinking: 'Thinking',
-    read: 'Read',
-    grep: 'Grep',
-    edit: 'Edit',
-    done: 'Done',
-  };
-
-  return `<div class="ide" aria-hidden="true">
-        <div class="ide-bar">
-          <span class="ide-dots"><span></span><span></span><span></span></span>
-          <span class="ide-title">yashwant-das · profile.ts</span>
-        </div>
-        <div class="ide-body">
-          <div class="ide-pane ide-side">
-            <p class="ide-label">Explorer</p>
-            <ul class="ide-tree">${tree}</ul>
-          </div>
-          <div class="ide-pane ide-editor">
-            <div class="ide-tabs"><span class="ide-tab">profile.ts</span><span class="ide-tab is-muted">toolbox.json</span></div>
-            ${renderCode(data)}
-          </div>
-          <div class="ide-pane ide-agent">
-            <p class="ide-label">Agent</p>
-            <p class="ide-prompt">Summarise profile.ts</p>
-            <ol class="ide-timeline">
-              ${steps
-                .map(
-                  ([kind, detail]) =>
-                    `<li><span class="pill pill-${kind}">${labels[kind]}</span><span class="ide-step">${escapeHtml(detail)}</span></li>`
-                )
-                .join('')}
-            </ol>
-            ${data.description ? `<p class="ide-reply">${escapeHtml(data.description)}</p>` : ''}
-          </div>
-        </div>
+// The platforms tested on, with their icons: the widest proof of the
+// statement, so it sits in the hero.
+function renderPlatforms(data: PortfolioData, icon: IconResolver): string {
+  const surfaces = data.surfaces ?? [];
+  return `<div class="platforms">
+        <p class="platforms-label" id="platforms-label">Tested on</p>
+        <ul class="platform-list" role="list" aria-labelledby="platforms-label">
+          ${surfaces
+            .map((s) => {
+              const svg = icon(s.icon);
+              return `<li>${svg ? `<span class="platform-icon">${decorate(svg)}</span>` : ''}${escapeHtml(s.name)}</li>`;
+            })
+            .join('')}
+        </ul>
       </div>`;
 }
 
 function renderHero(data: PortfolioData, icon: IconResolver, visible: Set<SectionId>): string {
   const socials = data.contact.socials ?? {};
-  const heroLinks = ['GitHub', 'LinkedIn']
-    .filter((label) => socials[label])
-    .map((label) => socialLink(label, socials[label] ?? '', icon, 'link'))
-    .join('');
-  const role = [data.role, data.location]
-    .filter(Boolean)
-    .map((s) => `<span>${escapeHtml(s as string)}</span>`);
+  const role = data.location ? `${data.role} in ${data.location}.` : `${data.role}.`;
+  const links = HERO_SOCIALS.filter((label) => socials[label]);
+  const actions =
+    visible.has('contact') && links.length > 0
+      ? `<div class="hero-actions">
+        ${links.map((label, i) => socialButton(label, socials[label] ?? '', icon, i === 0)).join('\n        ')}
+      </div>`
+      : '';
 
+  // As on cursor.com, the hero is one two-tone block at headline size: the
+  // name in ink, then role, place and statement in grey. The work window
+  // right below is the page's focal point.
   return `<section class="hero" id="top" aria-labelledby="hero-name">
     <div class="container">
-      <div class="hero-id">
-        ${
-          data.avatar
-            ? `<img class="hero-avatar" src="/${escapeHtml(data.avatar)}" alt="Portrait of ${escapeHtml(data.name)}" width="40" height="40" fetchpriority="high" decoding="async" />`
-            : ''
-        }
-        <p class="hero-role">${role.join('<span class="sep" aria-hidden="true">·</span>')}</p>
-        ${
-          data.status
-            ? `<p class="status"><span class="status-dot" aria-hidden="true"></span>${escapeHtml(data.status)}</p>`
-            : ''
-        }
+      ${
+        data.avatar
+          ? `<img class="hero-avatar" src="/${escapeHtml(data.avatar)}" alt="Portrait of ${escapeHtml(data.name)}" width="48" height="48" fetchpriority="high" decoding="async" />`
+          : ''
+      }
+      <div class="hero-text">
+        <h1 class="hero-name" id="hero-name">${escapeHtml(data.name)}</h1>
+        <p class="hero-lede"><span class="hero-role">${escapeHtml(role)}</span> <span class="hero-statement">${escapeHtml(data.statement)}</span></p>
       </div>
-      <h1 class="hero-name" id="hero-name">${escapeHtml(data.name)}</h1>
-      <p class="hero-statement">${escapeHtml(data.statement)}</p>
-      <div class="hero-actions">
-        ${visible.has('work') ? '<a class="btn btn-ink" href="#work">See selected work</a>' : ''}
-        ${heroLinks}
-      </div>
-      ${renderIde(data)}
+      ${
+        data.status
+          ? `<p class="status"><span class="status-dot" aria-hidden="true"></span>${escapeHtml(data.status)}</p>`
+          : ''
+      }
+      ${actions}
+      ${visible.has('surfaces') ? renderPlatforms(data, icon) : ''}
     </div>
   </section>`;
 }
 
-function renderBrand(brand: Brand, icon: IconResolver): string {
-  const svg = icon(brand.logo);
-  const kind = brand.kind === 'employer' ? 'Employer' : 'Client';
-  const inner = svg
-    ? `<span class="brand-logo"${logoSize(svg, brand.scale)}>${decorate(svg)}</span><span class="sr-only">${escapeHtml(brand.name)}</span>`
-    : `<span class="brand-word">${escapeHtml(brand.name)}</span>`;
-  return `<li class="brand" data-kind="${brand.kind}" title="${escapeHtml(brand.name)} · ${kind}">${inner}<span class="sr-only"> (${kind.toLowerCase()})</span></li>`;
-}
-
+// Client logos in one row; the employers the work came through are named
+// beneath rather than shown as logos.
 function renderBrands(data: PortfolioData, icon: IconResolver): string {
-  // Employers first, then clients, each in data order. Each group lays out in
-  // two rows on wide screens, so the two share one row of equal tiles.
   const all = (data.brands?.items ?? []).filter((b) => !b.disabled);
-  const groups = [
-    { kind: 'employer', label: 'Employers', items: all.filter((b) => b.kind === 'employer') },
-    { kind: 'client', label: 'Clients', items: all.filter((b) => b.kind === 'client') },
-  ]
-    .filter((g) => g.items.length > 0)
-    .map((g) => ({ ...g, span: Math.ceil(g.items.length / 2) }));
-  const cols = groups.reduce((sum, g) => sum + g.span, 0);
+  const clients = all.filter((b) => b.kind === 'client');
+  const employers = all.filter((b) => b.kind === 'employer').map((b) => b.name);
+  const wall = clients.length > 0 ? clients : all;
 
-  const html = groups
-    .map(
-      (
-        g
-      ) => `<div class="brand-group" role="group" aria-labelledby="brands-${g.kind}" style="--span: ${g.span}">
-          <h3 class="group-head" id="brands-${g.kind}">${g.label}<span class="group-count">${g.items.length}</span></h3>
-          <ul class="brand-grid" role="list">
-            ${g.items.map((b) => renderBrand(b, icon)).join('\n            ')}
-          </ul>
-        </div>`
-    )
+  const tiles = wall
+    .map((brand) => {
+      const svg = icon(brand.logo);
+      const inner = svg
+        ? `<span class="brand-logo"${logoSize(svg, brand.scale)}>${decorate(svg)}</span><span class="sr-only">${escapeHtml(brand.name)}</span>`
+        : `<span class="brand-word">${escapeHtml(brand.name)}</span>`;
+      return `<li class="brand" data-kind="${brand.kind}" title="${escapeHtml(brand.name)}">${inner}</li>`;
+    })
     .join('\n        ');
 
-  return `<section class="section" id="brands" aria-labelledby="brands-title">
+  const through =
+    clients.length > 0 && employers.length > 0
+      ? `<p class="brand-note">Through ${escapeHtml(joinList(employers))}.</p>`
+      : '';
+
+  // A cursor.com logo band: one small centred caption over a row of tiles.
+  return `<section class="section section-brands" id="brands" aria-labelledby="brands-title">
     <div class="container">
-      ${sectionHeader('brands', 'Worked with', `${all.length} companies`)}
-      <div class="brand-groups" style="--cols: ${cols}">
-        ${html}
-      </div>
-      ${data.brands?.note ? `<p class="note">${escapeHtml(data.brands.note)}</p>` : ''}
-    </div>
-  </section>`;
-}
-
-function renderElement(tool: Tool, n: number, icon: IconResolver): string {
-  const svg = icon(tool.icon);
-  return `<li class="el${tool.focus ? ' is-focus' : ''}" title="${escapeHtml(tool.name)}">
-            <span class="el-num" aria-hidden="true">${n}</span>
-            <span class="el-logo"${scaleStyle(tool.scale)} aria-hidden="true">${decorate(svg)}</span>
-            <span class="el-name">${escapeHtml(tool.name)}</span>${
-              tool.focus ? '<span class="sr-only"> (current focus)</span>' : ''
-            }
-          </li>`;
-}
-
-function renderToolbox(data: PortfolioData, icon: IconResolver): string {
-  const groups: ToolGroup[] = data.toolbox?.groups ?? [];
-  const items = (data.toolbox?.items ?? []).filter((t) => !t.disabled);
-  let n = 0;
-
-  const rows = groups
-    .map((group, g) => {
-      const tools = items.filter((t) => t.group === group.id);
-      if (tools.length === 0) return '';
-      const start = n + 1;
-      const cells = tools.map((t) => renderElement(t, ++n, icon)).join('\n          ');
-      return `<div class="pgroup" role="group" aria-labelledby="group-${group.id}">
-        <h3 class="group-head pgroup-head" id="group-${group.id}"><span class="pgroup-num" aria-hidden="true">${pad(g + 1)}</span>${escapeHtml(group.label)}<span class="group-count">${tools.length}</span></h3>
-        <ol class="pgroup-cells" start="${start}">
-          ${cells}
-        </ol>
-      </div>`;
-    })
-    .filter(Boolean);
-
-  return `<section class="section" id="toolbox" aria-labelledby="toolbox-title">
-    <div class="container">
-      ${sectionHeader('toolbox', 'Toolbox', `${n} elements`)}
-      <div class="ptable">
-      ${rows.join('\n      ')}
-      </div>
-      <div class="legend">
-        <p class="legend-key"><span class="legend-swatch" aria-hidden="true"></span>Current focus</p>
-        <p>Logos belong to their owners</p>
-      </div>
-    </div>
-  </section>`;
-}
-
-function renderSurface(surface: Surface, icon: IconResolver): string {
-  const svg = icon(surface.icon);
-  return `<li>${svg ? `<span class="surface-icon">${decorate(svg)}</span>` : ''}${escapeHtml(surface.name)}</li>`;
-}
-
-function renderSurfaces(data: PortfolioData, icon: IconResolver): string {
-  const surfaces = data.surfaces ?? [];
-  return `<section class="section" id="surfaces" aria-labelledby="surfaces-title">
-    <div class="container">
-      ${sectionHeader('surfaces', 'Tested on', `${surfaces.length} platforms`)}
-      <ul class="surfaces" role="list">
-        ${surfaces.map((s) => renderSurface(s, icon)).join('\n        ')}
+      <h2 class="brands-title" id="brands-title">${clients.length > 0 ? 'Shipped for these clients' : 'Worked with'}</h2>
+      <ul class="brand-row" role="list" style="--count: ${wall.length}">
+        ${tiles}
       </ul>
+      ${through}
     </div>
   </section>`;
 }
 
+// Work and writing share one row: the title in ink, a grey line beneath, and
+// quiet metadata on the right.
 function renderProject(project: Project): string {
+  const stack = project.stack?.length
+    ? `<span class="row-stack">${project.stack.map(escapeHtml).join(', ')}</span>`
+    : '';
   return `<li>
-          <a class="card" href="${escapeHtml(project.code)}" target="_blank" rel="noopener noreferrer">
-            <span class="card-title">${escapeHtml(project.title)}</span>
-            <span class="card-desc">${escapeHtml(project.description)}</span>
-            <span class="card-foot">GitHub${ARROW}</span>
+          <a class="row" ${external(project.code)}>
+            <span class="row-main">
+              <span class="row-title">${escapeHtml(project.description)}</span>
+              ${stack}
+            </span>
+            <span class="row-meta"><span class="row-repo">${escapeHtml(project.title)}</span>${ARROW}</span>
           </a>
         </li>`;
 }
 
-function renderWork(data: PortfolioData): string {
-  const projects = (data.projects ?? []).filter((p) => !p.disabled);
-  return `<section class="section" id="work" aria-labelledby="work-title">
+/* --------------------------------------------------------------------------
+   Feature blocks, after cursor.com: two-tone text on one side and an app
+   window on a tinted panel on the other. The window is a real control: its
+   sidebar is a tab list (click or arrow keys, see src/main.ts) that swaps the
+   main pane. Phones get a plain fallback instead, since the window needs room.
+   -------------------------------------------------------------------------- */
+
+interface WindowTab {
+  title: string;
+  sub?: string;
+  count?: number;
+  panel: string;
+}
+
+function renderWindow(id: string, name: string, label: string, tabs: WindowTab[]): string {
+  const list = tabs
+    .map(
+      (
+        tab,
+        i
+      ) => `<button class="window-tab" type="button" role="tab" id="${id}-tab-${i}" aria-controls="${id}-panel-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">
+              <span class="window-tab-title">${escapeHtml(tab.title)}</span>${
+                tab.sub ? `<span class="window-tab-sub">${escapeHtml(tab.sub)}</span>` : ''
+              }${
+                tab.count !== undefined
+                  ? `<span class="window-tab-count"><span class="sr-only">, </span>${tab.count}<span class="sr-only"> tools</span></span>`
+                  : ''
+              }
+            </button>`
+    )
+    .join('\n            ');
+  const panels = tabs
+    .map(
+      (
+        tab,
+        i
+      ) => `<div class="window-panel" role="tabpanel" id="${id}-panel-${i}" aria-labelledby="${id}-tab-${i}" tabindex="0"${i === 0 ? '' : ' hidden'}>
+            ${tab.panel}
+          </div>`
+    )
+    .join('\n          ');
+
+  return `<div class="window" data-tabs>
+        <div class="window-bar"><span class="window-dots" aria-hidden="true"><span></span><span></span><span></span></span><span class="window-name">${escapeHtml(name)}</span></div>
+        <div class="window-body">
+          <div class="window-side">
+            <p class="window-label" id="${id}-label">${escapeHtml(label)}<span>${tabs.length}</span></p>
+            <div class="window-tabs" role="tablist" aria-orientation="vertical" aria-labelledby="${id}-label">
+            ${list}
+            </div>
+          </div>
+          <div class="window-main">
+          ${panels}
+          </div>
+        </div>
+      </div>`;
+}
+
+// One file tab and a breadcrumb, like the top of an editor pane.
+function editorHead(file: string, crumb: string): string {
+  return `<div class="editor-tabs"><span class="editor-tab">${escapeHtml(file)}</span></div>
+            <p class="editor-crumb">${escapeHtml(crumb)}<span aria-hidden="true">›</span>${escapeHtml(file)}</p>`;
+}
+
+function toolList(names: string[], tools: Map<string, Tool>, icon: IconResolver): string {
+  return `<ul class="doc-tools" role="list">${names
+    .map((name) => {
+      const svg = icon(tools.get(name)?.icon);
+      return `<li>${svg ? `<span class="doc-tool-icon">${decorate(svg)}</span>` : ''}${escapeHtml(name)}</li>`;
+    })
+    .join('')}</ul>`;
+}
+
+function featureBlock(
+  id: string,
+  title: string,
+  lede: string,
+  media: string,
+  fallback: string,
+  reverse = false
+): string {
+  return `<section class="section" id="${id}" aria-labelledby="${id}-title">
     <div class="container">
-      ${sectionHeader('work', 'Selected work', 'Open source on GitHub')}
-      <ol class="cards" role="list">
-        ${projects.map(renderProject).join('\n        ')}
-      </ol>
+      <div class="feature${reverse ? ' feature-reverse' : ''}">
+        <div class="feature-text">
+          <h2 class="feature-title" id="${id}-title">${escapeHtml(title)}</h2>
+          <p class="feature-lede">${escapeHtml(lede)}</p>
+        </div>
+        <div class="feature-media">
+      ${media}
+        </div>
+      </div>
+      <div class="feature-fallback">
+      ${fallback}
+      </div>
     </div>
   </section>`;
 }
 
+function renderWork(data: PortfolioData, icon: IconResolver): string {
+  const projects = (data.projects ?? []).filter((p) => !p.disabled);
+  const tools = new Map((data.toolbox?.items ?? []).map((t) => [t.name, t]));
+
+  const tabs = projects.map((p) => ({
+    title: p.title,
+    sub: p.stack?.join(', '),
+    panel: `${editorHead('README.md', p.title)}
+            <div class="doc">
+              <h3 class="doc-title">${escapeHtml(p.title)}</h3>
+              <p class="doc-text">${escapeHtml(p.description)}</p>
+              ${p.stack?.length ? `<p class="doc-head">Built with</p>${toolList(p.stack, tools, icon)}` : ''}
+              <a class="text-link doc-link" ${external(p.code)}>View on GitHub${RIGHT}</a>
+            </div>`,
+  }));
+
+  return featureBlock(
+    'work',
+    'Selected work',
+    `${projects.length} open-source projects on GitHub. Pick one to see what it does and what it is built with.`,
+    renderWindow('work', 'yashwant-das', 'Repositories', tabs),
+    `<ol class="rows" role="list">
+        ${projects.map(renderProject).join('\n        ')}
+      </ol>`
+  );
+}
+
+function renderFocus(tool: Tool, icon: IconResolver): string {
+  const svg = icon(tool.icon);
+  return `<li class="tool-pill">${svg ? `<span class="tool-icon">${decorate(svg)}</span>` : ''}${escapeHtml(tool.name)}</li>`;
+}
+
+function inlineList(names: string[]): string {
+  return `<ul class="inline-list" role="list">${names.map((n) => `<li>${escapeHtml(n)}</li>`).join('')}</ul>`;
+}
+
+// Current focus leads; the window lists every group, and the phone fallback
+// keeps the full toolbox behind one disclosure.
+function renderStack(data: PortfolioData, icon: IconResolver): string {
+  const items = (data.toolbox?.items ?? []).filter((t) => !t.disabled);
+  const tools = new Map(items.map((t) => [t.name, t]));
+  const focus = items.filter((t) => t.focus);
+  const groups = (data.toolbox?.groups ?? [])
+    .map((group) => ({
+      label: group.label,
+      names: items.filter((t) => t.group === group.id).map((t) => t.name),
+    }))
+    .filter((g) => g.names.length > 0);
+  const all = [
+    ...(focus.length > 0 ? [{ label: 'Current focus', names: focus.map((t) => t.name) }] : []),
+    ...groups,
+  ];
+
+  const tabs = all.map((g) => ({
+    title: g.label,
+    count: g.names.length,
+    panel: `${editorHead('toolbox.json', 'Stack')}
+            <div class="doc">
+              <h3 class="doc-title">${escapeHtml(g.label)}</h3>
+              ${toolList(g.names, tools, icon)}
+            </div>`,
+  }));
+
+  const fallback = `${
+    focus.length > 0
+      ? `<div class="focus">
+        <p class="focus-label" id="focus-label">Current focus</p>
+        <ul class="focus-list" role="list" aria-labelledby="focus-label">${focus.map((t) => renderFocus(t, icon)).join('')}</ul>
+      </div>`
+      : ''
+  }
+      <details class="toolbox">
+        <summary>All ${items.length} tools${CHEVRON}</summary>
+        <dl class="stack">
+          ${groups
+            .map(
+              (g) => `<div class="stack-row">
+            <dt>${escapeHtml(g.label)}</dt>
+            <dd>${inlineList(g.names)}</dd>
+          </div>`
+            )
+            .join('\n          ')}
+        </dl>
+      </details>`;
+
+  return featureBlock(
+    'toolbox',
+    'Stack',
+    `What I work with most right now, and the full toolbox of ${items.length} tools.`,
+    renderWindow('stack', 'toolbox.json', 'Groups', tabs),
+    fallback,
+    true
+  );
+}
+
 function renderArticle(article: Article): string {
   return `<li>
-          <a class="row" href="${escapeHtml(article.url)}" target="_blank" rel="noopener noreferrer">
-            <span class="row-title">${escapeHtml(article.title)}</span>
-            ${article.description ? `<span class="row-desc">${escapeHtml(article.description)}</span>` : ''}
-            ${ARROW}
+          <a class="row" ${external(article.url)}>
+            <span class="row-main">
+              <span class="row-title">${escapeHtml(article.title)}</span>
+              ${article.description ? `<span class="row-desc">${escapeHtml(article.description)}</span>` : ''}
+            </span>
+            <span class="row-meta">${ARROW}</span>
           </a>
         </li>`;
 }
 
 function renderWriting(data: PortfolioData): string {
   const articles = (data.articles ?? []).filter((a) => !a.disabled);
+  const medium = data.contact.socials?.Medium;
   return `<section class="section" id="writing" aria-labelledby="writing-title">
     <div class="container">
-      ${sectionHeader('writing', 'Writing', 'On Medium')}
-      <ol class="row-list" role="list">
+      ${sectionHeader('writing', 'Writing')}
+      <ol class="rows" role="list">
         ${articles.map(renderArticle).join('\n        ')}
       </ol>
+      ${medium ? `<a class="text-link" ${external(medium)}>More on Medium${RIGHT}</a>` : ''}
     </div>
   </section>`;
 }
 
-// The address is never shown: the Email action copies it, and falls back to
-// opening the mail app where the clipboard is unavailable.
-function renderEmailAction(email: string, icon: IconResolver): string {
-  return `<button class="btn btn-primary copy-email" id="copy-email-btn" type="button" data-email="${escapeHtml(email)}">
-          <span class="link-icon">${decorate(icon('ui:mail'))}</span><span class="copy-label"><span class="copy-idle">Copy email<span class="copy-glyph" aria-hidden="true">${decorate(icon('ui:copy'))}</span></span><span class="copy-done">Email copied<span class="copy-glyph" aria-hidden="true">${decorate(icon('ui:check'))}</span></span></span>
-        </button>
-        <span class="sr-only" id="copy-email-status" role="status"></span>`;
-}
-
+// The page ends where a reader who got this far wants to act: on contact.
+// The page closes the way cursor.com's does: one large line and the action.
 function renderContact(data: PortfolioData, icon: IconResolver): string {
-  const email = data.contact.email;
-  const entries = Object.entries(data.contact.socials ?? {});
-  const socials = entries
-    .map(([label, url]) => socialLink(label, url, icon, 'btn btn-secondary'))
-    .join('');
-  const names = entries.map(([label]) => label);
-  const lead = email
-    ? `Email is quickest.${names.length ? ` I'm also on ${joinList(names)}.` : ''}`
-    : `Find me on ${joinList(names)}.`;
+  const socials = Object.entries(data.contact.socials ?? {})
+    .map(([label, url]) => socialButton(label, url, icon))
+    .join('\n        ');
 
-  return `<section class="section-contact" id="contact" aria-labelledby="contact-title">
+  return `<section class="closing" id="contact" aria-labelledby="contact-title">
     <div class="container">
-      <div class="cta-band">
-        <h2 class="cta-title" id="contact-title">Get in touch</h2>
-        <p class="cta-lead">${escapeHtml(lead)}</p>
-        <div class="contact-actions" id="social-list">
-          ${email ? renderEmailAction(email, icon) : ''}
-          ${socials}
-        </div>
+      <h2 class="closing-title" id="contact-title">Get in touch.</h2>
+      <div class="closing-actions" id="social-list">
+        ${data.contact.email ? emailButton(data.contact.email, 'copy-email-btn') : ''}
+        ${socials}
       </div>
     </div>
   </section>`;
 }
 
-function renderFooter(data: PortfolioData, visible: Set<SectionId>): string {
-  const sections = NAV.filter((item) => visible.has(item.id))
-    .map((item) => `<li><a href="#${item.id}">${item.label}</a></li>`)
-    .join('');
-  const socials = Object.entries(data.contact.socials ?? {})
-    .map(
-      ([label, url]) =>
-        `<li><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a></li>`
-    )
-    .join('');
-
+function renderFooter(data: PortfolioData): string {
   return `<footer class="site-footer">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <a class="wordmark" href="#top">${MARK}<span>${escapeHtml(data.name)}</span></a>
-      <p>© ${new Date().getFullYear()} ${escapeHtml(data.name)}</p>
-    </div>
-    <nav class="footer-col" aria-label="Footer">
-      <p class="footer-head">Sections</p>
-      <ul role="list">${sections}</ul>
-    </nav>
-    ${socials ? `<div class="footer-col"><p class="footer-head">Elsewhere</p><ul role="list">${socials}</ul></div>` : ''}
-    <div class="footer-col">
-      <p class="footer-head">Colophon</p>
-      <ul role="list"><li>Static HTML</li><li>Tested with Playwright</li><li>Inter and JetBrains Mono</li></ul>
-    </div>
+  <div class="container">
+    <p class="footer-base">© ${new Date().getFullYear()} ${escapeHtml(data.name)}</p>
   </div>
-</footer>`;
+</footer>
+<span class="sr-only" id="copy-email-status" role="status"></span>`;
 }
 
 function renderHead(data: PortfolioData): string {
@@ -532,10 +526,9 @@ export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPag
 
   const sections = [
     renderHero(data, icon, visible),
+    visible.has('work') ? renderWork(data, icon) : '',
     visible.has('brands') ? renderBrands(data, icon) : '',
-    visible.has('toolbox') ? renderToolbox(data, icon) : '',
-    visible.has('surfaces') ? renderSurfaces(data, icon) : '',
-    visible.has('work') ? renderWork(data) : '',
+    visible.has('toolbox') ? renderStack(data, icon) : '',
     visible.has('writing') ? renderWriting(data) : '',
     visible.has('contact') ? renderContact(data, icon) : '',
   ].filter(Boolean);
@@ -544,7 +537,7 @@ export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPag
 <main id="main">
   ${sections.join('\n\n  ')}
 </main>
-${renderFooter(data, visible)}`;
+${renderFooter(data)}`;
 
   return { head: renderHead(data), body };
 }

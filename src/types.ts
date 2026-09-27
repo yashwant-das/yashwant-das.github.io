@@ -35,6 +35,7 @@ export interface Project {
   title: string;
   description: string;
   code: string;
+  stack?: string[];
   disabled?: boolean;
 }
 

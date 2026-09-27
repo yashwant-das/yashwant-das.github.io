@@ -203,6 +203,15 @@
             "type": "string",
             "format": "uri"
           },
+          "stack": {
+            "type": "array",
+            "description": "Tools the project is built with. Each must be a toolbox item name.",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
           "disabled": {
             "type": "boolean"
           }
