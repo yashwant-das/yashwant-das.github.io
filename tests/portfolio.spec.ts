@@ -95,10 +95,46 @@ test.describe('Portfolio', () => {
       );
     }
 
-    // Everything else waits behind one disclosure.
+    // On a phone, everything else waits behind one disclosure.
+    await page.setViewportSize({ width: 390, height: 800 });
     await expect(page.locator('#toolbox details')).not.toHaveAttribute('open', '');
     await page.locator('#toolbox summary').click();
     await expect(page.locator('#toolbox .stack-row').first()).toBeVisible();
+  });
+
+  test('the work window switches repositories by click and arrow keys', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const tabs = page.locator('#work [role="tab"]');
+    await expect(tabs).toHaveCount(projects.length);
+    await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
+
+    const second = projects[1];
+    if (!second) return;
+    await tabs.nth(1).click();
+    await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true');
+    const panel = page.locator('#work [role="tabpanel"]:visible');
+    await expect(panel).toHaveCount(1);
+    await expect(panel).toContainText(second.description);
+    await expect(panel.locator('a')).toHaveAttribute('href', second.code);
+
+    // Arrow keys move the selection, and focus, along the list.
+    await tabs.nth(1).press('ArrowDown');
+    await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true');
+    await expect(tabs.nth(2)).toBeFocused();
+    await tabs.nth(2).press('Home');
+    await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
+  });
+
+  test('the stack window lists current focus and every group', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const tabs = page.locator('#toolbox [role="tab"] .window-tab-title');
+    await expect(tabs).toHaveText(['Current focus', ...groups.map((g) => g.label)]);
+    const lastGroup = groups[groups.length - 1];
+    if (!lastGroup) return;
+    await page.locator('#toolbox [role="tab"]').last().click();
+    await expect(page.locator('#toolbox [role="tabpanel"]:visible li')).toHaveText(
+      tools.filter((t) => t.group === lastGroup.id).map((t) => t.name)
+    );
   });
 
   test('shows the platforms tested on in the hero', async ({ page }) => {

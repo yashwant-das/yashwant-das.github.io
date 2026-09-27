@@ -37,6 +37,42 @@ function initCopyEmail() {
   });
 }
 
+// The feature windows' sidebars are tab lists: a click or the arrow keys
+// select a tab and show its panel (roving tabindex, per the ARIA tabs pattern).
+function initWindowTabs() {
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((win) => {
+    const tabs = [...win.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+
+    const select = (next: HTMLButtonElement, focus: boolean) => {
+      tabs.forEach((tab) => {
+        const on = tab === next;
+        tab.setAttribute('aria-selected', String(on));
+        tab.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(tab.getAttribute('aria-controls') ?? '');
+        if (panel) panel.hidden = !on;
+      });
+      if (focus) next.focus();
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(tab, false));
+      tab.addEventListener('keydown', (event) => {
+        const last = tabs.length - 1;
+        const target = {
+          ArrowDown: i === last ? 0 : i + 1,
+          ArrowUp: i === 0 ? last : i - 1,
+          Home: 0,
+          End: last,
+        }[event.key];
+        if (target === undefined) return;
+        event.preventDefault();
+        const next = tabs[target];
+        if (next) select(next, true);
+      });
+    });
+  });
+}
+
 // Marks the nav link for the section currently in view.
 function initActiveNav() {
   const links = new Map<string, HTMLAnchorElement>();
@@ -69,6 +105,7 @@ function initActiveNav() {
 function init() {
   initTheme();
   initCopyEmail();
+  initWindowTabs();
   initActiveNav();
 }
 

@@ -42,8 +42,25 @@ export function escapeHtml(value: string): string {
     .replace(/'/g, '&#39;');
 }
 
+// An icon can be inlined several times (a hero pill, a hidden window panel),
+// so ids inside it, such as a mask's, get a per-copy suffix. Otherwise every
+// copy would point at the first, which may sit in a hidden element and not paint.
+let iconCopy = 0;
+
 function decorate(svg: string | null): string {
-  return svg ? svg.replace('<svg ', '<svg aria-hidden="true" focusable="false" ') : '';
+  if (!svg) return '';
+  const ids = [...svg.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1] as string);
+  let out = svg.replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+  if (ids.length > 0) {
+    const n = ++iconCopy;
+    for (const id of ids) {
+      out = out
+        .replaceAll(`id="${id}"`, `id="${id}-${n}"`)
+        .replaceAll(`url(#${id})`, `url(#${id}-${n})`)
+        .replaceAll(`href="#${id}"`, `href="#${id}-${n}"`);
+    }
+  }
+  return out;
 }
 
 // Logo walls look even when every logo covers roughly the same area, not the
@@ -219,16 +236,130 @@ function renderProject(project: Project): string {
         </li>`;
 }
 
-function renderWork(data: PortfolioData): string {
-  const projects = (data.projects ?? []).filter((p) => !p.disabled);
-  return `<section class="section" id="work" aria-labelledby="work-title">
+/* --------------------------------------------------------------------------
+   Feature blocks, after cursor.com: two-tone text on one side and an app
+   window on a tinted panel on the other. The window is a real control: its
+   sidebar is a tab list (click or arrow keys, see src/main.ts) that swaps the
+   main pane. Phones get a plain fallback instead, since the window needs room.
+   -------------------------------------------------------------------------- */
+
+interface WindowTab {
+  title: string;
+  sub?: string;
+  count?: number;
+  panel: string;
+}
+
+function renderWindow(id: string, name: string, label: string, tabs: WindowTab[]): string {
+  const list = tabs
+    .map(
+      (
+        tab,
+        i
+      ) => `<button class="window-tab" type="button" role="tab" id="${id}-tab-${i}" aria-controls="${id}-panel-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">
+              <span class="window-tab-title">${escapeHtml(tab.title)}</span>${
+                tab.sub ? `<span class="window-tab-sub">${escapeHtml(tab.sub)}</span>` : ''
+              }${
+                tab.count !== undefined
+                  ? `<span class="window-tab-count"><span class="sr-only">, </span>${tab.count}<span class="sr-only"> tools</span></span>`
+                  : ''
+              }
+            </button>`
+    )
+    .join('\n            ');
+  const panels = tabs
+    .map(
+      (
+        tab,
+        i
+      ) => `<div class="window-panel" role="tabpanel" id="${id}-panel-${i}" aria-labelledby="${id}-tab-${i}" tabindex="0"${i === 0 ? '' : ' hidden'}>
+            ${tab.panel}
+          </div>`
+    )
+    .join('\n          ');
+
+  return `<div class="window" data-tabs>
+        <div class="window-bar"><span class="window-dots" aria-hidden="true"><span></span><span></span><span></span></span><span class="window-name">${escapeHtml(name)}</span></div>
+        <div class="window-body">
+          <div class="window-side">
+            <p class="window-label" id="${id}-label">${escapeHtml(label)}<span>${tabs.length}</span></p>
+            <div class="window-tabs" role="tablist" aria-orientation="vertical" aria-labelledby="${id}-label">
+            ${list}
+            </div>
+          </div>
+          <div class="window-main">
+          ${panels}
+          </div>
+        </div>
+      </div>`;
+}
+
+// One file tab and a breadcrumb, like the top of an editor pane.
+function editorHead(file: string, crumb: string): string {
+  return `<div class="editor-tabs"><span class="editor-tab">${escapeHtml(file)}</span></div>
+            <p class="editor-crumb">${escapeHtml(crumb)}<span aria-hidden="true">›</span>${escapeHtml(file)}</p>`;
+}
+
+function toolList(names: string[], tools: Map<string, Tool>, icon: IconResolver): string {
+  return `<ul class="doc-tools" role="list">${names
+    .map((name) => {
+      const svg = icon(tools.get(name)?.icon);
+      return `<li>${svg ? `<span class="doc-tool-icon">${decorate(svg)}</span>` : ''}${escapeHtml(name)}</li>`;
+    })
+    .join('')}</ul>`;
+}
+
+function featureBlock(
+  id: string,
+  title: string,
+  lede: string,
+  media: string,
+  fallback: string,
+  reverse = false
+): string {
+  return `<section class="section" id="${id}" aria-labelledby="${id}-title">
     <div class="container">
-      ${sectionHeader('work', 'Selected work')}
-      <ol class="rows" role="list">
-        ${projects.map(renderProject).join('\n        ')}
-      </ol>
+      <div class="feature${reverse ? ' feature-reverse' : ''}">
+        <div class="feature-text">
+          <h2 class="feature-title" id="${id}-title">${escapeHtml(title)}</h2>
+          <p class="feature-lede">${escapeHtml(lede)}</p>
+        </div>
+        <div class="feature-media">
+      ${media}
+        </div>
+      </div>
+      <div class="feature-fallback">
+      ${fallback}
+      </div>
     </div>
   </section>`;
+}
+
+function renderWork(data: PortfolioData, icon: IconResolver): string {
+  const projects = (data.projects ?? []).filter((p) => !p.disabled);
+  const tools = new Map((data.toolbox?.items ?? []).map((t) => [t.name, t]));
+
+  const tabs = projects.map((p) => ({
+    title: p.title,
+    sub: p.stack?.join(', '),
+    panel: `${editorHead('README.md', p.title)}
+            <div class="doc">
+              <h3 class="doc-title">${escapeHtml(p.title)}</h3>
+              <p class="doc-text">${escapeHtml(p.description)}</p>
+              ${p.stack?.length ? `<p class="doc-head">Built with</p>${toolList(p.stack, tools, icon)}` : ''}
+              <a class="text-link doc-link" ${external(p.code)}>View on GitHub${RIGHT}</a>
+            </div>`,
+  }));
+
+  return featureBlock(
+    'work',
+    'Selected work',
+    `${projects.length} open-source projects on GitHub. Pick one to see what it does and what it is built with.`,
+    renderWindow('work', 'yashwant-das', 'Repositories', tabs),
+    `<ol class="rows" role="list">
+        ${projects.map(renderProject).join('\n        ')}
+      </ol>`
+  );
 }
 
 function renderFocus(tool: Tool, icon: IconResolver): string {
@@ -240,10 +371,11 @@ function inlineList(names: string[]): string {
   return `<ul class="inline-list" role="list">${names.map((n) => `<li>${escapeHtml(n)}</li>`).join('')}</ul>`;
 }
 
-// Current focus is the visible stack; the full toolbox waits behind one
-// disclosure, grouped.
+// Current focus leads; the window lists every group, and the phone fallback
+// keeps the full toolbox behind one disclosure.
 function renderStack(data: PortfolioData, icon: IconResolver): string {
   const items = (data.toolbox?.items ?? []).filter((t) => !t.disabled);
+  const tools = new Map(items.map((t) => [t.name, t]));
   const focus = items.filter((t) => t.focus);
   const groups = (data.toolbox?.groups ?? [])
     .map((group) => ({
@@ -251,18 +383,29 @@ function renderStack(data: PortfolioData, icon: IconResolver): string {
       names: items.filter((t) => t.group === group.id).map((t) => t.name),
     }))
     .filter((g) => g.names.length > 0);
+  const all = [
+    ...(focus.length > 0 ? [{ label: 'Current focus', names: focus.map((t) => t.name) }] : []),
+    ...groups,
+  ];
 
-  return `<section class="section" id="toolbox" aria-labelledby="toolbox-title">
-    <div class="container">
-      ${sectionHeader('toolbox', 'Stack')}
-      ${
-        focus.length > 0
-          ? `<div class="focus">
+  const tabs = all.map((g) => ({
+    title: g.label,
+    count: g.names.length,
+    panel: `${editorHead('toolbox.json', 'Stack')}
+            <div class="doc">
+              <h3 class="doc-title">${escapeHtml(g.label)}</h3>
+              ${toolList(g.names, tools, icon)}
+            </div>`,
+  }));
+
+  const fallback = `${
+    focus.length > 0
+      ? `<div class="focus">
         <p class="focus-label" id="focus-label">Current focus</p>
         <ul class="focus-list" role="list" aria-labelledby="focus-label">${focus.map((t) => renderFocus(t, icon)).join('')}</ul>
       </div>`
-          : ''
-      }
+      : ''
+  }
       <details class="toolbox">
         <summary>All ${items.length} tools${CHEVRON}</summary>
         <dl class="stack">
@@ -275,9 +418,16 @@ function renderStack(data: PortfolioData, icon: IconResolver): string {
             )
             .join('\n          ')}
         </dl>
-      </details>
-    </div>
-  </section>`;
+      </details>`;
+
+  return featureBlock(
+    'toolbox',
+    'Stack',
+    `What I work with most right now, and the full toolbox of ${items.length} tools.`,
+    renderWindow('stack', 'toolbox.json', 'Groups', tabs),
+    fallback,
+    true
+  );
 }
 
 function renderArticle(article: Article): string {
@@ -368,7 +518,7 @@ export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPag
   const sections = [
     renderHero(data, icon, visible),
     visible.has('brands') ? renderBrands(data, icon) : '',
-    visible.has('work') ? renderWork(data) : '',
+    visible.has('work') ? renderWork(data, icon) : '',
     visible.has('toolbox') ? renderStack(data, icon) : '',
     visible.has('writing') ? renderWriting(data) : '',
   ].filter(Boolean);
