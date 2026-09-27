@@ -18,9 +18,10 @@ const socials = Object.entries(content.contact.socials ?? {});
 
 const SECTIONS = ['brands', 'work', 'toolbox', 'writing', 'contact'];
 
-// Phone, tablet, laptop and wide desktop.
+// Small and large phones, tablet, laptop and wide desktop.
 const RESPONSIVE_VIEWPORTS = [
   { name: 'phone', width: 360, height: 800 },
+  { name: 'large phone', width: 440, height: 956 },
   { name: 'tablet', width: 820, height: 1180 },
   { name: 'laptop', width: 1366, height: 768 },
   { name: 'wide', width: 1920, height: 1080 },
@@ -78,28 +79,22 @@ test.describe('Portfolio', () => {
   });
 
   test('renders the stack from content data', async ({ page }) => {
-    // Current focus: one pill with a logo per focus tool, in data order.
-    const pills = page.locator('#toolbox .tool-pill');
-    await expect(pills).toHaveText(tools.filter((t) => t.focus).map((t) => t.name));
-    await expect(page.locator('#toolbox .tool-pill svg')).toHaveCount(
-      tools.filter((t) => t.focus).length
-    );
-
-    // One row per group, listing every tool in that group.
-    for (const group of groups) {
-      const row = page.locator('#toolbox .stack-row', {
-        has: page.locator('dt', { hasText: group.label }),
-      });
-      await expect(row.locator('.inline-list li')).toHaveText(
+    // Current focus leads, one logo per tool, then one panel per group listing
+    // every tool in it. Hidden panels still hold their content; toContainText,
+    // since some logos carry a <style> block in their text.
+    const panels = page.locator('#toolbox [role="tabpanel"]');
+    const focus = tools.filter((t) => t.focus);
+    await expect(panels).toHaveCount(groups.length + (focus.length > 0 ? 1 : 0));
+    const offset = focus.length > 0 ? 1 : 0;
+    if (focus.length > 0) {
+      await expect(panels.first().locator('li')).toContainText(focus.map((t) => t.name));
+      await expect(panels.first().locator('li svg')).toHaveCount(focus.length);
+    }
+    for (const [i, group] of groups.entries()) {
+      await expect(panels.nth(i + offset).locator('li')).toContainText(
         tools.filter((t) => t.group === group.id).map((t) => t.name)
       );
     }
-
-    // On a phone, everything else waits behind one disclosure.
-    await page.setViewportSize({ width: 390, height: 800 });
-    await expect(page.locator('#toolbox details')).not.toHaveAttribute('open', '');
-    await page.locator('#toolbox summary').click();
-    await expect(page.locator('#toolbox .stack-row').first()).toBeVisible();
   });
 
   test('the work window switches repositories by click and arrow keys', async ({ page }) => {
@@ -144,17 +139,53 @@ test.describe('Portfolio', () => {
   });
 
   test('lists selected work with external links and stacks', async ({ page }) => {
-    const cards = page.locator('#work .row');
-    await expect(cards).toHaveCount(projects.length);
+    const panels = page.locator('#work [role="tabpanel"]');
+    await expect(panels).toHaveCount(projects.length);
     for (const [i, project] of projects.entries()) {
-      const card = cards.nth(i);
-      await expect(card).toHaveAttribute('href', project.code);
-      await expect(card).toHaveAttribute('target', '_blank');
-      await expect(card).toHaveAttribute('rel', 'noopener noreferrer');
-      await expect(card).toContainText(project.title);
-      await expect(card).toContainText(project.description);
-      for (const name of project.stack ?? []) await expect(card).toContainText(name);
+      const panel = panels.nth(i);
+      await expect(panel).toContainText(project.title);
+      await expect(panel).toContainText(project.description);
+      for (const name of project.stack ?? []) await expect(panel).toContainText(name);
+      const link = panel.locator('a');
+      await expect(link).toHaveAttribute('href', project.code);
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     }
+  });
+
+  test('keeps the windows on a phone, with tabs across the top', async ({ page }) => {
+    // iPhone 16 Pro Max.
+    await page.setViewportSize({ width: 440, height: 956 });
+    await page.reload();
+    const list = page.locator('#work [role="tablist"]');
+    const tabs = page.locator('#work [role="tab"]');
+    await expect(page.locator('#work .window')).toBeVisible();
+    await expect(list).toHaveAttribute('aria-orientation', 'horizontal');
+
+    // Every tab is a full touch target, laid out in one row.
+    const first = await tabs.first().boundingBox();
+    const second = await tabs.nth(1).boundingBox();
+    expect(first?.height).toBeGreaterThanOrEqual(44);
+    expect(second?.y).toBe(first?.y);
+
+    // Tapping a tab off the edge scrolls it into view and swaps the pane.
+    const last = projects[projects.length - 1];
+    if (!last) return;
+    await tabs.last().click();
+    await expect(tabs.last()).toHaveAttribute('aria-selected', 'true');
+    await expect(tabs.last()).toBeInViewport();
+    await expect(page.locator('#work [role="tabpanel"]:visible')).toContainText(last.description);
+
+    // Left and right arrows move along the row.
+    await tabs.last().press('ArrowRight');
+    await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
+    await tabs.first().press('ArrowLeft');
+    await expect(tabs.last()).toBeFocused();
+
+    // Switching panels never changes the window's height.
+    const height = (await page.locator('#work .window').boundingBox())?.height;
+    await tabs.nth(1).click();
+    expect((await page.locator('#work .window').boundingBox())?.height).toBe(height);
   });
 
   test('lists articles with external links', async ({ page }) => {
