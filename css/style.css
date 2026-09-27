@@ -26,14 +26,16 @@
 
   /*
    * Type scale. Every font-size on the page is one of these steps.
-   *   display    hero name and statement
-   *   title      section titles, card titles
-   *   base       body text, buttons
-   *   sm         nav, secondary text, stack lists
-   *   caption    meta, kickers, footer
+   *   hero       the name: the one large thing on the page
+   *   title      section titles, the footer's call to action
+   *   lede       the hero paragraph
+   *   base       body text, row titles, buttons
+   *   sm         nav, secondary text, lists
+   *   caption    repo names, footnotes
    */
-  --text-display: 22px;
-  --text-title: 20px;
+  --text-hero: 44px;
+  --text-title: 22px;
+  --text-lede: 19px;
   --text-base: 16px;
   --text-sm: 14px;
   --text-caption: 13px;
@@ -41,11 +43,14 @@
   --weight-regular: 400;
   --weight-medium: 500;
 
-  --leading-display: 1.25;
+  --leading-hero: 1.05;
+  --leading-title: 1.25;
+  --leading-lede: 1.4;
   --leading-snug: 1.4;
   --leading-normal: 1.5;
 
-  --tracking-display: -0.0125em;
+  --tracking-hero: -0.03em;
+  --tracking-title: -0.0125em;
 
   /* Spacing, on a 4px grid. Every margin, padding and gap uses a step. */
   --space-1: 4px;
@@ -64,6 +69,7 @@
   --section-space: var(--space-9);
   --header-height: 56px;
   --icon-size: 16px;
+  --label-col: 176px;
 
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -98,14 +104,16 @@
   :root {
     --gutter: var(--space-7);
     --section-space: var(--space-10);
-    --text-display: 26px;
-    --text-title: 22px;
+    --text-hero: 56px;
+    --text-title: 26px;
+    --text-lede: 22px;
   }
 }
 
 @media (min-width: 1024px) {
   :root {
     --gutter: var(--space-8);
+    --text-hero: 64px;
   }
 }
 
@@ -162,6 +170,12 @@ body {
 
 ::selection {
   background: var(--selection);
+}
+
+html {
+  accent-color: var(--primary);
+  caret-color: var(--primary);
+  scrollbar-color: var(--fill-hover) var(--canvas);
 }
 
 h1,
@@ -287,19 +301,6 @@ button {
   height: var(--icon-size);
 }
 
-/* Orange text link: "More on Medium →" */
-.text-link {
-  display: inline-flex;
-  margin-top: var(--space-5);
-  color: var(--link);
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
-}
-
-.text-link:hover .arrow {
-  transform: translateX(2px);
-}
-
 /* ==========================================================================
    Header
    ========================================================================== */
@@ -401,7 +402,8 @@ button {
 
 /* ==========================================================================
    Hero
-   The name and statement read as one two-tone paragraph, as on cursor.com.
+   The name is the one large thing on the page. Role and place open the lede
+   in ink and the statement follows in grey, as one two-tone paragraph.
    ========================================================================== */
 
 .hero {
@@ -414,34 +416,42 @@ button {
   }
 }
 
-.hero-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-4);
-  margin-bottom: var(--space-6);
-  color: var(--muted);
-  font-size: var(--text-sm);
-  line-height: var(--leading-snug);
-}
-
 .hero-avatar {
-  flex: none;
-  width: var(--space-7);
-  height: var(--space-7);
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--space-6);
   border-radius: 50%;
   object-fit: cover;
   background: var(--surface);
 }
 
-.sep {
-  margin-inline: var(--space-2);
+.hero-name {
+  font-size: var(--text-hero);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-hero);
+  letter-spacing: var(--tracking-hero);
+}
+
+.hero-lede {
+  max-width: 34em;
+  margin-top: var(--space-5);
+  font-size: var(--text-lede);
+  line-height: var(--leading-lede);
+  letter-spacing: var(--tracking-title);
+  text-wrap: pretty;
+}
+
+.hero-statement {
+  color: var(--muted);
 }
 
 .status {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
+  margin-top: var(--space-4);
+  color: var(--muted);
+  font-size: var(--text-sm);
 }
 
 .status-dot {
@@ -451,20 +461,6 @@ button {
   background: var(--success);
 }
 
-.hero-name,
-.hero-statement {
-  max-width: 22em;
-  font-size: var(--text-display);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
-  text-wrap: pretty;
-}
-
-.hero-statement {
-  color: var(--muted);
-}
-
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -472,15 +468,53 @@ button {
   margin-top: var(--space-7);
 }
 
-/* Phone: Copy email takes a row; the profile links share the next. */
+/* Phone: Copy email takes a row; the profile links share the rows below. */
 @media (max-width: 559px) {
-  .hero-actions .btn {
-    flex: 1 1 0;
+  .hero-actions .btn,
+  .footer-actions .btn {
+    flex: 1 1 40%;
   }
 
-  .hero-actions .btn-primary {
+  .hero-actions .btn-primary,
+  .footer-actions .btn-primary {
     flex-basis: 100%;
   }
+}
+
+/* Tested on: one quiet line of platforms with their icons. */
+.platforms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-8);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.platforms-label {
+  color: var(--muted);
+}
+
+.platform-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+}
+
+.platform-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.platform-icon {
+  color: var(--muted);
+}
+
+.platform-icon svg {
+  width: 14px;
+  height: 14px;
 }
 
 /*
@@ -495,9 +529,6 @@ button {
 .copy-idle,
 .copy-done {
   grid-area: 1 / 1;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
 }
 
 .copy-done,
@@ -507,11 +538,6 @@ button {
 
 .copy-email.is-done .copy-done {
   visibility: visible;
-}
-
-.copy-glyph svg {
-  width: 14px;
-  height: 14px;
 }
 
 /* ==========================================================================
@@ -524,42 +550,28 @@ button {
 
 .section-title {
   margin-bottom: var(--space-6);
-  font-size: var(--text-display);
+  font-size: var(--text-title);
   font-weight: var(--weight-regular);
-  line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
+}
+
+.section-note {
+  max-width: 65ch;
+  margin-top: var(--space-4);
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
 }
 
 /* ==========================================================================
    Shipped for: one row of filled logo tiles
    ========================================================================== */
 
-.section-brands {
-  padding-top: var(--space-9);
-}
-
-.brands-title,
-.brand-note {
-  color: var(--muted);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-snug);
-  text-align: center;
-}
-
-.brands-title {
-  margin-bottom: var(--space-4);
-}
-
-.brand-note {
-  margin-top: var(--space-4);
-  text-wrap: balance;
-}
-
 .brand-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 
 @media (min-width: 560px) {
@@ -608,110 +620,120 @@ button {
 }
 
 /* ==========================================================================
-   Cards: selected work and writing
+   Rows: selected work and writing
+   Full-width filled strips, stacked with a small gap. The title leads; the
+   metadata sits quietly to the right.
    ========================================================================== */
 
-.cards {
+.rows {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 
-@media (min-width: 640px) {
-  .cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .cards {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  height: 100%;
-  padding: var(--space-5) var(--space-6) var(--space-6);
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2) var(--space-6);
+  align-items: start;
+  padding: var(--space-5) var(--space-6);
   border-radius: var(--radius-sm);
   background: var(--surface);
   transition: background-color var(--fast) var(--ease);
 }
 
-.card:hover {
+.row:hover {
   background: var(--surface-hover);
 }
 
-.card-kicker,
-.card-meta {
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  line-height: var(--leading-snug);
-  overflow-wrap: anywhere;
+.row-main {
+  display: grid;
+  gap: var(--space-1);
 }
 
-.card:hover .card-kicker {
-  color: var(--ink);
-}
-
-.card-title {
+.row-title {
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   text-wrap: pretty;
 }
 
-.card-desc {
+.row-desc,
+.row-stack {
   color: var(--muted);
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
 }
 
-.card-meta {
-  margin-top: auto;
-  padding-top: var(--space-4);
-}
-
-/* ==========================================================================
-   Stack: label and list rows
-   ========================================================================== */
-
-.stack-row {
-  display: grid;
+.row-meta {
+  display: inline-flex;
+  align-items: baseline;
   gap: var(--space-2);
-  padding-block: var(--space-4);
-  border-top: 1px solid var(--line);
+  color: var(--muted);
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
 }
 
-.stack-row:last-child {
-  border-bottom: 1px solid var(--line);
+/* Repo names are identifiers, so they are the one mono text on the page. */
+.row-repo {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+}
+
+.row:hover .row-meta {
+  color: var(--ink);
+}
+
+.row:hover .arrow {
+  transform: translate(1px, -1px);
+}
+
+/* Phone: the repo name drops beneath the title; the arrow pins top-right. */
+@media (max-width: 639px) {
+  .row {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--space-4) var(--space-8) var(--space-4) var(--space-5);
+  }
+
+  .row-meta .arrow {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-5);
+  }
+
+  .row-meta:not(:has(.row-repo)) {
+    display: contents;
+  }
+}
+
+/* ==========================================================================
+   Stack: current focus, then the full toolbox behind one disclosure
+   ========================================================================== */
+
+.focus,
+.stack-row {
+  display: grid;
+  gap: var(--space-3);
 }
 
 @media (min-width: 768px) {
+  .focus,
   .stack-row {
-    grid-template-columns: 200px minmax(0, 1fr);
+    grid-template-columns: var(--label-col) minmax(0, 1fr);
     gap: var(--space-6);
   }
 }
 
+.focus-label,
 .stack-row dt {
   color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
 }
 
-.inline-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 var(--space-2);
-}
-
-.inline-list li:not(:last-child)::after {
-  content: '·';
-  margin-left: var(--space-2);
-  color: var(--muted);
+@media (min-width: 768px) {
+  .focus-label {
+    padding-top: var(--space-1);
+  }
 }
 
 .focus-list {
@@ -728,6 +750,7 @@ button {
   padding: 0 var(--space-3) 0 var(--space-2);
   border-radius: var(--radius-pill);
   background: var(--fill);
+  font-size: var(--text-sm);
   line-height: 1;
 }
 
@@ -736,41 +759,115 @@ button {
   height: var(--icon-size);
 }
 
-/* ==========================================================================
-   Footer: a filled band
-   ========================================================================== */
+.toolbox {
+  margin-top: var(--space-6);
+}
 
-.site-footer {
-  margin-top: var(--section-space);
-  padding-block: var(--space-9) var(--space-7);
+/* The toggle lines up with the focus pills, under their label column. */
+@media (min-width: 768px) {
+  .toolbox summary {
+    margin-left: calc(var(--label-col) + var(--space-6));
+  }
+}
+
+.toolbox summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--link);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  cursor: pointer;
+  list-style: none;
+}
+
+.toolbox summary::-webkit-details-marker {
+  display: none;
+}
+
+.chevron {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  transition: transform var(--fast) var(--ease);
+}
+
+.toolbox[open] .chevron {
+  transform: rotate(180deg);
+}
+
+.stack {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  padding: var(--space-6);
+  border-radius: var(--radius-sm);
   background: var(--surface);
+}
+
+.stack-row {
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
 }
 
-.footer-cols {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-7) var(--space-6);
-}
-
+/* Inside the padded panel, the list column still lines up with the pills. */
 @media (min-width: 768px) {
-  .footer-cols {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .stack-row {
+    grid-template-columns: calc(var(--label-col) - var(--space-6)) minmax(0, 1fr);
   }
 }
 
-.footer-head {
-  margin-bottom: var(--space-3);
-  color: var(--muted);
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-1);
 }
 
-.footer-col li + li {
-  margin-top: var(--space-2);
+.inline-list li:not(:last-child)::after {
+  content: ',';
 }
 
-.footer-col a:hover {
+/* ==========================================================================
+   Text link: "More on Medium →"
+   ========================================================================== */
+
+.text-link {
+  display: inline-flex;
+  margin-top: var(--space-5);
   color: var(--link);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+.text-link:hover .arrow {
+  transform: translateX(2px);
+}
+
+/* ==========================================================================
+   Footer: the contact, as a filled band
+   ========================================================================== */
+
+.site-footer {
+  margin-top: var(--section-space);
+  padding-block: var(--space-10) var(--space-7);
+  background: var(--surface);
+}
+
+.footer-title {
+  font-size: var(--text-title);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
+}
+
+.footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.footer-actions .btn-secondary {
+  background: var(--fill);
 }
 
 .footer-base {

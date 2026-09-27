@@ -95,15 +95,20 @@ test.describe('Portfolio', () => {
       );
     }
 
-    // Platforms tested on.
-    const platforms = page.locator('#toolbox .stack-row', {
-      has: page.locator('dt', { hasText: 'Platforms' }),
-    });
-    await expect(platforms.locator('li')).toHaveText((content.surfaces ?? []).map((s) => s.name));
+    // Everything else waits behind one disclosure.
+    await expect(page.locator('#toolbox details')).not.toHaveAttribute('open', '');
+    await page.locator('#toolbox summary').click();
+    await expect(page.locator('#toolbox .stack-row').first()).toBeVisible();
+  });
+
+  test('shows the platforms tested on in the hero', async ({ page }) => {
+    await expect(page.locator('.hero .platform-list li')).toHaveText(
+      (content.surfaces ?? []).map((s) => s.name)
+    );
   });
 
   test('lists selected work with external links and stacks', async ({ page }) => {
-    const cards = page.locator('#work .card');
+    const cards = page.locator('#work .row');
     await expect(cards).toHaveCount(projects.length);
     for (const [i, project] of projects.entries()) {
       const card = cards.nth(i);
@@ -117,7 +122,7 @@ test.describe('Portfolio', () => {
   });
 
   test('lists articles with external links', async ({ page }) => {
-    const cards = page.locator('#writing .card');
+    const cards = page.locator('#writing .row');
     await expect(cards).toHaveCount(articles.length);
     for (const [i, article] of articles.entries()) {
       await expect(cards.nth(i)).toHaveAttribute('href', article.url);
@@ -136,10 +141,15 @@ test.describe('Portfolio', () => {
     await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
   });
 
-  test('links every social profile', async ({ page }) => {
+  test('ends with contact: Copy email and every social profile', async ({ page }) => {
+    await expect(page.locator('#social-list .copy-email')).toHaveAttribute(
+      'data-email',
+      content.contact.email ?? ''
+    );
     for (const [label, url] of socials) {
       const link = page.locator(`#social-list a[href="${url}"]`);
-      await expect(link).toHaveText(label);
+      await expect(link).toContainText(label);
+      await expect(link.locator('svg').first()).toBeVisible();
       await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     }
     // The hero's social buttons lead with a logo.

@@ -4,32 +4,36 @@ import { handleError } from './utils.ts';
 // The page is rendered to static HTML at build time (see vite.config.ts); this
 // script only adds the few behaviours that need JavaScript.
 
+// Every Copy email button (the hero and the footer) shares one status line.
 function initCopyEmail() {
-  const button = document.getElementById('copy-email-btn');
   const status = document.getElementById('copy-email-status');
-  const email = button?.dataset.email;
-  if (!button || !status || !email) return;
+  if (!status) return;
 
-  let resetTimer: number | undefined;
-  button.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(email);
-    } catch (err) {
-      // No clipboard (an insecure context or a denied permission): hand the
-      // address to the mail app instead.
-      handleError(err, 'Clipboard unavailable');
-      window.location.href = `mailto:${email}`;
-      return;
-    }
-    // Both labels always occupy the button, so swapping them never shifts
-    // the links beside it; the status line tells screen readers.
-    button.classList.add('is-done');
-    status.textContent = 'Email address copied';
-    window.clearTimeout(resetTimer);
-    resetTimer = window.setTimeout(() => {
-      button.classList.remove('is-done');
-      status.textContent = '';
-    }, 2000);
+  document.querySelectorAll<HTMLButtonElement>('.copy-email').forEach((button) => {
+    const email = button.dataset.email;
+    if (!email) return;
+
+    let resetTimer: number | undefined;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(email);
+      } catch (err) {
+        // No clipboard (an insecure context or a denied permission): hand the
+        // address to the mail app instead.
+        handleError(err, 'Clipboard unavailable');
+        window.location.href = `mailto:${email}`;
+        return;
+      }
+      // Both labels always occupy the button, so swapping them never shifts
+      // the links beside it; the status line tells screen readers.
+      button.classList.add('is-done');
+      status.textContent = 'Email address copied';
+      window.clearTimeout(resetTimer);
+      resetTimer = window.setTimeout(() => {
+        button.classList.remove('is-done');
+        status.textContent = '';
+      }, 2000);
+    });
   });
 }
 

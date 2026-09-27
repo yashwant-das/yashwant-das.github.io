@@ -23,16 +23,17 @@ npm run format     # Prettier
 ## Design rules
 
 - This is a personal site, not a resume. Don't add job timelines, dates, education or certifications.
-- Don't print the email address anywhere on the page. The Contact section's "Copy email" action copies it (falling back to `mailto:` without a clipboard).
-- **Minimal, after cursor.com:** every section must earn its space. Order: hero, Shipped for, Selected work, Stack, Writing, footer.
-  - Warm-cream (`#f7f7f4`) or warm-dark (`#14120b`) canvas. Depth comes from filled surfaces (4px radius), not borders; the only lines are the hairlines between Stack rows. No shadows, gradients or decorative motion.
-  - Inter (standing in for CursorGothic) at weight 400 for display type. JetBrains Mono only for code-like text: repo names, stacks and kickers. Set every `font-size` from the type-scale tokens; don't add one-off sizes.
+- Don't print the email address anywhere on the page. The Copy email buttons (hero and footer) copy it, falling back to `mailto:` without a clipboard.
+- **Minimal, after cursor.com:** every section must earn its space, and nothing is said twice. Order: hero, Shipped for, Selected work, Stack, Writing, then the footer, which is the contact. Everything aligns to one left edge.
+  - Warm-cream (`#f7f7f4`) or warm-dark (`#14120b`) canvas. Depth comes from filled surfaces (4px radius), not borders or rules. No shadows, gradients or decorative motion.
+  - Inter (standing in for CursorGothic) at weight 400 for display type. The name is the one large thing on the page (`--text-hero`); section titles sit well below it. JetBrains Mono only for repo names. No labels or kickers above headings. Set every `font-size` from the type-scale tokens; don't add one-off sizes.
   - Set every margin, padding and gap from the `--space-*` tokens (a 4px grid).
   - Buttons are pills: the primary is an ink inversion (Copy email), the secondary a soft fill.
 - **Orange:** `--primary` is for the wordmark mark and focus rings; `--link` is for text links ("More on Medium →"). Nothing else is orange.
-- **Hero:** name and statement read as one two-tone block, with Copy email and the LinkedIn and GitHub buttons beneath. Other socials go in the footer.
+- **Hero:** avatar, the name, then one two-tone lede (role and place in ink, the statement in grey), Copy email with the LinkedIn and GitHub buttons, and a "Tested on" line of platforms with icons.
 - **Shipped for:** client logos in one row; employers are named in a line beneath, not shown as logos.
-- **Stack:** text, not tiles. A "Current focus" row of logo pills, one line per toolbox group, and the platforms tested on. Project cards list their `stack`, and the build checks each entry is a toolbox item.
+- **Selected work and Writing:** full-width filled rows: title in ink, a grey line beneath, the repo name and arrow on the right.
+- **Stack:** the "Current focus" logo pills are the visible stack; the full toolbox, grouped, sits behind one "All N tools" disclosure. Project rows list their `stack`, and the build checks each entry is a toolbox item.
 - **Themes:** follow the system setting until the toggle is used; the choice is remembered. Both themes must be equally polished. Use the colour tokens in `css/style.css`, never raw colours.
 - **Logos:** single-colour `currentColor` SVGs only. Focus tools and client brands show logos; when a tool has none, use the closest matching icon (see `src/icons/`). Social buttons pick up the logo named after their label in lower case (`LinkedIn` → `linkedin`).
 - **Accessibility:**
