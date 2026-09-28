@@ -10,32 +10,19 @@
   },
   "name": "Yashwant Das",
   "role": "Lead QA engineer and test automation architect",
-  "location": "Bengaluru, India",
   "avatar": "assets/avatars/avatar.webp",
-  "statement": "I make sure software works on every screen it ships to. Lately, I teach language models to help.",
-  "description": "Yashwant Das is a lead QA engineer and test automation architect in Bengaluru, testing web, mobile, streaming and TV apps, and building AI-assisted testing tools for Playwright and Appium.",
+  "statement": "I test apps for every screen, and teach AI to write tests worth trusting.",
+  "description": "Yashwant Das is a lead QA engineer and test automation architect. He tests apps for every screen, from web and mobile to streaming and TV, and teaches AI to write tests worth trusting.",
   "brands": {
-    "note": "Client work was delivered through the employers listed.",
     "items": [
-      { "name": "Publicis Sapient", "kind": "employer", "logo": "publicis-sapient" },
-      { "name": "LTIMindtree", "kind": "employer", "logo": "ltimindtree", "scale": 1.1 },
-      { "name": "Future Focus Infotech", "kind": "employer", "logo": "ffi", "scale": 0.85 },
-      { "name": "Diagnal", "kind": "employer", "logo": "diagnal" },
-      { "name": "Gionee", "kind": "employer", "logo": "gionee" },
-      { "name": "Lava", "kind": "employer", "logo": "lava" },
-      { "name": "Marquistech", "kind": "employer", "logo": "marquistech" },
-      { "name": "Samsung", "kind": "employer", "logo": "samsung" },
-      { "name": "Bhilwara Infotechnology", "kind": "employer" },
-      { "name": "Travelers", "kind": "client", "logo": "travelers", "scale": 1.05 },
-      { "name": "Nokia", "kind": "client", "logo": "nokia" },
+      { "name": "Travelers", "kind": "client", "logo": "travelers" },
       { "name": "Equifax", "kind": "client", "logo": "equifax" },
-      { "name": "FOX", "kind": "client", "logo": "fox", "scale": 0.85 },
+      { "name": "FOX", "kind": "client", "logo": "fox" },
       { "name": "Pilot Flying J", "kind": "client", "logo": "pilot" },
-      { "name": "Paramount", "kind": "client", "logo": "paramount", "scale": 1.2 },
-      { "name": "Falabella", "kind": "client", "logo": "falabella", "scale": 1.1 },
+      { "name": "Paramount", "kind": "client", "logo": "paramount" },
+      { "name": "Falabella", "kind": "client", "logo": "falabella" },
       { "name": "Optus Sport", "kind": "client", "logo": "optus" },
-      { "name": "Mediacorp", "kind": "client", "logo": "mediacorp" },
-      { "name": "ALTBalaji", "kind": "client", "logo": "altbalaji" }
+      { "name": "Mediacorp", "kind": "client", "logo": "mediacorp" }
     ]
   },
   "toolbox": {
@@ -112,16 +99,16 @@
   },
   "surfaces": [
     { "name": "Web", "icon": "ui:globe" },
-    { "name": "iOS", "icon": "ui:phone" },
-    { "name": "Android", "icon": "ui:phone" },
-    { "name": "Android TV", "icon": "ui:tv" },
-    { "name": "Smart TV", "icon": "ui:tv" },
-    { "name": "Apple TV", "icon": "ui:tv" },
-    { "name": "Fire TV", "icon": "ui:tv" },
+    { "name": "iOS", "icon": "apple" },
+    { "name": "Android", "icon": "android" },
     { "name": "Xbox", "icon": "ui:gamepad" },
-    { "name": "PlayStation", "icon": "ui:gamepad" },
-    { "name": "Roku", "icon": "ui:tv" },
-    { "name": "webOS", "icon": "ui:tv" }
+    { "name": "PlayStation", "icon": "playstation" },
+    { "name": "Roku", "icon": "roku", "wordmark": "Roku" },
+    { "name": "Fire TV", "icon": "ui:stick" },
+    { "name": "Apple TV", "icon": "appletv", "wordmark": "Apple TV" },
+    { "name": "Android TV", "icon": "googletv" },
+    { "name": "LG webOS", "icon": "lg", "wordmark": "LG" },
+    { "name": "Samsung Tizen", "icon": "samsung", "wordmark": "Samsung" }
   ],
   "projects": [
     {
@@ -179,7 +166,6 @@
     }
   ],
   "contact": {
-    "email": "yashworks@gmail.com",
     "socials": {
       "LinkedIn": "https://linkedin.com/in/yashwant-das",
       "GitHub": "https://github.com/yashwant-das",

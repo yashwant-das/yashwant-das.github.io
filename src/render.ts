@@ -1,7 +1,7 @@
 // Turns data/content.json into the page's static HTML. Runs at build time (and
 // on every dev-server request) from vite.config.ts, so the shipped page is plain
 // HTML with no client-side rendering, loading states or layout shift.
-import type { Article, PortfolioData, SectionId, Tool } from './types.ts';
+import type { Article, PortfolioData, SectionId, Surface, Tool } from './types.ts';
 
 export type IconResolver = (name: string | undefined) => string | null;
 
@@ -16,8 +16,9 @@ const NAV: { id: SectionId; label: string }[] = [
   { id: 'writing', label: 'Writing' },
 ];
 
-// Socials in the hero; the first is the primary button. The closing contact
-// carries them all, with Copy email.
+// Socials in the hero; the first is the primary button, here and in the
+// closing contact, which carries them all. There is no email: people reach out
+// on LinkedIn.
 const HERO_SOCIALS = ['LinkedIn', 'GitHub'];
 
 const ARROW = '<span class="arrow" aria-hidden="true">↗</span>';
@@ -63,30 +64,17 @@ function decorate(svg: string | null): string {
   return out;
 }
 
-// Logo walls look even when every logo covers roughly the same area, not the
-// same height: a wide wordmark gets shorter, a compact mark gets taller.
-const LOGO_AREA = 50; // square root of the target area, in px
-const LOGO_MAX_W = 120;
-const LOGO_MAX_H = 40;
-
-function logoSize(svg: string, scale = 1): string {
+// As on cursor.com, every logo in the band is set to one height and centred
+// in its tile. The aspect ratio gives it its width, and a wordmark too wide for
+// its tile shrinks to fit (see .brand-logo in css/style.css).
+function logoRatio(svg: string): string {
   const box = svg
     .match(/viewBox="([^"]+)"/)?.[1]
     ?.trim()
     .split(/[\s,]+/)
     .map(Number);
   const ratio = box && box[2] && box[3] ? box[2] / box[3] : 1;
-  const height = (LOGO_AREA * scale) / Math.sqrt(ratio);
-  const width = height * ratio;
-  const fit = Math.min(1, LOGO_MAX_W / width, LOGO_MAX_H / height);
-  // Height follows from the aspect ratio, so the CSS max-width can shrink it.
-  return ` style="width: ${(width * fit).toFixed(1)}px; aspect-ratio: ${ratio.toFixed(3)}"`;
-}
-
-// "A, B and C"
-function joinList(items: string[]): string {
-  if (items.length < 2) return items.join('');
-  return `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
+  return ` style="aspect-ratio: ${ratio.toFixed(3)}"`;
 }
 
 function isVisible(data: PortfolioData, id: SectionId, hasContent: boolean): boolean {
@@ -104,15 +92,6 @@ function socialButton(label: string, url: string, icon: IconResolver, primary = 
   return `<a class="btn ${primary ? 'btn-primary' : 'btn-secondary'}" ${external(url)}>${
     svg ? `<span class="btn-icon">${decorate(svg)}</span>` : ''
   }<span>${escapeHtml(label)}${ARROW}</span></a>`;
-}
-
-// The address is never shown: the button copies it, and falls back to opening
-// the mail app where the clipboard is unavailable. The hero's button carries
-// the id; every copy button reports through one status line.
-function emailButton(email: string, id = ''): string {
-  return `<button class="btn btn-primary copy-email"${id ? ` id="${id}"` : ''} type="button" data-email="${escapeHtml(email)}">
-          <span class="copy-label"><span class="copy-idle">Copy email</span><span class="copy-done">Email copied</span></span>
-        </button>`;
 }
 
 function sectionHeader(id: string, title: string): string {
@@ -135,6 +114,18 @@ function renderHeader(data: PortfolioData, visible: Set<SectionId>): string {
 </header>`;
 }
 
+// A platform with a wordmark logo (Samsung, Roku) shows the logo in place of
+// that part of its name, at text height, and keeps the whole name for screen
+// readers. Otherwise a small icon leads the name.
+function renderPlatform(s: Surface, icon: IconResolver): string {
+  const svg = icon(s.icon);
+  if (svg && s.wordmark && s.name.startsWith(s.wordmark)) {
+    const rest = s.name.slice(s.wordmark.length).trim();
+    return `<li><span class="platform-wordmark">${decorate(svg)}</span><span class="sr-only">${escapeHtml(s.wordmark)}${rest ? ' ' : ''}</span>${escapeHtml(rest)}</li>`;
+  }
+  return `<li>${svg ? `<span class="platform-icon">${decorate(svg)}</span>` : ''}${escapeHtml(s.name)}</li>`;
+}
+
 // The platforms tested on, with their icons: the widest proof of the
 // statement, so it sits in the hero.
 function renderPlatforms(data: PortfolioData, icon: IconResolver): string {
@@ -142,12 +133,7 @@ function renderPlatforms(data: PortfolioData, icon: IconResolver): string {
   return `<div class="platforms">
         <p class="platforms-label" id="platforms-label">Tested on</p>
         <ul class="platform-list" role="list" aria-labelledby="platforms-label">
-          ${surfaces
-            .map((s) => {
-              const svg = icon(s.icon);
-              return `<li>${svg ? `<span class="platform-icon">${decorate(svg)}</span>` : ''}${escapeHtml(s.name)}</li>`;
-            })
-            .join('')}
+          ${surfaces.map((s) => renderPlatform(s, icon)).join('')}
         </ul>
       </div>`;
 }
@@ -164,7 +150,7 @@ function renderHero(data: PortfolioData, icon: IconResolver, visible: Set<Sectio
       : '';
 
   // As on cursor.com, the hero is one two-tone block at headline size: the
-  // name in ink, then role, place and statement in grey. The work window
+  // name in ink, then role and statement in grey. The work window
   // right below is the page's focal point.
   return `<section class="hero" id="top" aria-labelledby="hero-name">
     <div class="container">
@@ -188,37 +174,29 @@ function renderHero(data: PortfolioData, icon: IconResolver, visible: Set<Sectio
   </section>`;
 }
 
-// Client logos in one row; the employers the work came through are named
-// beneath rather than shown as logos.
+// Client logos in one row.
 function renderBrands(data: PortfolioData, icon: IconResolver): string {
   const all = (data.brands?.items ?? []).filter((b) => !b.disabled);
   const clients = all.filter((b) => b.kind === 'client');
-  const employers = all.filter((b) => b.kind === 'employer').map((b) => b.name);
   const wall = clients.length > 0 ? clients : all;
 
   const tiles = wall
     .map((brand) => {
       const svg = icon(brand.logo);
       const inner = svg
-        ? `<span class="brand-logo"${logoSize(svg, brand.scale)}>${decorate(svg)}</span><span class="sr-only">${escapeHtml(brand.name)}</span>`
+        ? `<span class="brand-logo"${logoRatio(svg)}>${decorate(svg)}</span><span class="sr-only">${escapeHtml(brand.name)}</span>`
         : `<span class="brand-word">${escapeHtml(brand.name)}</span>`;
       return `<li class="brand" data-kind="${brand.kind}" title="${escapeHtml(brand.name)}">${inner}</li>`;
     })
     .join('\n        ');
 
-  const through =
-    clients.length > 0 && employers.length > 0
-      ? `<p class="brand-note">Through ${escapeHtml(joinList(employers))}.</p>`
-      : '';
-
   // A cursor.com logo band: one small centred caption over a row of tiles.
   return `<section class="section section-brands" id="brands" aria-labelledby="brands-title">
     <div class="container">
-      <h2 class="brands-title" id="brands-title">${clients.length > 0 ? 'Shipped for these clients' : 'Worked with'}</h2>
+      <h2 class="brands-title" id="brands-title">${clients.length > 0 ? 'Tested for these clients' : 'Worked with'}</h2>
       <ul class="brand-row" role="list" style="--count: ${wall.length}">
         ${tiles}
       </ul>
-      ${through}
     </div>
   </section>`;
 }
@@ -301,14 +279,15 @@ function featureBlock(
   title: string,
   lede: string,
   media: string,
-  reverse = false
+  reverse = false,
+  link = ''
 ): string {
   return `<section class="section" id="${id}" aria-labelledby="${id}-title">
     <div class="container">
       <div class="feature${reverse ? ' feature-reverse' : ''}">
         <div class="feature-text">
           <h2 class="feature-title" id="${id}-title">${escapeHtml(title)}</h2>
-          <p class="feature-lede">${escapeHtml(lede)}</p>
+          <p class="feature-lede">${escapeHtml(lede)}</p>${link}
         </div>
         <div class="feature-media">
       ${media}
@@ -321,6 +300,7 @@ function featureBlock(
 function renderWork(data: PortfolioData, icon: IconResolver): string {
   const projects = (data.projects ?? []).filter((p) => !p.disabled);
   const tools = new Map((data.toolbox?.items ?? []).map((t) => [t.name, t]));
+  const github = data.contact.socials?.GitHub;
 
   const tabs = projects.map((p) => ({
     title: p.title,
@@ -338,7 +318,12 @@ function renderWork(data: PortfolioData, icon: IconResolver): string {
     'work',
     'Selected work',
     `${projects.length} open-source projects on GitHub. Pick one to see what it does and what it is built with.`,
-    renderWindow('work', 'yashwant-das', 'Repositories', tabs)
+    renderWindow('work', 'yashwant-das', 'Repositories', tabs),
+    false,
+    // As on cursor.com, a text link closes the block's text.
+    github
+      ? `\n          <a class="text-link feature-link" ${external(github)}>All projects on GitHub${RIGHT}</a>`
+      : ''
   );
 }
 
@@ -407,14 +392,13 @@ function renderWriting(data: PortfolioData): string {
 // The page closes the way cursor.com's does: one large line and the action.
 function renderContact(data: PortfolioData, icon: IconResolver): string {
   const socials = Object.entries(data.contact.socials ?? {})
-    .map(([label, url]) => socialButton(label, url, icon))
+    .map(([label, url]) => socialButton(label, url, icon, label === HERO_SOCIALS[0]))
     .join('\n        ');
 
   return `<section class="closing" id="contact" aria-labelledby="contact-title">
     <div class="container">
       <h2 class="closing-title" id="contact-title">Get in touch.</h2>
       <div class="closing-actions" id="social-list">
-        ${data.contact.email ? emailButton(data.contact.email, 'copy-email-btn') : ''}
         ${socials}
       </div>
     </div>
@@ -426,8 +410,7 @@ function renderFooter(data: PortfolioData): string {
   <div class="container">
     <p class="footer-base">© ${new Date().getFullYear()} ${escapeHtml(data.name)}</p>
   </div>
-</footer>
-<span class="sr-only" id="copy-email-status" role="status"></span>`;
+</footer>`;
 }
 
 function renderHead(data: PortfolioData): string {
@@ -456,7 +439,7 @@ export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPag
   const hasTools = (data.toolbox?.items ?? []).some((t) => !t.disabled);
   const hasWork = (data.projects ?? []).some((p) => !p.disabled);
   const hasWriting = (data.articles ?? []).some((a) => !a.disabled);
-  const hasContact = !!data.contact.email || Object.keys(data.contact.socials ?? {}).length > 0;
+  const hasContact = Object.keys(data.contact.socials ?? {}).length > 0;
 
   const visible = new Set<SectionId>();
   if (isVisible(data, 'brands', hasBrands)) visible.add('brands');

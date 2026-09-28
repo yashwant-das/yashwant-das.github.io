@@ -7,7 +7,7 @@
   "definitions": {
     "icon": {
       "type": "string",
-      "description": "A Simple Icons slug, the basename of an SVG in src/icons/, or a built-in 'ui:' icon (ui:globe, ui:phone, ui:tv, ui:gamepad, ui:mail).",
+      "description": "A Simple Icons slug, the basename of an SVG in src/icons/, or a built-in 'ui:' icon (ui:globe, ui:stick, ui:gamepad, ui:check, ui:database, ui:checklist).",
       "pattern": "^(ui:)?[a-z0-9-]+$"
     },
     "scale": {
@@ -99,9 +99,6 @@
               "logo": {
                 "$ref": "#/definitions/icon"
               },
-              "scale": {
-                "$ref": "#/definitions/scale"
-              },
               "disabled": {
                 "type": "boolean"
               }
@@ -180,6 +177,11 @@
           },
           "icon": {
             "$ref": "#/definitions/icon"
+          },
+          "wordmark": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The start of the name that the icon spells out (a wordmark such as Samsung's). The logo stands in for it at text height, and screen readers still hear the whole name."
           }
         }
       }
@@ -246,10 +248,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "email": {
-          "type": "string",
-          "format": "email"
-        },
         "socials": {
           "type": "object",
           "additionalProperties": {

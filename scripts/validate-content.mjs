@@ -43,6 +43,15 @@ for (const project of data.projects ?? []) {
   }
 }
 
+// A platform's wordmark stands in for the start of its name.
+for (const surface of data.surfaces ?? []) {
+  if (surface.wordmark && !surface.name.startsWith(surface.wordmark)) {
+    problems.push(
+      `platform "${surface.name}" has wordmark "${surface.wordmark}", which does not start its name`
+    );
+  }
+}
+
 if (problems.length > 0) {
   console.error('Content validation failed:');
   problems.forEach((p) => console.error(`  - ${p}`));
