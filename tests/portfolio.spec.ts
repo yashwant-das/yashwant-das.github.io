@@ -9,7 +9,6 @@ const content = JSON.parse(readFileSync('data/content.json', 'utf8')) as Portfol
 
 const brands = (content.brands?.items ?? []).filter((b) => !b.disabled);
 const clients = brands.filter((b) => b.kind === 'client');
-const employers = brands.filter((b) => b.kind === 'employer');
 const tools = (content.toolbox?.items ?? []).filter((t) => !t.disabled);
 const groups = (content.toolbox?.groups ?? []).filter((g) => tools.some((t) => t.group === g.id));
 const projects = (content.projects ?? []).filter((p) => !p.disabled);
@@ -65,7 +64,7 @@ test.describe('Portfolio', () => {
     }
   });
 
-  test('shows client logos and names the employers', async ({ page }) => {
+  test('shows client logos at one height', async ({ page }) => {
     const tiles = page.locator('#brands .brand');
     await expect(tiles).toHaveCount(clients.length);
     for (const [i, brand] of clients.entries()) {
@@ -73,9 +72,11 @@ test.describe('Portfolio', () => {
       await expect(tiles.nth(i)).toContainText(brand.name);
       if (brand.logo) await expect(tiles.nth(i).locator('svg')).toHaveCount(1);
     }
-    for (const employer of employers) {
-      await expect(page.locator('#brands .brand-note')).toContainText(employer.name);
-    }
+    // As on cursor.com, every logo shares one height, whatever its shape.
+    const heights = await page
+      .locator('#brands .brand-logo')
+      .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().height)));
+    expect(new Set(heights).size).toBe(1);
   });
 
   test('renders the stack from content data', async ({ page }) => {
@@ -198,21 +199,11 @@ test.describe('Portfolio', () => {
     }
   });
 
-  test('offers email as a copy action without printing the address', async ({ page }) => {
-    const email = content.contact.email ?? '';
-    await expect(page.locator('#copy-email-btn')).toHaveAttribute('data-email', email);
-    await expect(page.locator('#copy-email-btn .copy-idle')).toBeVisible();
-    await expect(page.locator('#copy-email-btn .copy-done')).toBeHidden();
-    // The address itself never appears as visible text or a mailto link.
-    await expect(page.locator('body')).not.toContainText(email);
-    await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
-  });
-
-  test('ends with contact: Copy email and every social profile', async ({ page }) => {
-    await expect(page.locator('#social-list .copy-email')).toHaveAttribute(
-      'data-email',
-      content.contact.email ?? ''
-    );
+  test('ends with contact: every social profile, LinkedIn first, and no email', async ({
+    page,
+  }) => {
+    await expect(page.locator('#social-list .btn-primary')).toHaveText(/LinkedIn/);
+    await expect(page.locator('a[href^="mailto:"], .copy-email')).toHaveCount(0);
     for (const [label, url] of socials) {
       const link = page.locator(`#social-list a[href="${url}"]`);
       await expect(link).toContainText(label);
@@ -224,23 +215,6 @@ test.describe('Portfolio', () => {
     for (const link of await heroLinks.all()) {
       await expect(link.locator('svg').first()).toBeVisible();
     }
-  });
-
-  test('copies the email address', async ({ page, context }) => {
-    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-    const button = page.locator('#copy-email-btn');
-    const width = (await button.boundingBox())?.width;
-    await button.click();
-    await expect(button).toHaveClass(/is-done/);
-    await expect(button.locator('.copy-done')).toBeVisible();
-    await expect(button.locator('.copy-idle')).toBeHidden();
-    await expect(page.locator('#copy-email-status')).toHaveText('Email address copied');
-    // Swapping the label never changes the button's width.
-    expect((await button.boundingBox())?.width).toBe(width);
-    const copied = await page.evaluate(() => navigator.clipboard.readText());
-    expect(copied).toBe(content.contact.email);
-    // It resets, so it can be used again.
-    await expect(button.locator('.copy-idle')).toBeVisible({ timeout: 4000 });
   });
 
   test('marks the nav link for the section in view', async ({ page }) => {
@@ -282,6 +256,41 @@ test.describe('Portfolio', () => {
       expect(results.violations).toEqual([]);
     });
   }
+
+  test('gives every link and button a 44px touch target on a phone', async ({ page }) => {
+    // Apple's minimum. A tap 21px either side of a control's centre must still
+    // land on it, which counts invisible hit areas as well as the visible box.
+    await page.setViewportSize({ width: 393, height: 852 });
+    await page.reload();
+    const misses = await page.evaluate(async () => {
+      const found: string[] = [];
+      const controls = [...document.querySelectorAll<HTMLElement>('a, button')].filter(
+        // Inactive window panels stay laid out on a phone but invisible.
+        (el) =>
+          !el.classList.contains('skip-link') && el.checkVisibility({ visibilityProperty: true })
+      );
+      for (const el of controls) {
+        el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
+        await new Promise((r) => requestAnimationFrame(r));
+        const r = el.getBoundingClientRect();
+        const [x, y] = [r.left + r.width / 2, r.top + r.height / 2];
+        for (const [dx, dy] of [
+          [0, -21],
+          [0, 21],
+          [-21, 0],
+          [21, 0],
+        ] as const) {
+          const hit = document.elementFromPoint(x + dx, y + dy);
+          if (!hit || !el.contains(hit)) {
+            found.push(`${el.textContent?.trim() || el.getAttribute('aria-label')} (${dx}, ${dy})`);
+            break;
+          }
+        }
+      }
+      return found;
+    });
+    expect(misses).toEqual([]);
+  });
 
   for (const viewport of RESPONSIVE_VIEWPORTS) {
     test(`avoids horizontal overflow at ${viewport.name}`, async ({ page }) => {

@@ -8,7 +8,6 @@ export interface Brand {
   name: string;
   kind: 'client' | 'employer';
   logo?: string;
-  scale?: number;
   disabled?: boolean;
 }
 
@@ -29,6 +28,7 @@ export interface Tool {
 export interface Surface {
   name: string;
   icon?: string;
+  wordmark?: string;
 }
 
 export interface Project {
@@ -47,7 +47,6 @@ export interface Article {
 }
 
 export interface Contact {
-  email?: string;
   socials?: Record<string, string>;
 }
 

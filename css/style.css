@@ -23,24 +23,30 @@
   /* Inter stands in for CursorGothic; JetBrains Mono for code-like text. */
   --font: 'Inter Variable', 'Inter Fallback', system-ui, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* The feature windows' documents use the system face, as Cursor's product UI does. */
+  --font-product: system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
   /*
    * Type scale. Every font-size on the page is one of these steps, matched to
    * the sizes cursor.com uses (Inter renders about 3% larger than CursorGothic).
-   * Phones get Apple's iOS text sizes: 17px body, 15px secondary text, nothing
-   * under 11px, and 22px titles; from 640px up, body text steps down to 16px.
+   * Phones get Apple's iOS text styles: Large Title (34px) for the closing,
+   * Title 1 (28px) for the hero, Title 2 (22px) for titles, Title 3 (20px),
+   * Body (17px), Subheadline (15px), Footnote (13px), Caption 1 (12px) and
+   * Caption 2 (11px), the smallest. From 640px up, the sizes follow cursor.com.
    *   display    the closing "Get in touch." (cursor.com's "Try Cursor now.")
    *   headline   the hero block (cursor.com's hero, 26px)
-   *   title      section titles, feature-block text, window headings (22px)
-   *   base       body text, row titles, buttons
+   *   title      section and feature-block titles (22px)
+   *   doc-title  the heading of a window's document (20px, bold)
+   *   base       body text, the hero and feature descriptions, row titles, buttons
    *   sm         nav, secondary text, lists
    *   caption    repo names, footnotes, window text
    *   ui         secondary lines inside the feature windows
    *   ui-label   uppercase labels inside the feature windows
    */
-  --text-display: 40px;
-  --text-headline: 26px;
+  --text-display: 34px;
+  --text-headline: 28px;
   --text-title: 22px;
+  --text-doc-title: 20px;
   --text-base: 17px;
   --text-sm: 15px;
   --text-caption: 13px;
@@ -49,14 +55,19 @@
 
   --weight-regular: 400;
   --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
 
   --leading-display: 1.1;
-  --leading-title: 1.25;
+  --leading-headline: 1.25;
+  --leading-title: 1.3;
   --leading-snug: 1.4;
   --leading-normal: 1.5;
+  --leading-doc: 1.55;
 
   --tracking-display: -0.03em;
-  --tracking-title: -0.0125em;
+  --tracking-headline: -0.0125em;
+  --tracking-title: -0.005em;
 
   /* Spacing, on a 4px grid. Every margin, padding and gap uses a step. */
   --space-1: 4px;
@@ -70,10 +81,12 @@
   --space-9: 64px;
   --space-10: 96px;
 
-  --page-width: 1200px;
-  --gutter: var(--space-4);
+  /* As on cursor.com: content up to 1300px wide, 20px from the window's edge
+     at every size. */
+  --page-width: 1300px;
+  --gutter: var(--space-5);
   --section-space: var(--space-9);
-  --header-height: 56px;
+  --header-height: 52px;
   --icon-size: 16px;
 
   --radius-sm: 4px;
@@ -91,6 +104,8 @@
   --fill: #e6e5e0;
   --fill-hover: #dcdbd5;
   --line: rgba(38, 37, 30, 0.1);
+  /* cursor.com's card edge: the ink at 2.5%, barely there, in both themes. */
+  --hairline: color-mix(in oklab, var(--ink) 2.5%, transparent);
   --ink: #26251e;
   --ink-hover: #3b3a31;
   --muted: #66655e;
@@ -99,6 +114,8 @@
 
   /* Feature windows, measured from cursor.com. */
   --media: #d9d5cf;
+  /* A flat wash over the wallpaper: none in light, a dimming one in dark. */
+  --media-veil: transparent;
   --window-chrome: #f2f1ed;
   --window-editor: #f7f7f4;
   --window-hover: rgba(38, 37, 30, 0.04);
@@ -115,9 +132,9 @@
 
 @media (min-width: 640px) {
   :root {
-    --gutter: var(--space-7);
     --section-space: var(--space-10);
     --text-display: 56px;
+    --text-headline: 26px;
     --text-base: 16px;
     --text-sm: 14px;
   }
@@ -125,7 +142,6 @@
 
 @media (min-width: 1024px) {
   :root {
-    --gutter: var(--space-8);
     --text-display: 72px;
   }
 }
@@ -145,6 +161,7 @@
   --logo: var(--ink);
 
   --media: #4a443b;
+  --media-veil: rgba(20, 18, 11, 0.68);
   --window-chrome: #14120b;
   --window-editor: #1b1913;
   --window-hover: rgba(237, 236, 236, 0.04);
@@ -247,6 +264,9 @@ button {
 
 .skip-link {
   position: absolute;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   top: var(--space-3);
   left: var(--space-3);
   z-index: 100;
@@ -360,14 +380,14 @@ button {
   font-size: var(--text-sm);
 }
 
+/* As on cursor.com: nav links in ink, fading to 75% on hover. */
 .site-nav a {
-  color: var(--muted);
+  color: var(--ink);
   transition: color var(--fast) var(--ease);
 }
 
-.site-nav a:hover,
-.site-nav a[aria-current] {
-  color: var(--ink);
+.site-nav a:hover {
+  color: color-mix(in oklab, var(--ink) 75%, transparent);
 }
 
 .theme-toggle {
@@ -432,6 +452,29 @@ button {
   }
 }
 
+/* Phone: every link is at least a 44px touch target, Apple's minimum. The
+   small ones (nav, the name, text links) get an invisible hit area centred on
+   them, so the text stays exactly where it is. */
+@media (max-width: 639px) {
+  .site-nav a,
+  .wordmark,
+  .text-link {
+    position: relative;
+  }
+
+  .site-nav a::after,
+  .wordmark::after,
+  .text-link::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+
 /* ==========================================================================
    Hero
    The name is the one large thing on the page. Role and place open the lede
@@ -460,9 +503,12 @@ button {
 .hero-text {
   max-width: 30em;
   font-size: var(--text-headline);
-  line-height: var(--leading-title);
-  letter-spacing: var(--tracking-title);
+  line-height: var(--leading-headline);
+  letter-spacing: var(--tracking-headline);
 }
+
+/* The name is the heading; role and statement read as a paragraph beneath it,
+   at body size. */
 
 .hero-name,
 .hero-lede {
@@ -472,7 +518,12 @@ button {
 }
 
 .hero-lede {
+  max-width: 36rem;
+  margin-top: var(--space-2);
   color: var(--muted);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  letter-spacing: normal;
 }
 
 .status {
@@ -495,7 +546,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
-  margin-top: var(--space-7);
+  margin-top: var(--space-6);
 }
 
 /* Phone: buttons share rows evenly, two to a row. */
@@ -527,42 +578,69 @@ button {
   gap: var(--space-2) var(--space-4);
 }
 
+/* The text sets each item's baseline, so it lines up with "Tested on"; the
+   icon is centred on it without taking part. */
 .platform-list li {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   gap: var(--space-1);
 }
 
 .platform-icon {
+  align-self: center;
   color: var(--muted);
 }
 
+/* Outline icons (Web, Xbox, Fire TV) get a heavier stroke than elsewhere, so
+   at 14px they carry the same weight as the solid brand logos beside them. */
 .platform-icon svg {
   width: 14px;
   height: 14px;
+  stroke-width: 2.1;
+}
+
+/* A wordmark stands in for part of the name at the text's cap height and its
+   own width. Like every other logo in the row it is grey, and the names are
+   ink, so the whole line reads at one weight. */
+.platform-wordmark {
+  align-self: center;
+  color: var(--muted);
+}
+
+.platform-wordmark svg {
+  display: block;
+  width: auto;
+  height: 0.75em;
 }
 
 /*
- * Both labels share one grid cell, so the button keeps the wider one's width
- * and the buttons beside it never move when the label swaps.
+ * Every filled surface gets cursor.com's hairline: a 1px edge in the ink at
+ * 2.5%, drawn on a layer above the fill so it never shifts the layout or
+ * catches a click. The avatar is an image, so it takes the line as an inset
+ * outline instead.
  */
-.copy-label {
-  display: inline-grid;
-  justify-items: center;
+.feature,
+.feature-media,
+.brand,
+.row {
+  position: relative;
 }
 
-.copy-idle,
-.copy-done {
-  grid-area: 1 / 1;
+.feature::before,
+.feature-media::before,
+.brand::before,
+.row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--hairline);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
-.copy-done,
-.copy-email.is-done .copy-idle {
-  visibility: hidden;
-}
-
-.copy-email.is-done .copy-done {
-  visibility: visible;
+.hero-avatar {
+  outline: 1px solid var(--hairline);
+  outline-offset: -1px;
 }
 
 /* ==========================================================================
@@ -582,8 +660,8 @@ button {
 }
 
 /* ==========================================================================
-   Shipped for: a cursor.com logo band. A small centred caption over one row
-   of filled tiles, logos in full ink.
+   Tested for: a cursor.com logo band. A small centred caption over one row
+   of filled tiles, logos in full ink, every logo one height and centred.
    ========================================================================== */
 
 .section-brands {
@@ -597,14 +675,8 @@ button {
   line-height: var(--leading-normal);
 }
 
-.brand-note {
-  margin-top: var(--space-5);
-  color: var(--muted);
-  font-size: var(--text-sm);
-  line-height: var(--leading-normal);
-}
-
 .brand-row {
+  --logo-height: 22px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-2);
@@ -612,7 +684,8 @@ button {
 
 @media (min-width: 560px) {
   .brand-row {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    --logo-height: 26px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -639,18 +712,18 @@ button {
   }
 }
 
+/* One height for every logo; the inline aspect ratio sets the width. A
+   wordmark wider than its tile is capped and drawn smaller, still centred. */
 .brand-logo {
   display: block;
+  height: var(--logo-height);
   max-width: 100%;
 }
 
 .brand-logo svg {
+  display: block;
   width: 100%;
   height: 100%;
-}
-
-.brand-note {
-  text-wrap: balance;
 }
 
 .brand-word {
@@ -763,10 +836,19 @@ button {
   letter-spacing: var(--tracking-title);
 }
 
+/* The title keeps title size; the description beneath it is a paragraph. */
 .feature-lede {
-  max-width: 24em;
+  max-width: 28rem;
+  margin-top: var(--space-2);
   color: var(--muted);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  letter-spacing: normal;
   text-wrap: pretty;
+}
+
+.feature-text .feature-link {
+  margin-top: var(--space-4);
 }
 
 @media (min-width: 1024px) {
@@ -789,18 +871,49 @@ button {
   }
 }
 
-/* The tinted panel the window sits on. From 768px the window runs off its
-   right edge; on a phone it sits whole inside, so none of it is cut off. */
+/* The panel the window sits on: a painted wallpaper, as on cursor.com, over
+   the --media tint that shows while it loads. The painting is John Henry
+   Twachtman's "Winter Harmony" (c. 1890-1900, National Gallery of Art, CC0).
+   The Stack panel shows its other side, so the two blocks don't repeat.
+   From 768px the window is cursor.com's size (920 x 600) and, as there, runs
+   off the panel's right edge, which is the block's outer edge. It never runs
+   toward the text: in dark mode its editor pane is the block's own colour and
+   the two would merge. On a phone it sits whole inside the panel. */
 .feature-media {
   overflow: hidden;
   padding: var(--space-6) var(--space-3);
   border-radius: var(--radius-sm);
-  background: var(--media);
+  background:
+    linear-gradient(var(--media-veil), var(--media-veil)),
+    url('/assets/wallpaper/winter-harmony.webp') left center / cover no-repeat,
+    var(--media);
+}
+
+.feature-reverse .feature-media {
+  background-position:
+    0 0,
+    right center,
+    0 0;
 }
 
 @media (min-width: 768px) {
   .feature-media {
-    padding: var(--space-8) 0 var(--space-8) var(--space-8);
+    display: flex;
+    padding: calc(var(--space-8) - var(--space-2)) 0 calc(var(--space-8) - var(--space-2))
+      var(--space-7);
+  }
+}
+
+/* Stack's text sits on the right, and its window's sidebar on the left, so
+   it can run off neither side: as on cursor.com's reversed cards, the window
+   sits whole inside the panel. */
+@media (min-width: 1024px) {
+  .feature-reverse .feature-media {
+    padding-right: var(--space-7);
+  }
+
+  .feature-reverse .window {
+    width: 100%;
   }
 }
 
@@ -814,13 +927,19 @@ button {
   border-radius: var(--radius-window);
   background: var(--window-chrome);
   box-shadow: var(--shadow-window);
-  font-size: var(--text-caption);
+  /* As in Cursor's product UI: the system face throughout, 12px chrome
+     (title, tabs, breadcrumb, sidebar) and 11px secondary lines. */
+  font-family: var(--font-product);
+  font-size: var(--text-ui);
   line-height: var(--leading-snug);
 }
 
+/* cursor.com's window: 920px wide, capped so it never runs more than 192px
+   past the panel. */
 @media (min-width: 768px) {
   .window {
-    width: calc(100% + var(--space-6));
+    flex: none;
+    width: clamp(100%, 920px, calc(100% + var(--space-10) * 2));
   }
 }
 
@@ -828,7 +947,7 @@ button {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  height: 32px;
+  height: 28px;
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--line);
 }
@@ -852,7 +971,7 @@ button {
 .window-body {
   display: grid;
   grid-template-columns: 208px minmax(0, 1fr);
-  height: 440px;
+  height: 572px;
 }
 
 .window-side {
@@ -907,7 +1026,7 @@ button {
 
 .window-tab-sub {
   color: var(--muted);
-  font-size: var(--text-ui);
+  font-size: var(--text-ui-label);
 }
 
 /* A compact tab: the title with a count on the right, on one line. */
@@ -918,7 +1037,7 @@ button {
 
 .window-tab-count {
   color: var(--muted);
-  font-size: var(--text-ui);
+  font-size: var(--text-ui-label);
 }
 
 .window-main {
@@ -941,7 +1060,7 @@ button {
 }
 
 .editor-tab {
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--space-3);
   border-right: 1px solid var(--line);
   background: var(--window-editor);
   margin-bottom: -1px;
@@ -952,36 +1071,38 @@ button {
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
   color: var(--muted);
+  font-size: var(--text-ui);
 }
 
 /* The README pane: a small document, set like Cursor's plan view. */
+/* Narrow enough that the text wraps inside the part of the window left
+   visible when it runs off the panel. */
 .doc {
-  max-width: 34em;
-  padding: var(--space-5) var(--space-8) var(--space-6);
-  font-size: var(--text-sm);
-  line-height: var(--leading-normal);
+  max-width: 36rem;
+  padding: var(--space-5) var(--space-9) var(--space-6);
+  font-family: var(--font-product);
+  font-size: var(--text-caption);
+  line-height: var(--leading-doc);
 }
 
 .doc-title {
   margin: 0 0 var(--space-2);
-  font-size: var(--text-title);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-title);
-  letter-spacing: var(--tracking-title);
+  font-size: var(--text-doc-title);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-doc);
 }
 
 .doc-head {
-  margin-top: var(--space-5);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--line);
-  color: var(--muted);
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
 }
 
 .doc-tools {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-2) var(--space-6);
-  margin-top: var(--space-3);
+  gap: var(--space-1) var(--space-6);
+  margin-top: var(--space-1);
 }
 
 .doc-tools li {
@@ -995,9 +1116,10 @@ button {
   height: var(--icon-size);
 }
 
-.doc-link {
-  margin-top: var(--space-6);
-  font-size: var(--text-sm);
+/* Scoped to the doc so it beats .text-link, which comes later. */
+.doc .doc-link {
+  margin-top: var(--space-5);
+  font-size: var(--text-caption);
 }
 
 /*
