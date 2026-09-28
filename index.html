@@ -22,7 +22,23 @@
       })();
     </script>
     <!--app-head-->
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
+    <!-- Safari ignores SVG favicons; these PNGs come from scripts/favicons.mjs. -->
+    <link
+      rel="icon"
+      href="/favicon.png"
+      type="image/png"
+      sizes="64x64"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      href="/favicon-dark.png"
+      type="image/png"
+      sizes="64x64"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="stylesheet" href="/css/style.css" />
     <script type="module" src="/src/main.ts"></script>
   </head>
