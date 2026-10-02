@@ -19,6 +19,21 @@ function initWindowTabs() {
     orient();
     phone.addEventListener('change', orient);
 
+    // On a phone the tab row runs past the window's edges; mark which ends
+    // have more tabs beyond them, so the CSS can fade those ends.
+    if (list) {
+      const edges = () => {
+        const end = list.scrollWidth - list.clientWidth;
+        const more = [list.scrollLeft > 1 && 'start', list.scrollLeft < end - 1 && 'end']
+          .filter(Boolean)
+          .join(' ');
+        if (more) list.dataset.more = more;
+        else delete list.dataset.more;
+      };
+      list.addEventListener('scroll', edges, { passive: true });
+      new ResizeObserver(edges).observe(list);
+    }
+
     const select = (next: HTMLButtonElement, focus: boolean) => {
       tabs.forEach((tab) => {
         const on = tab === next;
@@ -62,28 +77,24 @@ function reducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-// Marks the nav link for the section currently in view.
+// Marks the nav link for the section currently in view. Every section is
+// watched, including those without a link (the hero, the client band, the
+// closing), so while one of them is in view no link is marked.
 function initActiveNav() {
   const links = new Map<string, HTMLAnchorElement>();
   document.querySelectorAll<HTMLAnchorElement>('#site-nav a[href^="#"]').forEach((a) => {
     links.set(a.hash.slice(1), a);
   });
-  const sections = [...links.keys()]
-    .map((id) => document.getElementById(id))
-    .filter((el): el is HTMLElement => el !== null);
-  if (sections.length === 0 || !('IntersectionObserver' in window)) return;
+  const sections = [...document.querySelectorAll<HTMLElement>('main > section[id]')];
+  if (links.size === 0 || !('IntersectionObserver' in window)) return;
 
   const observer = new IntersectionObserver(
     (entries) => {
-      entries.forEach((entry) => {
-        const link = links.get(entry.target.id);
-        if (!link) return;
-        if (entry.isIntersecting) {
-          links.forEach((l) => l.removeAttribute('aria-current'));
-          link.setAttribute('aria-current', 'true');
-        } else if (link.hasAttribute('aria-current')) {
-          link.removeAttribute('aria-current');
-        }
+      const current = entries.find((entry) => entry.isIntersecting);
+      if (!current) return;
+      links.forEach((link, id) => {
+        if (id === current.target.id) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
       });
     },
     { rootMargin: '-45% 0px -50% 0px' }

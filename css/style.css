@@ -445,7 +445,7 @@ button {
 }
 
 /* Phone: the nav sits beside the toggle, and below 640px the toggle is a full
-   44px touch target. The narrowest phones keep only the wordmark and toggle. */
+   44px touch target. */
 @media (max-width: 559px) {
   .header-inner {
     grid-template-columns: 1fr auto auto;
@@ -465,9 +465,17 @@ button {
   }
 }
 
+/* The narrowest phones (and 400% zoom) can't fit the name beside the section
+   links, so the name tucks away: the mark stays as the home link, screen
+   readers still hear the name, and the hero shows it right below. */
 @media (max-width: 389px) {
-  .site-nav {
-    display: none;
+  .wordmark-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }
 
@@ -1042,8 +1050,14 @@ button {
   background: var(--window-hover);
 }
 
+/* The fill is too faint to mark the state alone (about 1.1:1 against the
+   window), so the title also turns semibold: a cue as strong as the text. */
 .window-tab[aria-selected='true'] {
   background: var(--fill);
+}
+
+.window-tab[aria-selected='true'] .window-tab-title {
+  font-weight: var(--weight-semibold);
 }
 
 .window-tab-title,
@@ -1082,8 +1096,16 @@ button {
   overflow-y: auto;
 }
 
+/* The window can run off its panel, where the panel's own ring would lose its
+   right edge, so the ring goes around the document, which always fits. */
 .window-panel:focus-visible {
+  outline: none;
+}
+
+.window-panel:focus-visible .doc {
+  outline: 2px solid var(--primary);
   outline-offset: -2px;
+  border-radius: var(--radius-sm);
 }
 
 .editor-tabs {
@@ -1207,6 +1229,26 @@ button {
     display: none;
   }
 
+  /* Fade an end that has more tabs beyond it (src/main.ts sets data-more),
+     so the row reads as one that scrolls. The mask uses only alpha. */
+  .window-tabs[data-more='end'] {
+    mask-image: linear-gradient(to right, currentColor calc(100% - var(--space-8)), transparent);
+  }
+
+  .window-tabs[data-more='start'] {
+    mask-image: linear-gradient(to left, currentColor calc(100% - var(--space-8)), transparent);
+  }
+
+  .window-tabs[data-more='start end'] {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      currentColor var(--space-8),
+      currentColor calc(100% - var(--space-8)),
+      transparent
+    );
+  }
+
   .window-tab,
   .window-tab:has(.window-tab-count) {
     display: inline-flex;
@@ -1223,6 +1265,17 @@ button {
 
   .window-tab-sub {
     display: none;
+  }
+
+  /* A hidden semibold copy of the title holds the pill at its selected
+     width, so the row doesn't shift when the selection moves. */
+  .window-tab-title::after {
+    content: attr(data-title);
+    display: block;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    font-weight: var(--weight-semibold);
   }
 
   .window-tab-count {

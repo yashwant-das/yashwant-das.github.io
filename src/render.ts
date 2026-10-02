@@ -21,8 +21,11 @@ const NAV: { id: SectionId; label: string }[] = [
 // on LinkedIn.
 const HERO_SOCIALS = ['LinkedIn', 'GitHub'];
 
-const ARROW = '<span class="arrow" aria-hidden="true">↗</span>';
-const RIGHT = '<span class="arrow" aria-hidden="true">→</span>';
+// Every link that leaves the site (and opens a new tab) ends in one of these
+// arrows, so they carry the new-tab warning for screen readers.
+const NEW_TAB = '<span class="sr-only"> (opens in a new tab)</span>';
+const ARROW = `<span class="arrow" aria-hidden="true">↗</span>${NEW_TAB}`;
+const RIGHT = `<span class="arrow" aria-hidden="true">→</span>${NEW_TAB}`;
 
 const SUN_ICON =
   '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>';
@@ -140,7 +143,7 @@ function renderHeader(data: PortfolioData, visible: Set<SectionId>): string {
 
   return `<header class="site-header">
   <div class="container header-inner">
-    <a class="wordmark" href="#top">${MARK}<span>${escapeHtml(data.name)}</span></a>
+    <a class="wordmark" href="#top">${MARK}<span class="wordmark-name">${escapeHtml(data.name)}</span></a>
     <nav class="site-nav" id="site-nav" aria-label="Sections">${links}</nav>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">
       ${SUN_ICON}${MOON_ICON}
@@ -175,7 +178,10 @@ function renderPlatforms(data: PortfolioData, icon: IconResolver): string {
 
 function renderHero(data: PortfolioData, icon: IconResolver, visible: Set<SectionId>): string {
   const socials = data.contact.socials ?? {};
-  const role = data.location ? `${data.role} in ${data.location}.` : `${data.role}.`;
+  // Non-breaking spaces keep "Bengaluru (IST)" on one line.
+  const role = data.location
+    ? `${data.role} in ${data.location.replace(/ /g, ' ')}.`
+    : `${data.role}.`;
   const links = HERO_SOCIALS.filter((label) => socials[label]);
   const actions =
     visible.has('contact') && links.length > 0
@@ -257,8 +263,11 @@ function renderWindow(id: string, name: string, label: string, tabs: WindowTab[]
         tab,
         i
       ) => `<button class="window-tab" type="button" role="tab" id="${id}-tab-${i}" aria-controls="${id}-panel-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">
-              <span class="window-tab-title">${escapeHtml(tab.title)}</span>${
-                tab.sub ? `<span class="window-tab-sub">${escapeHtml(tab.sub)}</span>` : ''
+              <span class="window-tab-title" data-title="${escapeHtml(tab.title)}">${escapeHtml(tab.title)}</span>${
+                // Hidden from screen readers: it repeats the README's "Built with".
+                tab.sub
+                  ? `<span class="window-tab-sub" aria-hidden="true">${escapeHtml(tab.sub)}</span>`
+                  : ''
               }${
                 tab.count !== undefined
                   ? `<span class="window-tab-count"><span class="sr-only">, </span>${tab.count}<span class="sr-only"> tools</span></span>`
@@ -346,7 +355,7 @@ function renderWork(data: PortfolioData, icon: IconResolver): string {
               <h3 class="doc-title">${escapeHtml(p.title)}</h3>
               <p class="doc-text">${escapeHtml(p.description)}</p>
               ${p.stack?.length ? `<p class="doc-head">Built with</p>${toolList(p.stack, tools, icon)}` : ''}
-              <a class="text-link doc-link" ${external(p.code)}>View on GitHub${RIGHT}</a>
+              <a class="text-link doc-link" ${external(p.code)}>View<span class="sr-only"> ${escapeHtml(p.title)}</span> on GitHub${RIGHT}</a>
             </div>`,
   }));
 
@@ -449,24 +458,38 @@ function renderFooter(data: PortfolioData): string {
 </footer>`;
 }
 
+const SITE_URL = 'https://yashwant-das.github.io/';
+
+// The preview card public/og.png comes from scripts/og-image.mjs.
 function renderHead(data: PortfolioData): string {
   const title = `${data.name} · ${data.role}`;
   const description = data.description ?? data.statement;
+  const image = `${SITE_URL}og.png`;
+  const imageAlt = `${data.name}, ${data.role}`;
   const sameAs = Object.values(data.contact.socials ?? {});
   const person = {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: data.name,
     jobTitle: data.role,
-    url: 'https://yashwant-das.github.io/',
+    url: SITE_URL,
+    ...(data.avatar ? { image: `${SITE_URL}${data.avatar}` } : {}),
     sameAs,
   };
 
   return `<title>${escapeHtml(title)}</title>
     <meta name="description" content="${escapeHtml(description)}" />
+    <link rel="canonical" href="${SITE_URL}" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="${SITE_URL}" />
+    <meta property="og:site_name" content="${escapeHtml(data.name)}" />
     <meta property="og:title" content="${escapeHtml(title)}" />
     <meta property="og:description" content="${escapeHtml(description)}" />
+    <meta property="og:image" content="${image}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="${escapeHtml(imageAlt)}" />
+    <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json">${JSON.stringify(person).replace(/</g, '\\u003c')}</script>`;
 }
 

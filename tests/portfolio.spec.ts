@@ -44,6 +44,9 @@ test.describe('Portfolio', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.locator('.hero-statement')).toHaveText(content.statement);
     await expect(page.locator('.hero-role')).toContainText(content.role);
+    if (content.location) {
+      await expect(page.locator('.hero-role')).toContainText(content.location);
+    }
     if (content.avatar) {
       await expect(page.locator('.hero-avatar')).toHaveAttribute('src', `/${content.avatar}`);
     }
@@ -255,9 +258,53 @@ test.describe('Portfolio', () => {
   });
 
   test('marks the nav link for the section in view', async ({ page }) => {
+    const current = page.locator('#site-nav a[aria-current]');
+    // The hero and the client band have no link, so nothing is marked there.
+    await expect(current).toHaveCount(0);
     const link = page.locator('#site-nav a[href="#work"]');
     await link.click();
     await expect(link).toHaveAttribute('aria-current', 'true');
+    await page.evaluate(() => {
+      const band = document.getElementById('brands')!.getBoundingClientRect();
+      window.scrollBy({
+        top: band.top + band.height / 2 - innerHeight * 0.47,
+        behavior: 'instant',
+      });
+    });
+    await expect(current).toHaveCount(0);
+    await page.locator('#site-nav a[href="#toolbox"]').click();
+    await expect(current).toHaveText('Stack');
+  });
+
+  test('marks the selected window tab beyond its faint fill', async ({ page }) => {
+    const weights = await page
+      .locator('#work .window-tab-title')
+      .evaluateAll((titles) => titles.map((t) => getComputedStyle(t).fontWeight));
+    expect(weights[0]).toBe('600');
+    expect(new Set(weights.slice(1))).toEqual(new Set(['400']));
+  });
+
+  test('fades the phone tab row at the ends with more tabs', async ({ page }) => {
+    await page.setViewportSize({ width: 393, height: 852 });
+    await page.reload();
+    const list = page.locator('#work [role="tablist"]');
+    await expect(list).toHaveAttribute('data-more', 'end');
+    await list.evaluate((el) => el.scrollTo({ left: el.scrollWidth, behavior: 'instant' }));
+    await expect(list).toHaveAttribute('data-more', 'start');
+    const mask = await list.evaluate((el) => getComputedStyle(el).maskImage);
+    expect(mask).toContain('linear-gradient');
+  });
+
+  test('describes the page for link previews', async ({ page }) => {
+    const meta = (selector: string) => page.locator(selector).getAttribute('content');
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /^https:\/\//);
+    expect(await meta('meta[property="og:url"]')).toMatch(/^https:\/\//);
+    expect(await meta('meta[name="twitter:card"]')).toBe('summary_large_image');
+    const image = await meta('meta[property="og:image"]');
+    expect(image).toMatch(/\/og\.png$/);
+    // The card exists and is the 1200 x 630 the tags promise (PNG header).
+    const png = readFileSync('public/og.png');
+    expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
   });
 
   test('follows the system theme and toggles, remembering the choice', async ({ page }) => {
@@ -294,8 +341,34 @@ test.describe('Portfolio', () => {
     });
   }
 
-  // A phone, and a large phone in landscape, still under the 640px phone sizes.
-  for (const width of [393, 600]) {
+  // Screen-reader names: each repo link says which repo, every link that
+  // opens a new tab says so, and a window tab is just its name.
+  test('names links and tabs clearly for screen readers', async ({ page }) => {
+    // Panels other than the open one are hidden, so include hidden links;
+    // that also counts the aria-hidden arrow, which the pattern allows.
+    for (const p of projects) {
+      const name = new RegExp(`^View ${p.title} on GitHub\\W*\\(opens in a new tab\\)$`);
+      await expect(page.getByRole('link', { name, includeHidden: true })).toHaveCount(1);
+    }
+    const external = page.locator('a[target="_blank"]');
+    const names = await external.evaluateAll((links) => links.map((a) => a.textContent ?? ''));
+    expect(names.every((n) => n.includes('(opens in a new tab)'))).toBe(true);
+    await expect(page.getByRole('tab', { name: projects[0]!.title, exact: true })).toHaveCount(1);
+  });
+
+  // The narrowest phones (and 400% zoom) keep the section links; the name
+  // tucks away instead, still read out.
+  test('keeps the section links on the narrowest phones', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 700 });
+    await page.reload();
+    await expect(page.locator('#site-nav a')).toHaveCount(3);
+    for (const link of await page.locator('#site-nav a').all()) await expect(link).toBeVisible();
+    await expect(page.getByRole('link', { name: content.name })).toHaveCount(1);
+  });
+
+  // A small phone, a phone, and a large phone in landscape, all under the
+  // 640px phone sizes.
+  for (const width of [360, 393, 600]) {
     test(`gives every link and button a 44px touch target at ${width}px`, async ({ page }) => {
       // Apple's minimum. A tap 21px either side of a control's centre must still
       // land on it, which counts invisible hit areas as well as the visible box.

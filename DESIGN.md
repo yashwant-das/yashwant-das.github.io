@@ -294,7 +294,7 @@ Rust Link at body size, ending in "→", which nudges 2px right on hover. One pe
 
 ### Navigation
 
-A 52px sticky header on the canvas: the mark and name on the left, three section links centred, the theme toggle on the right. Links are ink and fade to 75% on hover; the section in view gets a 1px Stone Grey underline, 6px below the text. Below 640px the links get invisible 44px hit areas and the toggle is a full 44px button; below 390px only the name and toggle remain.
+A 52px sticky header on the canvas: the mark and name on the left, three section links centred, the theme toggle on the right. Links are ink and fade to 75% on hover; the section in view gets a 1px Stone Grey underline, 6px below the text, and no link is marked while the hero, the client band or the closing is in view. Below 640px the links get invisible 44px hit areas and the toggle is a full 44px button; below 390px the name tucks away (the mark stays as the home link, and screen readers still hear the name) so the section links always fit.
 
 ### Platform line
 
@@ -310,7 +310,7 @@ Full-width Paper Surface strips 4px apart: the title in ink, a grey line beneath
 
 ### App windows (signature)
 
-A 10px-cornered frame on Window Chrome with three grey dots and a centred title, a 208px sidebar that is an ARIA tab list (click, arrows, Home and End), and an editor pane with a file tab, a breadcrumb and a README-style document. The selected tab takes Soft Fill. A document that outgrows the window (at large text sizes) scrolls inside its panel rather than being cut off. Tool logos inside come from one SVG sprite. On phones the frame stays, and the sidebar becomes 44px pill tabs; all panels share one grid cell so switching never changes the window's height.
+A 10px-cornered frame on Window Chrome with three grey dots and a centred title, a 208px sidebar that is an ARIA tab list (click, arrows, Home and End), and an editor pane with a file tab, a breadcrumb and a README-style document. The selected tab takes Soft Fill and a semibold title; the fill alone is too faint (about 1.1:1) to mark the state. A focused panel's ring goes around its document, which always fits the visible part of the window. A document that outgrows the window (at large text sizes) scrolls inside its panel rather than being cut off. Tool logos inside come from one SVG sprite. On phones the frame stays, and the sidebar becomes 44px pill tabs that scroll sideways, fading at any end with more tabs beyond it; each pill reserves its semibold width so the row never shifts. All panels share one grid cell so switching never changes the window's height.
 
 ## Do's and Don'ts
 
