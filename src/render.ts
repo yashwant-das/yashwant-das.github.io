@@ -64,6 +64,41 @@ function decorate(svg: string | null): string {
   return out;
 }
 
+// Tool logos repeat across the windows (a project's README, Current focus, the
+// tool's group), so each is defined once as a <symbol> in a sprite at the top
+// of the page and every copy is a <use>. Paint attributes on the source's root
+// move to a <g>, and ids inside get the symbol's prefix so icons can't collide.
+const symbols = new Map<string, string>();
+
+function useIcon(name: string, svg: string): string {
+  const id = `icon-${name.replace(/[^a-z0-9-]/gi, '-')}`;
+  if (!symbols.has(id)) {
+    const [, attrs = '', inner = ''] = svg.match(/^<svg\b([^>]*)>([\s\S]*)<\/svg>$/) ?? [];
+    const viewBox = attrs.match(/viewBox="[^"]*"/)?.[0] ?? '';
+    const paint = attrs
+      .replace(/\s(?:xmlns(?::\w+)?|viewBox|width|height|id|class|version)="[^"]*"/g, '')
+      .trim();
+    let body = inner;
+    for (const [, own] of inner.matchAll(/\bid="([^"]+)"/g)) {
+      body = body
+        .replaceAll(`id="${own}"`, `id="${id}-${own}"`)
+        .replaceAll(`url(#${own})`, `url(#${id}-${own})`)
+        .replaceAll(`href="#${own}"`, `href="#${id}-${own}"`);
+    }
+    symbols.set(
+      id,
+      `<symbol id="${id}" ${viewBox}>${paint ? `<g ${paint}>${body}</g>` : body}</symbol>`
+    );
+  }
+  return `<svg aria-hidden="true" focusable="false"><use href="#${id}"/></svg>`;
+}
+
+function renderSprite(): string {
+  return symbols.size > 0
+    ? `<svg class="icon-sprite" width="0" height="0" aria-hidden="true" focusable="false">${[...symbols.values()].join('')}</svg>`
+    : '';
+}
+
 // As on cursor.com, every logo in the band is set to one height and centred
 // in its tile. The aspect ratio gives it its width, and a wordmark too wide for
 // its tile shrinks to fit (see .brand-logo in css/style.css).
@@ -156,7 +191,7 @@ function renderHero(data: PortfolioData, icon: IconResolver, visible: Set<Sectio
     <div class="container">
       ${
         data.avatar
-          ? `<img class="hero-avatar" src="/${escapeHtml(data.avatar)}" alt="Portrait of ${escapeHtml(data.name)}" width="48" height="48" fetchpriority="high" decoding="async" />`
+          ? `<img class="hero-avatar" src="/${escapeHtml(data.avatar)}" alt="Portrait of ${escapeHtml(data.name)}" width="48" height="48" decoding="async" />`
           : ''
       }
       <div class="hero-text">
@@ -268,8 +303,9 @@ function editorHead(file: string, crumb: string): string {
 function toolList(names: string[], tools: Map<string, Tool>, icon: IconResolver): string {
   return `<ul class="doc-tools" role="list">${names
     .map((name) => {
-      const svg = icon(tools.get(name)?.icon);
-      return `<li>${svg ? `<span class="doc-tool-icon">${decorate(svg)}</span>` : ''}${escapeHtml(name)}</li>`;
+      const iconName = tools.get(name)?.icon;
+      const svg = icon(iconName);
+      return `<li>${svg && iconName ? `<span class="doc-tool-icon">${useIcon(iconName, svg)}</span>` : ''}${escapeHtml(name)}</li>`;
     })
     .join('')}</ul>`;
 }
@@ -435,6 +471,7 @@ function renderHead(data: PortfolioData): string {
 }
 
 export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPage {
+  symbols.clear();
   const hasBrands = (data.brands?.items ?? []).some((b) => !b.disabled);
   const hasTools = (data.toolbox?.items ?? []).some((t) => !t.disabled);
   const hasWork = (data.projects ?? []).some((p) => !p.disabled);
@@ -458,7 +495,8 @@ export function renderPage(data: PortfolioData, icon: IconResolver): RenderedPag
     visible.has('contact') ? renderContact(data, icon) : '',
   ].filter(Boolean);
 
-  const body = `${renderHeader(data, visible)}
+  const body = `${renderSprite()}
+${renderHeader(data, visible)}
 <main id="main">
   ${sections.join('\n\n  ')}
 </main>

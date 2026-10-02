@@ -1,0 +1,374 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-02T12:33:24.803Z",
+  "title": "Design System: Yashwant Das",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Signal Orange",
+        "canonical": "oklch(65.2% 0.2135 38)",
+        "tonalRamp": [
+          "oklch(15% 0.2135 38)",
+          "oklch(26.4% 0.2135 38)",
+          "oklch(37.9% 0.2135 38)",
+          "oklch(49.3% 0.2135 38)",
+          "oklch(60.7% 0.2135 38)",
+          "oklch(72.1% 0.2135 38)",
+          "oklch(83.6% 0.2135 38)",
+          "oklch(95% 0.2135 38)"
+        ]
+      },
+      "link": {
+        "role": "primary",
+        "displayName": "Rust Link",
+        "canonical": "oklch(52.8% 0.1709 38.5)",
+        "tonalRamp": [
+          "oklch(15% 0.1709 38.5)",
+          "oklch(26.4% 0.1709 38.5)",
+          "oklch(37.9% 0.1709 38.5)",
+          "oklch(49.3% 0.1709 38.5)",
+          "oklch(60.7% 0.1709 38.5)",
+          "oklch(72.1% 0.1709 38.5)",
+          "oklch(83.6% 0.1709 38.5)",
+          "oklch(95% 0.1709 38.5)"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Cream Canvas",
+        "canonical": "oklch(97.5% 0.004 106.5)",
+        "tonalRamp": [
+          "oklch(15% 0.004 106.5)",
+          "oklch(26.4% 0.004 106.5)",
+          "oklch(37.9% 0.004 106.5)",
+          "oklch(49.3% 0.004 106.5)",
+          "oklch(60.7% 0.004 106.5)",
+          "oklch(72.1% 0.004 106.5)",
+          "oklch(83.6% 0.004 106.5)",
+          "oklch(95% 0.004 106.5)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Paper Surface",
+        "canonical": "oklch(95.8% 0.0054 95.1)",
+        "tonalRamp": [
+          "oklch(15% 0.0054 95.1)",
+          "oklch(26.4% 0.0054 95.1)",
+          "oklch(37.9% 0.0054 95.1)",
+          "oklch(49.3% 0.0054 95.1)",
+          "oklch(60.7% 0.0054 95.1)",
+          "oklch(72.1% 0.0054 95.1)",
+          "oklch(83.6% 0.0054 95.1)",
+          "oklch(95% 0.0054 95.1)"
+        ]
+      },
+      "fill": {
+        "role": "neutral",
+        "displayName": "Soft Fill",
+        "canonical": "oklch(92.1% 0.0068 97.4)",
+        "tonalRamp": [
+          "oklch(15% 0.0068 97.4)",
+          "oklch(26.4% 0.0068 97.4)",
+          "oklch(37.9% 0.0068 97.4)",
+          "oklch(49.3% 0.0068 97.4)",
+          "oklch(60.7% 0.0068 97.4)",
+          "oklch(72.1% 0.0068 97.4)",
+          "oklch(83.6% 0.0068 97.4)",
+          "oklch(95% 0.0068 97.4)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Warm Graphite",
+        "canonical": "oklch(26.3% 0.0127 100.5)",
+        "tonalRamp": [
+          "oklch(15% 0.0127 100.5)",
+          "oklch(26.4% 0.0127 100.5)",
+          "oklch(37.9% 0.0127 100.5)",
+          "oklch(49.3% 0.0127 100.5)",
+          "oklch(60.7% 0.0127 100.5)",
+          "oklch(72.1% 0.0127 100.5)",
+          "oklch(83.6% 0.0127 100.5)",
+          "oklch(95% 0.0127 100.5)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Stone Grey",
+        "canonical": "oklch(50.5% 0.0109 100.2)",
+        "tonalRamp": [
+          "oklch(15% 0.0109 100.2)",
+          "oklch(26.4% 0.0109 100.2)",
+          "oklch(37.9% 0.0109 100.2)",
+          "oklch(49.3% 0.0109 100.2)",
+          "oklch(60.7% 0.0109 100.2)",
+          "oklch(72.1% 0.0109 100.2)",
+          "oklch(83.6% 0.0109 100.2)",
+          "oklch(95% 0.0109 100.2)"
+        ]
+      },
+      "canvas-dark": {
+        "role": "neutral",
+        "displayName": "Warm Night",
+        "canonical": "oklch(18.2% 0.0139 94)",
+        "tonalRamp": [
+          "oklch(15% 0.0139 94)",
+          "oklch(26.4% 0.0139 94)",
+          "oklch(37.9% 0.0139 94)",
+          "oklch(49.3% 0.0139 94)",
+          "oklch(60.7% 0.0139 94)",
+          "oklch(72.1% 0.0139 94)",
+          "oklch(83.6% 0.0139 94)",
+          "oklch(95% 0.0139 94)"
+        ]
+      },
+      "ink-dark": {
+        "role": "neutral",
+        "displayName": "Warm Chalk",
+        "canonical": "oklch(94.4% 0.0011 17.2)",
+        "tonalRamp": [
+          "oklch(15% 0.0011 17.2)",
+          "oklch(26.4% 0.0011 17.2)",
+          "oklch(37.9% 0.0011 17.2)",
+          "oklch(49.3% 0.0011 17.2)",
+          "oklch(60.7% 0.0011 17.2)",
+          "oklch(72.1% 0.0011 17.2)",
+          "oklch(83.6% 0.0011 17.2)",
+          "oklch(95% 0.0011 17.2)"
+        ]
+      },
+      "media": {
+        "role": "neutral",
+        "displayName": "Wallpaper Tint",
+        "canonical": "oklch(87.4% 0.0093 78.3)",
+        "tonalRamp": [
+          "oklch(15% 0.0093 78.3)",
+          "oklch(26.4% 0.0093 78.3)",
+          "oklch(37.9% 0.0093 78.3)",
+          "oklch(49.3% 0.0093 78.3)",
+          "oklch(60.7% 0.0093 78.3)",
+          "oklch(72.1% 0.0093 78.3)",
+          "oklch(83.6% 0.0093 78.3)",
+          "oklch(95% 0.0093 78.3)"
+        ]
+      },
+      "success": {
+        "role": "neutral",
+        "displayName": "Status Green",
+        "canonical": "oklch(56.5% 0.1101 164.5)",
+        "tonalRamp": [
+          "oklch(15% 0.1101 164.5)",
+          "oklch(26.4% 0.1101 164.5)",
+          "oklch(37.9% 0.1101 164.5)",
+          "oklch(49.3% 0.1101 164.5)",
+          "oklch(60.7% 0.1101 164.5)",
+          "oklch(72.1% 0.1101 164.5)",
+          "oklch(83.6% 0.1101 164.5)",
+          "oklch(95% 0.1101 164.5)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The closing \"Get in touch.\" only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The name in the hero."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section and feature-block titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Descriptions, buttons, writing-row titles."
+      },
+      "body-sm": {
+        "displayName": "Body small",
+        "purpose": "Nav, secondary lines, the logo band caption."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "The footer."
+      },
+      "doc-title": {
+        "displayName": "Document title",
+        "purpose": "The README heading inside a window, in the system face."
+      },
+      "doc-body": {
+        "displayName": "Document text",
+        "purpose": "README text inside a window."
+      },
+      "ui": {
+        "displayName": "Window chrome",
+        "purpose": "Window title, file tab, breadcrumb, sidebar items."
+      },
+      "ui-label": {
+        "displayName": "Window label",
+        "purpose": "Uppercase sidebar label and secondary lines in the windows."
+      }
+    },
+    "shadows": [
+      {
+        "name": "window",
+        "value": "0 28px 70px rgba(0, 0, 0, 0.14), 0 14px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(38, 37, 30, 0.1)",
+        "purpose": "The two feature windows only; measured from cursor.com."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.2, 0, 0, 1)",
+        "purpose": "Every state transition."
+      },
+      {
+        "name": "fast",
+        "value": "150ms",
+        "purpose": "Fill and colour changes on hover; arrow nudges."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "nav",
+        "value": "390px"
+      },
+      {
+        "name": "header",
+        "value": "560px"
+      },
+      {
+        "name": "type",
+        "value": "640px"
+      },
+      {
+        "name": "window",
+        "value": "768px"
+      },
+      {
+        "name": "split",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The ink pill for LinkedIn, the one way to get in touch.",
+      "html": "<a class=\"ds-btn ds-btn-primary\" href=\"#\">LinkedIn <span aria-hidden=\"true\">↗</span></a>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 9999px; font: 400 16px/1 var(--font, system-ui); text-decoration: none; transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1); } .ds-btn-primary { background: var(--ink, #26251e); color: var(--on-ink, #f7f7f4); } .ds-btn-primary:hover { background: var(--ink-hover, #3b3a31); } .ds-btn:focus-visible { outline: 2px solid var(--primary, #f54e00); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A soft-fill pill for every other profile.",
+      "html": "<a class=\"ds-btn2\" href=\"#\">GitHub <span aria-hidden=\"true\">↗</span></a>",
+      "css": ".ds-btn2 { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 9999px; background: var(--fill, #e6e5e0); color: var(--ink, #26251e); font: 400 16px/1 var(--font, system-ui); text-decoration: none; transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1); } .ds-btn2:hover { background: var(--fill-hover, #dcdbd5); } .ds-btn2:focus-visible { outline: 2px solid var(--primary, #f54e00); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Link",
+      "kind": "custom",
+      "refersTo": "text-link",
+      "description": "The one orange link that may close a block.",
+      "html": "<a class=\"ds-link\" href=\"#\">More on Medium <span class=\"ds-arrow\" aria-hidden=\"true\">→</span></a>",
+      "css": ".ds-link { color: var(--link, #b83a00); font: 400 16px/1.5 var(--font, system-ui); text-decoration: none; } .ds-arrow { display: inline-block; margin-left: 4px; transition: transform 150ms cubic-bezier(0.2, 0, 0, 1); } .ds-link:hover .ds-arrow { transform: translateX(2px); } .ds-link:focus-visible { outline: 2px solid var(--primary, #f54e00); outline-offset: 2px; border-radius: 4px; }"
+    },
+    {
+      "name": "Header Nav",
+      "kind": "nav",
+      "refersTo": "header",
+      "description": "Section links in ink that fade to 75% on hover.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\">Work</a><a href=\"#\">Stack</a><a href=\"#\">Writing</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 32px; font: 400 14px/1.5 var(--font, system-ui); } .ds-nav a { color: var(--ink, #26251e); text-decoration: none; transition: color 150ms cubic-bezier(0.2, 0, 0, 1); } .ds-nav a:hover { color: color-mix(in oklab, var(--ink, #26251e) 75%, transparent); } .ds-nav a:focus-visible { outline: 2px solid var(--primary, #f54e00); outline-offset: 2px; border-radius: 4px; }"
+    },
+    {
+      "name": "Writing Row",
+      "kind": "card",
+      "refersTo": "writing-row",
+      "description": "A full-width filled strip linking to an article.",
+      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-row-main\"><span>Charles Proxy macOS Setup Guide</span><span class=\"ds-row-desc\">Inspect HTTP and HTTPS traffic between your machine and devices.</span></span><span class=\"ds-row-meta\" aria-hidden=\"true\">↗</span></a>",
+      "css": ".ds-row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 24px; padding: 20px 24px; border-radius: 4px; background: var(--surface, #f2f1ed); color: var(--ink, #26251e); font: 400 16px/1.5 var(--font, system-ui); text-decoration: none; transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1); } .ds-row::before { content: \"\"; position: absolute; inset: 0; border: 1px solid color-mix(in oklab, var(--ink, #26251e) 2.5%, transparent); border-radius: inherit; pointer-events: none; } .ds-row-main { display: grid; gap: 4px; } .ds-row-desc, .ds-row-meta { color: var(--muted, #66655e); font-size: 14px; } .ds-row:hover { background: var(--surface-hover, #ebeae5); } .ds-row:hover .ds-row-meta { color: var(--ink, #26251e); } .ds-row:focus-visible { outline: 2px solid var(--primary, #f54e00); outline-offset: 2px; }"
+    },
+    {
+      "name": "Logo Tile",
+      "kind": "card",
+      "refersTo": "logo-tile",
+      "description": "One client logo, in ink, centred at the band's single logo height.",
+      "html": "<div class=\"ds-tile\"><svg viewBox=\"0 0 80 24\" width=\"87\" height=\"26\" fill=\"currentColor\" aria-label=\"Client\"><rect x=\"0\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"/><rect x=\"22\" y=\"8\" width=\"58\" height=\"8\" rx=\"2\"/></svg></div>",
+      "css": ".ds-tile { position: relative; display: grid; place-items: center; width: 180px; height: 100px; border-radius: 4px; background: var(--surface, #f2f1ed); color: var(--ink, #26251e); } .ds-tile::before { content: \"\"; position: absolute; inset: 0; border: 1px solid color-mix(in oklab, var(--ink, #26251e) 2.5%, transparent); border-radius: inherit; }"
+    },
+    {
+      "name": "Window Tab List",
+      "kind": "custom",
+      "refersTo": "window-tab",
+      "description": "The sidebar of a feature window: an ARIA tab list in the system face.",
+      "html": "<div class=\"ds-side\" role=\"tablist\" aria-orientation=\"vertical\"><p class=\"ds-label\">Repositories <span>6</span></p><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\"><span>ai-js-appium-mcp</span><span class=\"ds-sub\">Appium, MCP, WebdriverIO</span></button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\"><span>ai-js-promptfoo-eval</span><span class=\"ds-sub\">Promptfoo, Ollama, MLX</span></button></div>",
+      "css": ".ds-side { width: 208px; padding: 12px 8px; background: var(--window-chrome, #f2f1ed); font: 400 12px/1.4 system-ui, -apple-system, sans-serif; color: var(--ink, #26251e); } .ds-label { display: flex; gap: 8px; margin: 0; padding: 0 8px 8px; color: var(--muted, #66655e); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; } .ds-tab { display: grid; width: 100%; padding: 8px; border: 0; border-radius: 8px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1); } .ds-tab:hover { background: rgba(38, 37, 30, 0.04); } .ds-tab[aria-selected=\"true\"] { background: var(--fill, #e6e5e0); } .ds-tab:focus-visible { outline: 2px solid var(--primary, #f54e00); outline-offset: 2px; } .ds-sub { color: var(--muted, #66655e); font-size: 11px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Workbench",
+    "overview": "The page is a warm surface with the work laid out on it. Nothing raises its voice: the canvas is cream or warm near-black, type sits at weight 400, and depth comes from filled surfaces a shade off the canvas rather than from borders or shadows. The craft shows in precision, not decoration: one left edge for every section, a 4px spacing grid, one type scale, and logos cropped tight so that one height means the same thing for every brand.\n\nThe language is borrowed from cursor.com and stays with it: a 1300px page with a 20px gutter, a 52px header, pill buttons, a centred logo band, and feature blocks that pair a short text with an app window on a painted wallpaper. Those two windows (Selected work and Stack) are the only raised objects and the page's focal point. They are real controls: tab lists that swap a README-style document, set in the system face like Cursor's own product UI.\n\nLight and dark are equals. The theme follows the system until the toggle is used, every colour has a dark counterpart, and the wallpaper is veiled in dark mode so the windows still lead.",
+    "keyCharacteristics": [
+      "Warm cream (#f7f7f4) or warm near-black (#14120b) canvas; never pure white or grey.",
+      "Weight 400 for every heading, from the 22px titles to the 72px closing line.",
+      "Filled surfaces with a barely-there 1px hairline (the ink at 2.5%) instead of borders.",
+      "Two app windows, the only shadows on the page.",
+      "Orange only for focus rings and text links.",
+      "One public-domain painting (Twachtman's \"Winter Harmony\") as the windows' wallpaper, and no other imagery."
+    ],
+    "rules": [
+      {
+        "name": "The One Orange Rule",
+        "body": "Orange marks focus and text links, and nothing else. No orange fills, borders, icons or headings.",
+        "section": "colors"
+      },
+      {
+        "name": "The Token-Only Rule",
+        "body": "Every colour comes from a token in `css/style.css` with a value for both themes. No raw colours in components.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat Weight Rule",
+        "body": "Headings are weight 400. Size, not weight, makes hierarchy; only the windows' document headings are bold, because they imitate a README.",
+        "section": "typography"
+      },
+      {
+        "name": "The Scale-Only Rule",
+        "body": "Every `font-size` is a type-scale token. No one-off sizes, and nothing below 11px.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Kicker Rule",
+        "body": "No labels or eyebrows above headings.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two Windows Rule",
+        "body": "Only the feature windows are raised. Everything else is flat, so the eye goes to the work.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do take every colour, size, space and radius from the tokens in `css/style.css`.",
+      "Do give every new filled surface the 2.5% hairline on a `::before` layer.",
+      "Do crop logos tight to their artwork and render them as single-colour `currentColor` SVGs.",
+      "Do make every link and button at least a 44px touch target below 640px, with an invisible hit area for small text links.",
+      "Do check both themes; a change is finished only when light and dark are equally polished."
+    ],
+    "donts": [
+      "Don't use orange for anything but focus rings and text links.",
+      "Don't add shadows outside the two feature windows, or borders and rules between sections.",
+      "Don't bold a heading, or put a label above one.",
+      "Don't add gradients, decorative motion or imagery beyond the windows' wallpaper.",
+      "Don't let a window run toward its block's text, or let its document run past the panel's edge.",
+      "Don't use cursor.com's own wallpaper or marks."
+    ]
+  }
+}

@@ -1,5 +1,4 @@
-@import '@fontsource-variable/inter/index.css';
-@import '@fontsource-variable/jetbrains-mono/index.css';
+@import '@fontsource-variable/geist/index.css';
 
 /* ==========================================================================
    Tokens
@@ -9,26 +8,26 @@
    tokens chosen to pass WCAG AA on every surface they sit on.
    ========================================================================== */
 
-/* Metric-matched fallback so the Inter swap doesn't shift the layout. */
+/* Metric-matched fallback so the Geist swap doesn't shift the layout. */
 @font-face {
-  font-family: 'Inter Fallback';
+  font-family: 'Geist Fallback';
   src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
-  size-adjust: 107%;
-  ascent-override: 90%;
-  descent-override: 22.5%;
+  size-adjust: 102.9%;
+  ascent-override: 97.7%;
+  descent-override: 28.7%;
   line-gap-override: 0%;
 }
 
 :root {
-  /* Inter stands in for CursorGothic; JetBrains Mono for code-like text. */
-  --font: 'Inter Variable', 'Inter Fallback', system-ui, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* Geist stands in for CursorGothic: of the open faces, the closest in width,
+     x-height and cap height. */
+  --font: 'Geist Variable', 'Geist Fallback', system-ui, 'Helvetica Neue', Arial, sans-serif;
   /* The feature windows' documents use the system face, as Cursor's product UI does. */
   --font-product: system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
   /*
    * Type scale. Every font-size on the page is one of these steps, matched to
-   * the sizes cursor.com uses (Inter renders about 3% larger than CursorGothic).
+   * the sizes cursor.com uses.
    * Phones get Apple's iOS text styles: Large Title (34px) for the closing,
    * Title 1 (28px) for the hero, Title 2 (22px) for titles, Title 3 (20px),
    * Body (17px), Subheadline (15px), Footnote (13px), Caption 1 (12px) and
@@ -119,6 +118,7 @@
   --window-chrome: #f2f1ed;
   --window-editor: #f7f7f4;
   --window-hover: rgba(38, 37, 30, 0.04);
+  --window-side: 208px;
   --shadow-window:
     0 28px 70px rgba(0, 0, 0, 0.14), 0 14px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--line);
 
@@ -262,6 +262,15 @@ button {
   border: 0;
 }
 
+/* Holds the tool logos' symbols. Not display: none, which would stop masks
+   and gradients inside the symbols from painting in Safari and Firefox. */
+.icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 .skip-link {
   position: absolute;
   display: inline-flex;
@@ -390,6 +399,14 @@ button {
   color: color-mix(in oklab, var(--ink) 75%, transparent);
 }
 
+/* The section in view: a quiet underline, so it isn't shown by colour alone. */
+.site-nav a[aria-current] {
+  text-decoration: underline;
+  text-decoration-color: var(--muted);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+
 .theme-toggle {
   display: grid;
   place-items: center;
@@ -427,8 +444,8 @@ button {
   display: block;
 }
 
-/* Phone: the nav sits beside the toggle, and the toggle is a full 44px
-   touch target. The narrowest phones keep only the wordmark and toggle. */
+/* Phone: the nav sits beside the toggle, and below 640px the toggle is a full
+   44px touch target. The narrowest phones keep only the wordmark and toggle. */
 @media (max-width: 559px) {
   .header-inner {
     grid-template-columns: 1fr auto auto;
@@ -438,7 +455,9 @@ button {
   .site-nav {
     gap: var(--space-4);
   }
+}
 
+@media (max-width: 639px) {
   .theme-toggle {
     width: 44px;
     height: 44px;
@@ -898,6 +917,7 @@ button {
 
 @media (min-width: 768px) {
   .feature-media {
+    container: media / inline-size;
     display: flex;
     padding: calc(var(--space-8) - var(--space-2)) 0 calc(var(--space-8) - var(--space-2))
       var(--space-7);
@@ -970,7 +990,7 @@ button {
 
 .window-body {
   display: grid;
-  grid-template-columns: 208px minmax(0, 1fr);
+  grid-template-columns: var(--window-side) minmax(0, 1fr);
   height: 572px;
 }
 
@@ -1045,8 +1065,12 @@ button {
   background: var(--window-editor);
 }
 
+/* The window has a fixed height, so a document that outgrows it (at large
+   text sizes) scrolls inside its panel, as in an editor. The panel is
+   focusable, so the arrow keys scroll it too. */
 .window-panel {
   height: 100%;
+  overflow-y: auto;
 }
 
 .window-panel:focus-visible {
@@ -1075,14 +1099,27 @@ button {
 }
 
 /* The README pane: a small document, set like Cursor's plan view. */
-/* Narrow enough that the text wraps inside the part of the window left
-   visible when it runs off the panel. */
 .doc {
   max-width: 36rem;
   padding: var(--space-5) var(--space-9) var(--space-6);
   font-family: var(--font-product);
   font-size: var(--text-caption);
   line-height: var(--leading-doc);
+}
+
+/* The window runs off the panel, so the document wraps inside the part left
+   visible: the panel's width (100cqw, the window's left edge to the panel's
+   right) less the sidebar. Where that is narrow, the margins tighten. */
+@container media (min-width: 0) {
+  .doc {
+    max-width: min(36rem, 100cqw - var(--window-side));
+  }
+}
+
+@container media (max-width: 799px) {
+  .doc {
+    padding-inline: var(--space-7);
+  }
 }
 
 .doc-title {

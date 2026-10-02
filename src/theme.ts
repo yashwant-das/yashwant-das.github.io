@@ -6,7 +6,6 @@ import { handleError } from './utils.ts';
 type Theme = 'light' | 'dark';
 
 const STORAGE_KEY = 'yd-theme';
-const THEME_COLOR: Record<Theme, string> = { dark: '#14120b', light: '#f7f7f4' };
 
 const root = document.documentElement;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -26,7 +25,8 @@ function savedTheme(): Theme | null {
 
 function applyTheme(theme: Theme) {
   root.dataset.theme = theme;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLOR[theme]);
+  const canvas = getComputedStyle(root).getPropertyValue('--canvas').trim();
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', canvas);
 
   const toggle = document.getElementById('theme-toggle');
   toggle?.setAttribute(

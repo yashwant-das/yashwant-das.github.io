@@ -257,40 +257,45 @@ test.describe('Portfolio', () => {
     });
   }
 
-  test('gives every link and button a 44px touch target on a phone', async ({ page }) => {
-    // Apple's minimum. A tap 21px either side of a control's centre must still
-    // land on it, which counts invisible hit areas as well as the visible box.
-    await page.setViewportSize({ width: 393, height: 852 });
-    await page.reload();
-    const misses = await page.evaluate(async () => {
-      const found: string[] = [];
-      const controls = [...document.querySelectorAll<HTMLElement>('a, button')].filter(
-        // Inactive window panels stay laid out on a phone but invisible.
-        (el) =>
-          !el.classList.contains('skip-link') && el.checkVisibility({ visibilityProperty: true })
-      );
-      for (const el of controls) {
-        el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
-        await new Promise((r) => requestAnimationFrame(r));
-        const r = el.getBoundingClientRect();
-        const [x, y] = [r.left + r.width / 2, r.top + r.height / 2];
-        for (const [dx, dy] of [
-          [0, -21],
-          [0, 21],
-          [-21, 0],
-          [21, 0],
-        ] as const) {
-          const hit = document.elementFromPoint(x + dx, y + dy);
-          if (!hit || !el.contains(hit)) {
-            found.push(`${el.textContent?.trim() || el.getAttribute('aria-label')} (${dx}, ${dy})`);
-            break;
+  // A phone, and a large phone in landscape, still under the 640px phone sizes.
+  for (const width of [393, 600]) {
+    test(`gives every link and button a 44px touch target at ${width}px`, async ({ page }) => {
+      // Apple's minimum. A tap 21px either side of a control's centre must still
+      // land on it, which counts invisible hit areas as well as the visible box.
+      await page.setViewportSize({ width, height: 852 });
+      await page.reload();
+      const misses = await page.evaluate(async () => {
+        const found: string[] = [];
+        const controls = [...document.querySelectorAll<HTMLElement>('a, button')].filter(
+          // Inactive window panels stay laid out on a phone but invisible.
+          (el) =>
+            !el.classList.contains('skip-link') && el.checkVisibility({ visibilityProperty: true })
+        );
+        for (const el of controls) {
+          el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
+          await new Promise((r) => requestAnimationFrame(r));
+          const r = el.getBoundingClientRect();
+          const [x, y] = [r.left + r.width / 2, r.top + r.height / 2];
+          for (const [dx, dy] of [
+            [0, -21],
+            [0, 21],
+            [-21, 0],
+            [21, 0],
+          ] as const) {
+            const hit = document.elementFromPoint(x + dx, y + dy);
+            if (!hit || !el.contains(hit)) {
+              found.push(
+                `${el.textContent?.trim() || el.getAttribute('aria-label')} (${dx}, ${dy})`
+              );
+              break;
+            }
           }
         }
-      }
-      return found;
+        return found;
+      });
+      expect(misses).toEqual([]);
     });
-    expect(misses).toEqual([]);
-  });
+  }
 
   for (const viewport of RESPONSIVE_VIEWPORTS) {
     test(`avoids horizontal overflow at ${viewport.name}`, async ({ page }) => {
@@ -302,4 +307,68 @@ test.describe('Portfolio', () => {
       expect(overflow).toBe(0);
     });
   }
+
+  // The windows run off their panels on purpose, so a page-overflow check
+  // can't see text cut off at the panel's edge. Includes the iPad widths.
+  for (const width of [360, 768, 820, 1024, 1180, 1366, 1920]) {
+    test(`keeps every window's text inside its panel at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.reload();
+      const clipped = await page.evaluate(() => {
+        const found: string[] = [];
+        document.querySelectorAll<HTMLElement>('.feature-media').forEach((media) => {
+          const edge = media.getBoundingClientRect().right;
+          media.querySelectorAll<HTMLElement>('.window-panel').forEach((panel) => {
+            const wasHidden = panel.hidden;
+            panel.hidden = false;
+            panel.querySelectorAll('.doc :is(h3, p, li, a)').forEach((el) => {
+              const over = el.getBoundingClientRect().right - edge;
+              if (over > 0.5) found.push(`${panel.id}: ${el.textContent?.trim()} (${over}px)`);
+            });
+            panel.hidden = wasHidden;
+          });
+        });
+        return found;
+      });
+      expect(clipped).toEqual([]);
+    });
+  }
+
+  // WCAG 1.4.4: text-only zoom (Safari, Firefox) at 200% must lose nothing,
+  // though the window keeps its fixed height. Each document scrolls instead.
+  test('keeps every window document reachable at 200% text size', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.reload();
+    const unreachable = await page.evaluate(() => {
+      const root = document.documentElement;
+      const sizes = [
+        '--text-caption',
+        '--text-ui',
+        '--text-ui-label',
+        '--text-doc-title',
+        '--text-sm',
+      ];
+      for (const token of sizes) {
+        const px = parseFloat(getComputedStyle(root).getPropertyValue(token));
+        root.style.setProperty(token, `${px * 2}px`);
+      }
+      const found: string[] = [];
+      document.querySelectorAll<HTMLElement>('.window').forEach((win) => {
+        const panels = [...win.querySelectorAll<HTMLElement>('.window-panel')];
+        const shown = panels.find((p) => !p.hidden);
+        for (const panel of panels) {
+          panels.forEach((p) => (p.hidden = p !== panel));
+          panel.scrollTop = panel.scrollHeight;
+          const last = [...panel.querySelectorAll<HTMLElement>('.doc > *')].at(-1);
+          const over = last
+            ? last.getBoundingClientRect().bottom - panel.getBoundingClientRect().bottom
+            : 0;
+          if (over > 0.5) found.push(`${panel.id} (${over}px)`);
+        }
+        panels.forEach((p) => (p.hidden = p !== shown));
+      });
+      return found;
+    });
+    expect(unreachable).toEqual([]);
+  });
 });

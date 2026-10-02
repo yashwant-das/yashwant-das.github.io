@@ -5,10 +5,10 @@
     "ignoreFiles": [],
     "ignoreValues": [
       {
-        "rule": "design-system-font",
-        "value": "inter fallback",
-        "createdAt": "2026-09-25T15:35:25.899Z",
-        "reason": "Claude: metric-matched local fallback for Inter, which DESIGN.md names as the CursorGothic substitute"
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-10-02T12:20:52.531Z",
+        "reason": "user confirmed: chose Geist as the closest open match to CursorGothic (measured width, x-height, cap height)"
       }
     ]
   }
