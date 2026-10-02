@@ -36,7 +36,7 @@ const UI_ICONS: Record<string, string> = {
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="8.75" width="13.5" height="6.5" rx="2"/><path d="M16.25 10.25h3.5a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1h-3.5M6 12h.01"/></svg>',
   // Xbox's marks aren't in Simple Icons either.
   gamepad:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 7.25h9a4.75 4.75 0 0 1 4.6 5.9l-.9 3.6a2.2 2.2 0 0 1-3.8.9L14.9 16H9.1l-1.5 1.65a2.2 2.2 0 0 1-3.8-.9l-.9-3.6a4.75 4.75 0 0 1 4.6-5.9Z"/><path d="M8 10.25v3M6.5 11.75h3M15.5 11h.01M17 12.5h.01"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 6.4h9a4.75 4.75 0 0 1 4.6 5.9l-.9 3.6a2.2 2.2 0 0 1-3.8.9L14.9 15.15H9.1l-1.5 1.65a2.2 2.2 0 0 1-3.8-.9l-.9-3.6a4.75 4.75 0 0 1 4.6-5.9Z"/><path d="M8 9.4v3M6.5 10.9h3M15.5 10.15h.01M17 11.65h.01"/></svg>',
 };
 
 const cache = new Map<string, string | null>();

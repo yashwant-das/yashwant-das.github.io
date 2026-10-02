@@ -591,45 +591,54 @@ button {
   color: var(--muted);
 }
 
+/* Baseline, so an item that is only a wordmark (Roku, Apple TV) stands on
+   the same line as its neighbours' text instead of rising to the top. */
 .platform-list {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   gap: var(--space-2) var(--space-4);
 }
 
-/* The text sets each item's baseline, so it lines up with "Tested on"; the
-   icon is centred on it without taking part. */
+/* Everything sits on the text's baseline, so the row lines up with "Tested
+   on". Icons and wordmarks have no baseline of their own, so their bottom
+   edge lands on it; from there they are placed against the capital letters
+   (the cap unit, with a 0.71em fallback measured from Geist), not against the
+   line box, whose descender space would leave them sitting low. */
 .platform-list li {
+  --platform-icon: 14px;
   display: inline-flex;
   align-items: baseline;
   gap: var(--space-1);
 }
 
+/* An icon is centred on the capitals: lowered by half its overhang. */
 .platform-icon {
-  align-self: center;
   color: var(--muted);
+  translate: 0 calc((var(--platform-icon) - 0.71em) / 2);
+  translate: 0 calc((var(--platform-icon) - 1cap) / 2);
 }
 
 /* Outline icons (Web, Xbox, Fire TV) get a heavier stroke than elsewhere, so
    at 14px they carry the same weight as the solid brand logos beside them. */
 .platform-icon svg {
-  width: 14px;
-  height: 14px;
+  width: var(--platform-icon);
+  height: var(--platform-icon);
   stroke-width: 2.1;
 }
 
-/* A wordmark stands in for part of the name at the text's cap height and its
-   own width. Like every other logo in the row it is grey, and the names are
-   ink, so the whole line reads at one weight. */
+/* A wordmark stands in for part of the name: cap height tall, standing on the
+   baseline like the letters beside it. Like every other logo in the row it is
+   grey, and the names are ink, so the whole line reads at one weight. */
 .platform-wordmark {
-  align-self: center;
   color: var(--muted);
 }
 
 .platform-wordmark svg {
   display: block;
   width: auto;
-  height: 0.75em;
+  height: 0.71em;
+  height: 1cap;
 }
 
 /*

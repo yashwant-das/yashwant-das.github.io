@@ -296,6 +296,10 @@ Rust Link at body size, ending in "→", which nudges 2px right on hover. One pe
 
 A 52px sticky header on the canvas: the mark and name on the left, three section links centred, the theme toggle on the right. Links are ink and fade to 75% on hover; the section in view gets a 1px Stone Grey underline, 6px below the text. Below 640px the links get invisible 44px hit areas and the toggle is a full 44px button; below 390px only the name and toggle remain.
 
+### Platform line
+
+"Tested on" and a row of platforms at body-small size, names in ink and marks in Stone Grey. Icons (14px) are centred on the capital letters, not the line box. Where a platform's logo is a wordmark (Roku, Apple TV, LG, Samsung) it replaces that part of the name at exactly cap height, standing on the baseline like the letters beside it.
+
 ### Logo band
 
 A centred 14px caption over one row of 100px tiles on Paper Surface, client logos in full ink, all one height (26px, or 22px below 560px, where the row wraps to two columns), ordered by market value.

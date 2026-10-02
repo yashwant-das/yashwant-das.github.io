@@ -139,6 +139,43 @@ test.describe('Portfolio', () => {
     );
   });
 
+  // Icons are centred on the capital letters and wordmarks stand on the
+  // baseline at cap height, so the row reads as one line of type.
+  test('sets platform icons and wordmarks in line with the text', async ({ page }) => {
+    await page.evaluate(() => document.fonts.ready);
+    const misses = await page.evaluate(() => {
+      const font = getComputedStyle(document.querySelector('.platform-list')!).fontFamily;
+      const ctx = document.createElement('canvas').getContext('2d')!;
+      ctx.font = `400 1400px ${font}`;
+      const cap = ctx.measureText('H').actualBoundingBoxAscent / 100;
+      // A zero-size inline-block sits on the baseline; borrow the label's.
+      const marker = document.createElement('i');
+      marker.style.cssText = 'display:inline-block;width:0;height:0';
+      document.querySelector('.platforms-label')!.append(marker);
+      const labelBaseline = marker.getBoundingClientRect().top;
+      marker.remove();
+      const found: string[] = [];
+      document.querySelectorAll<HTMLElement>('.platform-list li').forEach((li) => {
+        const svg = li.querySelector<SVGSVGElement>('svg');
+        if (!svg || li.getBoundingClientRect().top > labelBaseline) return;
+        const name = li.textContent?.trim();
+        if (svg.closest('.platform-wordmark')) {
+          const box = svg.getBoundingClientRect();
+          const off = Math.max(Math.abs(box.bottom - labelBaseline), Math.abs(box.height - cap));
+          if (off > 0.5) found.push(`${name}: wordmark off by ${off.toFixed(2)}px`);
+        } else {
+          const art = svg.getBBox();
+          const m = svg.getScreenCTM()!;
+          const mid = m.f + (art.y + art.height / 2) * m.d;
+          const off = Math.abs(mid - (labelBaseline - cap / 2));
+          if (off > 0.5) found.push(`${name}: icon off by ${off.toFixed(2)}px`);
+        }
+      });
+      return found;
+    });
+    expect(misses).toEqual([]);
+  });
+
   test('lists selected work with external links and stacks', async ({ page }) => {
     const panels = page.locator('#work [role="tabpanel"]');
     await expect(panels).toHaveCount(projects.length);
