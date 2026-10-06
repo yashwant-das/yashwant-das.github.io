@@ -20,11 +20,14 @@ const CANVAS = '#f7f7f4';
 const INK = '#26251e';
 const MUTED = '#66655e';
 
+// As in the hero: the statement starts its own line, and a one-letter word
+// ("I") is tied to the word after it.
+const tie = (s) => s.replace(/(^|\s)(\S) /g, '$1$2\u00a0');
 const escape = (s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // Non-breaking spaces keep "Bengaluru (IST)" on one line, as in the hero.
 const role = content.location
-  ? `${content.role} in ${content.location.replace(/ /g, ' ')}.`
+  ? `${content.role} in ${content.location.replace(/ /g, '\u00a0')}.`
   : `${content.role}.`;
 const host = 'yashwant-das.github.io';
 
@@ -34,13 +37,14 @@ const html = `<!doctype html><meta charset="utf-8"><style>
   .card { box-sizing: border-box; width: 1200px; height: 630px; padding: 80px 88px 72px;
     display: flex; flex-direction: column; background: ${CANVAS}; color: ${INK}; font-family: Geist; }
   h1 { margin: 0; font-size: 80px; font-weight: 400; line-height: 1.1; letter-spacing: -0.03em; }
-  p { margin: 28px 0 0; max-width: 940px; color: ${MUTED}; font-size: 32px; line-height: 1.4; text-wrap: pretty; }
+  p { margin: 28px 0 0; color: ${MUTED}; font-size: 32px; line-height: 1.4; text-wrap: pretty; }
+  p span { display: block; }
   .site { display: flex; align-items: center; gap: 14px; margin-top: auto; color: ${MUTED}; font-size: 26px; }
   .site svg { width: 32px; height: 32px; color: ${INK}; }
 </style>
 <div class="card">
   <h1>${escape(content.name)}</h1>
-  <p>${escape(role)} ${escape(content.statement)}</p>
+  <p>${escape(role)}<span>${escape(tie(content.statement))}</span></p>
   <div class="site"><svg viewBox="0 0 24 24" fill="currentColor">${mark}</svg>${escape(host)}</div>
 </div>`;
 

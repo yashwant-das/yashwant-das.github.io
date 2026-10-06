@@ -37,6 +37,12 @@ const MOON_ICON =
 const MARK =
   '<svg class="wordmark-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M4 2.5 21 12H9.67Z"/><path d="M4 21.5 21 12H9.67Z" fill-opacity=".55"/><path d="M4 2.5 9.67 12 4 21.5Z" fill-opacity=".28"/></svg>';
 
+// A one-letter word ("I", "a") never ends a line: a no-break space ties it to
+// the word after it.
+export function tieShortWords(text: string): string {
+  return text.replace(/(^|\s)(\S) /g, '$1$2\u00a0');
+}
+
 export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -180,7 +186,7 @@ function renderHero(data: PortfolioData, icon: IconResolver, visible: Set<Sectio
   const socials = data.contact.socials ?? {};
   // Non-breaking spaces keep "Bengaluru (IST)" on one line.
   const role = data.location
-    ? `${data.role} in ${data.location.replace(/ /g, ' ')}.`
+    ? `${data.role} in ${data.location.replace(/ /g, '\u00a0')}.`
     : `${data.role}.`;
   const links = HERO_SOCIALS.filter((label) => socials[label]);
   const actions =
@@ -202,7 +208,7 @@ function renderHero(data: PortfolioData, icon: IconResolver, visible: Set<Sectio
       }
       <div class="hero-text">
         <h1 class="hero-name" id="hero-name">${escapeHtml(data.name)}</h1>
-        <p class="hero-lede"><span class="hero-role">${escapeHtml(role)}</span> <span class="hero-statement">${escapeHtml(data.statement)}</span></p>
+        <p class="hero-lede"><span class="hero-role">${escapeHtml(role)}</span> <span class="hero-statement">${escapeHtml(tieShortWords(data.statement))}</span></p>
       </div>
       ${
         data.status
@@ -355,7 +361,7 @@ function renderWork(data: PortfolioData, icon: IconResolver): string {
               <h3 class="doc-title">${escapeHtml(p.title)}</h3>
               <p class="doc-text">${escapeHtml(p.description)}</p>
               ${p.stack?.length ? `<p class="doc-head">Built with</p>${toolList(p.stack, tools, icon)}` : ''}
-              <a class="text-link doc-link" ${external(p.code)}>View<span class="sr-only"> ${escapeHtml(p.title)}</span> on GitHub${RIGHT}</a>
+              <a class="text-link doc-link" ${external(p.code)}><span>View<span class="sr-only"> ${escapeHtml(p.title)}</span> on GitHub</span>${RIGHT}</a>
             </div>`,
   }));
 

@@ -553,6 +553,12 @@ button {
   letter-spacing: normal;
 }
 
+/* The statement starts its own line, so the lede breaks between its two
+   sentences in every browser, not wherever one sentence runs out of room. */
+.hero-statement {
+  display: block;
+}
+
 .status {
   display: inline-flex;
   align-items: center;

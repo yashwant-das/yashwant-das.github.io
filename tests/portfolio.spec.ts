@@ -55,6 +55,46 @@ test.describe('Portfolio', () => {
     }
   });
 
+  // The lede breaks between its two sentences in every browser, and a
+  // one-letter word ("I") is never left at the end of a line.
+  for (const width of [360, 1440]) {
+    test(`breaks the hero lede between its sentences at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.reload();
+      const lede = await page.evaluate(() => {
+        const top = (el: Element) => Math.round(el.getClientRects()[0]!.top);
+        const role = document.querySelector('.hero-role')!;
+        const statement = document.querySelector('.hero-statement')!;
+        const lastRoleLine = Math.max(...[...role.getClientRects()].map((r) => Math.round(r.top)));
+        return {
+          statementOnNewLine: top(statement) > lastRoleLine,
+          text: statement.textContent ?? '',
+        };
+      });
+      expect(lede.statementOnNewLine).toBe(true);
+      expect(lede.text).not.toMatch(/(^|\s)\S /);
+    });
+  }
+
+  // Flex items drop their leading and trailing spaces, so text sitting
+  // directly in a flex link ("View" + " on GitHub") would run together.
+  test('keeps the spaces in link labels', async ({ page }) => {
+    const runTogether = await page.evaluate(() =>
+      [...document.querySelectorAll('a, button')]
+        .filter((el) => getComputedStyle(el).display.includes('flex'))
+        .flatMap((el) =>
+          [...el.childNodes].filter(
+            (n) =>
+              n.nodeType === Node.TEXT_NODE &&
+              /\S/.test(n.textContent!) &&
+              /^\s|\s$/.test(n.textContent!)
+          )
+        )
+        .map((n) => n.parentElement!.textContent!.trim())
+    );
+    expect(runTogether).toEqual([]);
+  });
+
   test('shows every section', async ({ page }) => {
     for (const id of SECTIONS) {
       await expect(page.locator(`#${id}`)).toBeVisible();
