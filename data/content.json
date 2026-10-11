@@ -67,7 +67,8 @@
       { "name": "MCP", "group": "ai", "icon": "modelcontextprotocol", "focus": true },
       { "name": "Promptfoo", "group": "ai", "icon": "promptfoo" },
       { "name": "Pydantic", "group": "ai", "icon": "pydantic" },
-      { "name": "Gradio", "group": "ai", "icon": "gradio" },
+      { "name": "FastAPI", "group": "ai", "icon": "fastapi" },
+      { "name": "htmx", "group": "ai", "icon": "htmx" },
       { "name": "Claude Code", "group": "agents", "icon": "claude", "focus": true },
       { "name": "GitHub Copilot", "group": "agents", "icon": "githubcopilot" },
       { "name": "Codex CLI", "group": "agents", "icon": "openai" },
@@ -126,13 +127,22 @@
     },
     {
       "title": "ai-py-playwright-workbench",
-      "description": "Generates and repairs Playwright tests with local LLMs, and benchmarks the results",
+      "description": "Generates Playwright tests and heals failing ones with local LLMs, with a verified fix and a report for every run",
       "code": "https://github.com/yashwant-das/ai-py-playwright-workbench",
-      "stack": ["Playwright", "Python", "TypeScript", "Ollama", "LM Studio", "Pydantic", "Gradio"]
+      "stack": [
+        "Playwright",
+        "Python",
+        "TypeScript",
+        "FastAPI",
+        "htmx",
+        "Ollama",
+        "LM Studio",
+        "Pydantic"
+      ]
     },
     {
       "title": "ai-ts-playwright-protocol",
-      "description": "Guides AI coding agents through writing Playwright tests, using Markdown task files and verification checks",
+      "description": "Guides AI coding agents and Playwright's Test Agents through writing tests, with Markdown task files and a verification gate",
       "code": "https://github.com/yashwant-das/ai-ts-playwright-protocol",
       "stack": ["Playwright", "MCP", "TypeScript"]
     },
