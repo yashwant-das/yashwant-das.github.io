@@ -137,10 +137,10 @@
       "stack": ["Playwright", "MCP", "TypeScript"]
     },
     {
-      "title": "qa-java-selenium",
-      "description": "Tests web UIs and APIs in Java 21 with Selenium, TestNG, REST Assured and Allure reports",
-      "code": "https://github.com/yashwant-das/qa-java-selenium",
-      "stack": ["Java", "Selenium", "TestNG", "REST Assured", "Allure"]
+      "title": "qa-java-restassured-payments",
+      "description": "Tests a signed payment API end to end with REST Assured and TestNG, and checks the MySQL state after every step",
+      "code": "https://github.com/yashwant-das/qa-java-restassured-payments",
+      "stack": ["Java", "REST Assured", "TestNG", "MySQL", "Allure"]
     },
     {
       "title": "qa-py-locust-grafana",
