@@ -161,18 +161,23 @@
   ],
   "articles": [
     {
-      "title": "Charles Proxy macOS Setup Guide",
-      "description": "Inspect HTTP and HTTPS traffic between your machine, devices and the internet.",
+      "title": "What reaches your local LLM, and what gets dropped",
+      "description": "I tuned four local models across two servers and two coding agents. Then I put a proxy in the middle and found that a lot of that tuning…",
+      "url": "https://medium.com/@yashwant-das/what-reaches-your-local-llm-and-what-gets-dropped-99a48296903c"
+    },
+    {
+      "title": "Setting up Charles Proxy on macOS to inspect iOS app traffic",
+      "description": "Install Charles, trust its root certificate on the Mac and the iPhone, and read an app’s HTTPS requests.",
       "url": "https://medium.com/@yashwant-das/charles-proxy-macos-setup-guide-cfde50262b91"
     },
     {
-      "title": "Appium XCUITest on Real iOS Devices",
-      "description": "Set up Appium on macOS to run automated tests on real iPhones and iPads.",
+      "title": "Appium XCUITest on real iOS devices",
+      "description": "Signing WebDriverAgent by hand with a free Apple developer account. Written for Appium 1.13 and iOS 12.",
       "url": "https://medium.com/@yashwant-das/appium-xcuitest-on-real-ios-devices-bd1ebe0dea55"
     },
     {
-      "title": "Setting up Distributed Load Testing with JMeter",
-      "description": "Run JMeter in distributed mode across machines to simulate more concurrent users than one computer can.",
+      "title": "Setting up distributed load testing with JMeter",
+      "description": "One MacBook Pro could not get past 500 concurrent users, so I ran JMeter 4.0 across two of them.",
       "url": "https://medium.com/@yashwant-das/how-to-setup-distributed-load-testing-with-jmeter-fba703f41a32"
     }
   ],
