@@ -151,19 +151,49 @@
   ],
   "articles": [
     {
-      "title": "Charles Proxy macOS Setup Guide",
-      "description": "Inspect HTTP and HTTPS traffic between your machine, devices and the internet.",
+      "title": "What reaches your local LLM, and what gets dropped",
+      "description": "I tuned four local models across two servers and two coding agents. Then I put a proxy in the middle and found that a lot of that tuning…",
+      "url": "https://medium.com/@yashwant-das/what-reaches-your-local-llm-and-what-gets-dropped-99a48296903c"
+    },
+    {
+      "title": "A ready-made Playwright test framework for Java teams",
+      "description": "Playwright, TestNG, Allure reports, YAML config, retries and CI, already set up for QA teams working in Java.",
+      "url": "https://medium.com/@yashwant-das/accelerate-your-java-ui-testing-with-playwright-introducing-a-modern-robust-framework-83b98e323411"
+    },
+    {
+      "title": "Setting up Appium 2.1 for iOS 17 on a real device",
+      "description": "A manual setup on macOS Sonoma: the XCUITest driver, WebDriverAgent code signing, and a first session on an iPhone.",
+      "url": "https://medium.com/@yashwant-das/comprehensive-guide-to-manually-configuring-appium-2-1-for-ios-17-x-on-real-devices-7f2264717d76"
+    },
+    {
+      "title": "Mirror an Android screen on your desktop with scrcpy",
+      "description": "A free alternative to Vysor. Install it on Linux, Windows or macOS, plug in a USB cable and run one command.",
+      "url": "https://medium.com/@yashwant-das/scrcpy-your-go-to-android-screen-mirroring-solution-2dd875395197"
+    },
+    {
+      "title": "Installing PyAudio on an M1 Mac running macOS 14",
+      "description": "pip install pyaudio kept failing on Python 3.12. It worked after I switched to Python 3.11 and installed PortAudio.",
+      "url": "https://medium.com/@yashwant-das/installing-pyaudio-on-macos-14-0-with-an-m1-macbook-3952c73598d6"
+    },
+    {
+      "title": "Setting up Charles Proxy on macOS to inspect iOS app traffic",
+      "description": "Install Charles, trust its root certificate on the Mac and the iPhone, and read an app’s HTTPS requests.",
       "url": "https://medium.com/@yashwant-das/charles-proxy-macos-setup-guide-cfde50262b91"
     },
     {
-      "title": "Appium XCUITest on Real iOS Devices",
-      "description": "Set up Appium on macOS to run automated tests on real iPhones and iPads.",
+      "title": "Appium XCUITest on real iOS devices",
+      "description": "Signing WebDriverAgent by hand with a free Apple developer account. Written for Appium 1.13 and iOS 12.",
       "url": "https://medium.com/@yashwant-das/appium-xcuitest-on-real-ios-devices-bd1ebe0dea55"
     },
     {
-      "title": "Setting up Distributed Load Testing with JMeter",
-      "description": "Run JMeter in distributed mode across machines to simulate more concurrent users than one computer can.",
+      "title": "Setting up distributed load testing with JMeter",
+      "description": "One MacBook Pro could not get past 500 concurrent users, so I ran JMeter 4.0 across two of them.",
       "url": "https://medium.com/@yashwant-das/how-to-setup-distributed-load-testing-with-jmeter-fba703f41a32"
+    },
+    {
+      "title": "Creating a .bash_profile on macOS",
+      "description": "Check whether the file exists, create it with touch, and add a line to it.",
+      "url": "https://medium.com/@yashwant-das/how-to-create-bash-profile-in-macos-sierra-a0e2a42fa4db"
     }
   ],
   "contact": {
